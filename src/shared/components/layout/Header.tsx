@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export default function Header() {
   const [q, setQ] = useState('');
@@ -29,10 +29,13 @@ export default function Header() {
             className="hidden w-[320px] rounded-full border px-4 py-2 text-sm md:block"
           />
 
-          <Link href="/login" className="text-sm">
+          <Link href="/auth?mode=login" className="text-sm hover:text-purple-700 transition-colors">
             로그인
           </Link>
-          <Link href="/signup" className="rounded-full bg-purple-700 px-4 py-2 text-sm text-white">
+          <Link
+            href="/auth?mode=signup"
+            className="rounded-full bg-purple-700 px-4 py-2 text-sm text-white hover:bg-purple-800 transition-colors"
+          >
             회원가입
           </Link>
         </div>
