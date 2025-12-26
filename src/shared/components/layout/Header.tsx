@@ -1,10 +1,20 @@
 'use client';
 
+import { Search } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 export default function Header() {
   const [q, setQ] = useState('');
+  const router = useRouter();
+
+  const handleSearch = (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (!q.trim()) return;
+    router.push(`/search?q=${encodeURIComponent(q)}`);
+  };
 
   return (
     <header className="w-full bg-background">
@@ -16,7 +26,7 @@ export default function Header() {
           </Link>
 
           <Link
-            href="/products"
+            href="/products?q=베스트"
             className="text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
           >
             상품
@@ -25,22 +35,40 @@ export default function Header() {
 
         {/* Search + Auth */}
         <div className="flex items-center gap-3">
-          <input
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="검색어를 입력하세요"
-            className="
-              hidden w-[320px] rounded-full
-              border border-border
-              bg-input-background
-              px-4 py-2 text-sm
-              text-foreground
-              placeholder:text-muted-foreground
-              outline-none
-              focus:ring-2 focus:ring-primary-300
-              md:block
-            "
-          />
+          <div className="relative flex items-center">
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSearch();
+              }}
+              placeholder="검색어를 입력하세요"
+              className="
+                hidden w-[320px] rounded-full
+                border border-border
+                bg-input-background
+                pl-4 pr-10 py-2 text-sm
+                text-foreground
+                placeholder:text-muted-foreground
+                outline-none
+                focus:ring-2 focus:ring-primary-300
+                md:block
+              "
+            />
+            <button
+              onClick={() => handleSearch()}
+              className="absolute right-3 hidden text-muted-foreground hover:text-foreground md:block"
+            >
+              <Search size={20} />
+            </button>
+          </div>
+
+          <Link
+            href="/search"
+            className="block md:hidden text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <Search size={20} />
+          </Link>
 
           <Link
             href="/auth?mode=login"
