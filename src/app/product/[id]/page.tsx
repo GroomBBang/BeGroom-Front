@@ -1,9 +1,11 @@
 // src/app/product/[id]/page.tsx
 'use client';
 
+import { useCart } from '@/features/cart/hooks/useCart';
 import { products } from '@/features/product/mocks/product';
 import { formatWon } from '@/shared/lib/format';
 import { ChevronLeft, ChevronRight, Download, Gift, Heart, ShoppingCart } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { use, useState } from 'react';
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -12,6 +14,9 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
   const [qty, setQty] = useState(1);
   const [liked, setLiked] = useState(false);
+
+  const router = useRouter();
+  const { addToCart } = useCart();
 
   if (!product) {
     return (
@@ -171,6 +176,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
           <div className="mt-6 flex items-center gap-3">
             <button
               type="button"
+              onClick={() => {
+                addToCart(product, qty); // qty만큼 담기
+                router.push('/cart'); // 장바구니로 이동
+              }}
               className="flex h-12 flex-1 items-center justify-center gap-2 rounded-sm bg-primary-700 px-5 text-sm font-bold text-white transition-colors hover:bg-primary-800 cursor-pointer"
             >
               <ShoppingCart size={18} />
