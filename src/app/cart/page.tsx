@@ -5,6 +5,7 @@ import { useCart } from '@/features/cart/hooks/useCart';
 import { formatWon } from '@/shared/lib/format';
 import { Trash2, X } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function CartPage() {
   const {
@@ -19,6 +20,8 @@ export default function CartPage() {
   } = useCart();
 
   const isEmpty = items.length === 0;
+
+  const router = useRouter();
 
   return (
     <div className="mx-auto min-h-screen max-w-6xl px-4 py-10">
@@ -168,7 +171,8 @@ export default function CartPage() {
 
             <button
               type="button"
-              className="mt-6 h-12 w-full rounded-sm bg-primary-700 text-sm font-bold text-white hover:bg-primary-800"
+              onClick={() => router.push('/checkout')}
+              className="mt-6 h-12 w-full rounded-sm bg-primary-700 text-sm font-bold text-white hover:bg-primary-800 cursor-pointer"
             >
               {totals.selectedCount}개 상품 주문하기
             </button>
