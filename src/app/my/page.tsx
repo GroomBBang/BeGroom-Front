@@ -9,7 +9,7 @@ import WishlistContent from '@/features/user/components/WishlistContent';
 import { useState } from 'react';
 
 export default function MyPage() {
-  const [activeMenu, setActiveMenu] = useState<MenuType>('wishlist');
+  const [activeMenu, setActiveMenu] = useState<MenuType>('profile');
 
   const renderContent = () => {
     switch (activeMenu) {
@@ -24,7 +24,7 @@ export default function MyPage() {
       case 'points':
         return <PointsContent />;
       default:
-        return <OrdersContent />;
+        return <ProfileContent />;
     }
   };
 
@@ -41,7 +41,7 @@ export default function MyPage() {
       case 'points':
         return '적립금';
       default:
-        return '';
+        return '회원정보';
     }
   };
 

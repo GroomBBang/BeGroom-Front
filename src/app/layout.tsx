@@ -1,4 +1,5 @@
 import QuickMenu from '@/features/user/components/QuickMenu';
+import MSWProvider from '@/providers/MSWProvider';
 import ToastProvider from '@/providers/ToastProvider';
 import Header from '@/shared/components/layout/Header';
 import type { Metadata } from 'next';
@@ -22,12 +23,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko">
       <body className="min-h-screen bg-background text-foreground antialiased">
         <Header />
-        <div className="relative">
-          {children}
-          <div className="fixed top-[25%] right-[30px] hidden xl:block">
-            <QuickMenu />
+        <MSWProvider>
+          <div className="relative">
+            {children}
+            <div className="fixed top-[25%] right-[30px] hidden xl:block">
+              <QuickMenu />
+            </div>
           </div>
-        </div>
+        </MSWProvider>
         <ToastProvider />
       </body>
     </html>
