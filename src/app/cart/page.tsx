@@ -88,9 +88,9 @@ export default function CartPage() {
 
                     {/* 이미지 */}
                     <div className="h-20 w-20 overflow-hidden rounded-md bg-muted">
-                      {item.imageUrl ? (
+                      {item.imageUrls.length > 0 ? (
                         <img
-                          src={item.imageUrl}
+                          src={item.imageUrls[0]}
                           alt={item.title}
                           className="h-full w-full object-cover"
                         />

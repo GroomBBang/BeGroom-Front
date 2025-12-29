@@ -5,9 +5,10 @@ export type Product = {
   category: CategoryKey;
   categoryLabel: string;
   title: string;
+  description: string;
   price: number;
   originalPrice?: number;
   discountRate?: number;
   likes: number;
-  imageUrl?: string;
+  imageUrls: string[];
 };
