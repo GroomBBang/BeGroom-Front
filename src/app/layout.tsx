@@ -1,6 +1,6 @@
 'use client';
 
-// app/layout.tsx
+import QuickMenu from '@/features/search/components/QuickMenu';
 import Header from '@/shared/components/layout/Header';
 import './globals.css';
 
@@ -9,7 +9,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko">
       <body className="min-h-screen bg-background text-foreground antialiased">
         <Header />
-        {children}
+        <div className="relative">
+          {children}
+          <div className="fixed top-[25%] right-[30px] hidden xl:block">
+            <QuickMenu />
+          </div>
+        </div>
       </body>
     </html>
   );
