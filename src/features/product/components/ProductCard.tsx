@@ -20,7 +20,7 @@ export default function ProductCard({ product: p, formatWon }: Props) {
   };
 
   return (
-    <Link href={`/product/${p.id}`} className="block">
+    <Link href={`/products/${p.id}`} className="block">
       <article
         className="
         h-full
