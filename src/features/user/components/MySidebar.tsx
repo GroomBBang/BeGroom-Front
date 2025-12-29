@@ -1,7 +1,7 @@
 import { menus } from '../constants/sidebar';
 import { USER_PROFILE } from '../mocks/my';
 
-export type MenuType = 'orders' | 'coupons' | 'profile' | 'wishlist';
+export type MenuType = 'orders' | 'coupons' | 'profile' | 'wishlist' | 'points';
 
 interface MySidebarProps {
   activeMenu: MenuType;

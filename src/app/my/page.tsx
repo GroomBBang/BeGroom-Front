@@ -3,6 +3,7 @@
 import CouponsContent from '@/features/user/components/CouponsContent';
 import MySidebar, { MenuType } from '@/features/user/components/MySidebar';
 import OrdersContent from '@/features/user/components/OrdersContent';
+import PointsContent from '@/features/user/components/PointsContent';
 import ProfileContent from '@/features/user/components/ProfileContent';
 import WishlistContent from '@/features/user/components/WishlistContent';
 import { useState } from 'react';
@@ -20,6 +21,8 @@ export default function MyPage() {
         return <ProfileContent />;
       case 'wishlist':
         return <WishlistContent />;
+      case 'points':
+        return <PointsContent />;
       default:
         return <OrdersContent />;
     }
@@ -35,6 +38,8 @@ export default function MyPage() {
         return '회원정보';
       case 'wishlist':
         return '위시리스트';
+      case 'points':
+        return '적립금';
       default:
         return '';
     }

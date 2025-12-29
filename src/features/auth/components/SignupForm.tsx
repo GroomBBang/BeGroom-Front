@@ -1,9 +1,12 @@
 import TextInput from '@/shared/components/common/TextInput';
 import { Store, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function SignupForm({ onSwitch }: { onSwitch: () => void }) {
   const [userType, setUserType] = useState<'general' | 'seller'>('general');
+  const router = useRouter();
 
   return (
     <div className="w-full max-w-[500px] rounded-2xl bg-white p-8 shadow-lg md:p-12">
@@ -77,7 +80,14 @@ export default function SignupForm({ onSwitch }: { onSwitch: () => void }) {
           </label>
         </div>
 
-        <button className="mt-4 w-full rounded-md bg-[#5f0080] py-3.5 text-base font-bold text-white transition-colors hover:bg-[#4a0063]">
+        <button
+          type="button"
+          onClick={() => {
+            toast.success('회원가입 성공');
+            router.push('/auth?mode=login');
+          }}
+          className="mt-4 w-full rounded-md bg-[#5f0080] py-3.5 text-base font-bold text-white transition-colors hover:bg-[#4a0063]"
+        >
           회원가입
         </button>
 

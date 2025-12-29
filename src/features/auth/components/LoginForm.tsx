@@ -1,10 +1,14 @@
 import TextInput from '@/shared/components/common/TextInput';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
+  const router = useRouter();
+
   return (
     <div className="w-full max-w-[400px] rounded-2xl bg-white p-8 shadow-lg md:p-12">
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-[#5f0080]">BeGroom</h1>
+        <h1 className="text-3xl font-bold text-primary-500">BeGroom</h1>
         <p className="mt-2 text-gray-500">로그인</p>
       </div>
 
@@ -14,7 +18,7 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
 
         <div className="flex items-center justify-between text-sm">
           <label className="flex items-center gap-2 text-gray-600 cursor-pointer">
-            <input type="checkbox" className="accent-[#5f0080]" />
+            <input type="checkbox" className="accent-primary-500" />
             로그인 상태 유지
           </label>
           <button type="button" className="text-gray-500 hover:text-gray-800">
@@ -22,7 +26,14 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
           </button>
         </div>
 
-        <button className="mt-4 w-full rounded-md bg-[#5f0080] py-3.5 text-base font-bold text-white transition-colors hover:bg-[#4a0063]">
+        <button
+          type="button"
+          onClick={() => {
+            toast.success('로그인 성공');
+            router.push('/');
+          }}
+          className="mt-4 w-full rounded-md bg-primary-500 py-3.5 text-base font-bold text-white transition-colors hover:bg-primary-600"
+        >
           로그인
         </button>
 
@@ -31,15 +42,15 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
           <button
             type="button"
             onClick={onSwitch}
-            className="font-bold text-[#5f0080] hover:underline"
+            className="font-bold text-primary-500 hover:underline"
           >
             회원가입
           </button>
         </div>
 
         {/* 테스트 계정 안내 박스 */}
-        <div className="mt-4 rounded-lg bg-purple-50 p-4 text-xs text-gray-600 border border-purple-100">
-          <p className="font-bold text-[#5f0080] mb-1">테스트 계정</p>
+        <div className="mt-4 rounded-lg bg-primary-50 p-4 text-xs text-gray-600 border border-primary-100">
+          <p className="font-bold text-primary-500 mb-1">테스트 계정</p>
           <p>관리자: admin@kurly.com / admin123</p>
           <p>일반 사용자: user@kurly.com / user123</p>
         </div>

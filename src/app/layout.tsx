@@ -1,6 +1,7 @@
 'use client';
 
 import QuickMenu from '@/features/search/components/QuickMenu';
+import ToastProvider from '@/providers/ToastProvider';
 import Header from '@/shared/components/layout/Header';
 import './globals.css';
 
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <QuickMenu />
           </div>
         </div>
+        <ToastProvider />
       </body>
     </html>
   );
