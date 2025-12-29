@@ -258,18 +258,18 @@ export default function SellerSettlementPageV2() {
   return (
     <main className="min-h-screen bg-gray-50">
       <div className=" mx-auto max-w-6xl px-4 py-10">
+        {/* 좌상단 뒤로가기 */}
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="mb-6 inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
+        >
+          <ArrowLeft size={16} className="text-gray-500" />
+          대시보드로 돌아가기
+        </button>
         {/* 상단: 전체 기간 고정 헤더 */}
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            {/* 뒤로가기(상단바는 추후 공통 컴포넌트로 분리 예정) */}
-            <button
-              type="button"
-              onClick={() => router.back()}
-              className=" left-8 top-12 inline-flex cursor-pointer items-center gap-2 text-sm text-gray-500 hover:text-gray-700"
-            >
-              <ArrowLeft size={16} />
-              대시보드로 돌아가기
-            </button>
             <h1 className="text-2xl font-bold text-gray-900">정산 관리</h1>
           </div>
 
