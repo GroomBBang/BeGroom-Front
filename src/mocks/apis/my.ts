@@ -1,6 +1,6 @@
 import { delay, HttpResponse } from 'msw';
 import { api } from '../http';
-import { USER_PROFILE } from './data/my';
+import { USER_ORDERS, USER_POINTS, USER_PROFILE, USER_WISHLIST } from './data/my';
 
 export const myHandlers = [
   api.get('/my', async () => {
@@ -8,8 +8,18 @@ export const myHandlers = [
     return HttpResponse.json(USER_PROFILE);
   }),
 
-  api.post('/my', async () => {
+  api.get('/my/points', async () => {
     await delay(1000);
-    return HttpResponse.json({});
+    return HttpResponse.json(USER_POINTS);
+  }),
+
+  api.get('/my/orders', async () => {
+    await delay(2000);
+    return HttpResponse.json(USER_ORDERS);
+  }),
+
+  api.get('/my/wish', async () => {
+    await delay(2000);
+    return HttpResponse.json(USER_WISHLIST);
   }),
 ];

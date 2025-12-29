@@ -52,10 +52,7 @@ export default function MyPage() {
       <div className="flex flex-col gap-8 md:flex-row">
         <MySidebar activeMenu={activeMenu} onMenuChange={setActiveMenu} />
 
-        <main className="flex-1">
-          <h2 className="mb-4 text-t6 font-bold text-gray-900">{getActiveLabel()}</h2>
-          {renderContent()}
-        </main>
+        <main className="flex-1">{renderContent()}</main>
       </div>
     </div>
   );
