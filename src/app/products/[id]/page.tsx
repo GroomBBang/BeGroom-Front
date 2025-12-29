@@ -3,15 +3,17 @@
 
 import { useCart } from '@/features/cart/hooks/useCart';
 import { products } from '@/features/product/mocks/product';
+import { useRecentProducts } from '@/features/user/hooks/useRecentProducts';
 import { formatWon } from '@/shared/lib/format';
 import { ChevronLeft, ChevronRight, Download, Gift, Heart, ShoppingCart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { use, useMemo, useState } from 'react';
+import { use, useEffect, useMemo, useState } from 'react';
 
 type TabKey = 'desc' | 'info';
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const { addProduct } = useRecentProducts();
 
   const product = useMemo(() => products.find((p) => p.id === id), [id]);
 
@@ -20,6 +22,16 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
   const router = useRouter();
   const { addToCart } = useCart();
+
+  useEffect(() => {
+    if (product) {
+      addProduct({
+        id: Number(product.id),
+        thumb: product.imageUrls[0],
+        time: Date.now(),
+      });
+    }
+  }, [product]);
 
   if (!product) {
     return (
