@@ -1,23 +1,4 @@
-import {
-  Apple,
-  Beef,
-  Coffee,
-  Cookie,
-  Croissant,
-  CupSoda,
-  Fish,
-  Gift,
-  Leaf,
-  Milk,
-  PartyPopper,
-  Pill,
-  Salad,
-  Shirt,
-  ShoppingBag,
-  Soup,
-  Utensils,
-  Wine,
-} from 'lucide-react';
+import { Apple, Fish, Gift, Leaf, PartyPopper, Shirt, Wine } from 'lucide-react';
 
 export const CATEGORIES = [
   {
@@ -25,26 +6,22 @@ export const CATEGORIES = [
     label: '새해설선물',
     icon: Gift,
     isNew: true,
-    subcategories: [
-      '건강식품 선물',
-      '과일·정육 선물',
-      '수산·건어물 선물',
-      '베이커리·간식 선물',
-      '생활용품 선물',
-    ],
+    subcategories: ['추천 특가', '사전예약', '가격대별', '카테고리', '큐레이션'],
   },
   {
     id: 'festa',
     label: '리빙컬리페스타',
     icon: PartyPopper,
     isNew: true,
-    subcategories: ['주방용품 특가', '생활용품 특가', '가전제품 특가'],
-  },
-  {
-    id: 'duffle',
-    label: '더퍼플셀렉션',
-    icon: ShoppingBag,
-    subcategories: ['더퍼플 단독', '프리미엄관'],
+    subcategories: [
+      '2025 어워즈',
+      '컬리 단독',
+      '올해의 브랜드',
+      '클리어런스',
+      '카테고리 랭킹',
+      '푸드 브랜드관',
+      '쿠폰 적용 상품',
+    ],
   },
   {
     id: 'veg',
@@ -52,12 +29,13 @@ export const CATEGORIES = [
     icon: Leaf,
     subcategories: [
       '친환경',
-      '고구마·감자·당근',
-      '시금치·쌈채소·나물',
-      '브로콜리·파프리카·양배추',
-      '양파·대파·마늘·배추',
-      '오이·호박·고추',
-      '콩나물·버섯',
+      '제철과일',
+      '국산과일',
+      '수입과일',
+      '간편과일',
+      '냉동·건과일',
+      '견과류',
+      '쌀·잡곡',
     ],
   },
   {
@@ -82,80 +60,22 @@ export const CATEGORIES = [
     subcategories: [
       '제철수산',
       '생선류',
+      '굴비·반건류',
+      '연어·참치',
+      '회·탕류',
       '오징어·낙지·문어',
+      '해산물·전복·조개류',
       '새우·게·랍스터',
-      '해산물·조개류',
+      '수산가공품',
+      '명란',
+      '젓갈·창류',
+      '간편구이',
       '김·미역·해조류',
-      '건어물·다시팩',
+      '멸치·황태·다시팩',
+      '조미오징어·어포·쥐포',
     ],
   },
-  {
-    id: 'meat',
-    label: '정육·가공육·달걀',
-    icon: Beef,
-    subcategories: [
-      '국내산 소고기',
-      '수입산 소고기',
-      '돼지고기',
-      '닭·오리고기',
-      '양념육·돈까스',
-      '계란류',
-    ],
-  },
-  {
-    id: 'soup',
-    label: '국·반찬·메인요리',
-    icon: Soup,
-    subcategories: ['국·탕·찌개', '밀키트·메인요리', '밑반찬', '김치·젓갈·장류'],
-  },
-  {
-    id: 'salad',
-    label: '간편식·밀키트·샐러드',
-    icon: Salad,
-    subcategories: ['샐러드·닭가슴살', '도시락·밥류', '파스타·면류', '떡볶이·튀김·순대'],
-  },
-  {
-    id: 'oil',
-    label: '면·양념·오일',
-    icon: Utensils,
-    subcategories: ['파스타·면류', '식초·소스·드레싱', '오일·참기름', '소금·설탕·향신료'],
-  },
-  {
-    id: 'water',
-    label: '생수·음료',
-    icon: CupSoda,
-    subcategories: ['생수·탄산수', '음료·주스', '우유·두유·요거트'],
-  },
-  {
-    id: 'coffee',
-    label: '커피·차',
-    icon: Coffee,
-    subcategories: ['원두커피', '캡슐커피', '차류', '커피용품'],
-  },
-  {
-    id: 'snack',
-    label: '간식·과자·떡',
-    icon: Cookie,
-    subcategories: ['과자·스낵', '쿠키·파이', '초콜릿·젤리', '떡·한과'],
-  },
-  {
-    id: 'bakery',
-    label: '베이커리',
-    icon: Croissant,
-    subcategories: ['식빵·빵류', '잼·버터·스프레드', '케이크·디저트'],
-  },
-  {
-    id: 'milk',
-    label: '유제품',
-    icon: Milk,
-    subcategories: ['우유', '치즈', '버터·크림', '요거트'],
-  },
-  {
-    id: 'health',
-    label: '건강식품',
-    icon: Pill,
-    subcategories: ['홍삼·인삼', '유산균', '비타민·미네랄', '건강즙·액기스'],
-  },
+
   {
     id: 'wine',
     label: '와인·위스키·데낄라',
@@ -170,11 +90,50 @@ export const CATEGORIES = [
     subcategories: ['막걸리·탁주', '증류주', '약주·청주', '과실주'],
   },
   {
+    id: 'best',
+    label: '베스트',
+    icon: Shirt,
+    subcategories: ['2025년도 베스트', '2024년도 베스트', '2023년도 베스트'],
+  },
+  {
+    id: 'sale',
+    label: '세일',
+    icon: Shirt,
+    subcategories: ['식품 세일', '화장품 세일'],
+  },
+  {
     id: 'fashion',
     label: '패션',
     icon: Shirt,
-    subcategories: ['여성의류', '남성의류', '잡화', '쥬얼리'],
+    subcategories: ['패션 상품 1', '패션 상품 2', '패션 상품 3'],
   },
+  {
+    id: 'home',
+    label: '리빙',
+    icon: Shirt,
+    subcategories: ['리빙 상품 1', '리빙 상품 2', '리빙 상품 3'],
+  },
+  {
+    id: 'new',
+    label: '신상',
+    icon: Shirt,
+    subcategories: ['신상 상품 1', '신상 상품 2', '신상 상품 3'],
+  },
+  {
+    id: 'special',
+    label: '특가/혜택',
+    icon: Shirt,
+    subcategories: ['특가 상품 1', '특가 상품 2', '특가 상품 3'],
+  },
+];
+
+export const SUB_CATEGORIES = [
+  '생수/얼음',
+  '탄산수',
+  '탄산/스포츠음료',
+  '과일야채음료',
+  '차음료',
+  '어린이음료/선물세트',
 ];
 
 export const PRODUCTS = [
@@ -215,10 +174,10 @@ export const PRODUCTS = [
 ];
 
 export const NAV_LINKS = [
-  { label: '베스트', href: '/products?q=베스트' },
-  { label: '세일', href: '/products?q=세일' },
-  { label: '패션', href: '/products?q=패션' },
-  { label: '리빙', href: '/products?q=리빙' },
-  { label: '신상', href: '/products?q=신상' },
-  { label: '특가/혜택', href: '/products?q=특가/혜택' },
+  { label: '베스트', href: '/products?main=베스트&sub=전체보기' },
+  { label: '세일', href: '/products?main=세일&sub=전체보기' },
+  { label: '패션', href: '/products?main=패션&sub=전체보기' },
+  { label: '리빙', href: '/products?main=리빙&sub=전체보기' },
+  { label: '신상', href: '/products?main=신상&sub=전체보기' },
+  { label: '특가/혜택', href: '/products?main=특가/혜택&sub=전체보기' },
 ];

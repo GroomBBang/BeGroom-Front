@@ -26,7 +26,13 @@ export default function Header() {
           </Link>
 
           <Link
-            href="/products?q=베스트"
+            href={{
+              pathname: '/products',
+              query: {
+                main: '베스트',
+                sub: '전체보기',
+              },
+            }}
             className="text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
           >
             상품
