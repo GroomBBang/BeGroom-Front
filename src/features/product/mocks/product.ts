@@ -1,5 +1,4 @@
-// app/_data/home.mock.ts
-import type { Product } from '@/features/product/types';
+import { Product } from '../types';
 
 export const products: Product[] = [
   {
@@ -11,7 +10,12 @@ export const products: Product[] = [
     originalPrice: 7900,
     discountRate: 25,
     likes: 342,
-    imageUrl: 'https://images.unsplash.com/photo-1540420773420-3366772f4999',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1540420773420-3366772f4999',
+      'https://images.unsplash.com/photo-1542838132-92c53300491e',
+      'https://images.unsplash.com/photo-1512621776951-a57141f2eefd',
+    ],
+    description: '신선한 유기농 채소를 간편하게 즐길 수 있는 샐러드 믹스입니다.',
   },
   {
     id: '2',
@@ -20,7 +24,11 @@ export const products: Product[] = [
     title: '수제 식빵',
     price: 4500,
     likes: 421,
-    imageUrl: 'https://images.unsplash.com/photo-1608198093002-ad4e005484ec',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1608198093002-ad4e005484ec',
+      'https://images.unsplash.com/photo-1549931319-a545dcf3bc73',
+    ],
+    description: '매일 아침 갓 구워내는 부드럽고 고소한 수제 식빵입니다.',
   },
   {
     id: '3',
@@ -29,7 +37,11 @@ export const products: Product[] = [
     title: '프리미엄 과일 모음',
     price: 29900,
     likes: 156,
-    imageUrl: 'https://images.unsplash.com/photo-1540420773420-3366772f4999',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1540420773420-3366772f4999',
+      'https://images.unsplash.com/photo-1574226516831-e1dff420e43e',
+    ],
+    description: '제철 과일만을 엄선한 프리미엄 과일 세트입니다.',
   },
   {
     id: '4',
@@ -40,6 +52,10 @@ export const products: Product[] = [
     originalPrice: 3900,
     discountRate: 18,
     likes: 589,
-    imageUrl: 'https://images.unsplash.com/photo-1608198093002-ad4e005484ec',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1608198093002-ad4e005484ec',
+      'https://images.unsplash.com/photo-1550583724-b2692b85b150',
+    ],
+    description: '부담 없이 즐길 수 있는 고소한 저지방 우유입니다.',
   },
 ];

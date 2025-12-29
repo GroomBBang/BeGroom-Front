@@ -7,9 +7,11 @@ import { categories } from '@/features/product/constants/categories';
 import { products } from '@/features/product/mocks/product';
 import { CategoryKey } from '@/features/product/types';
 import { formatWon } from '@/shared/lib/format';
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
   const [category, setCategory] = useState<CategoryKey>('all');
+  const router = useRouter();
 
   const filtered = useMemo(() => {
     if (category === 'all') return products;
@@ -66,6 +68,7 @@ export default function HomePage() {
 
             <button
               type="button"
+              onClick={() => router.push('/coupons')}
               className="rounded-full bg-white/20 px-4 py-2 text-sm font-bold hover:bg-white/25 cursor-pointer"
             >
               쿠폰 받기 →
