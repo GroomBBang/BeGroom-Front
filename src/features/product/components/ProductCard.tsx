@@ -35,9 +35,9 @@ export default function ProductCard({ product: p, formatWon }: Props) {
       >
         {/* 이미지 영역 */}
         <div className="relative flex aspect-[4/3] items-center justify-center bg-muted">
-          {p.imageUrl ? (
+          {p.imageUrls.length > 0 ? (
             <img
-              src={p.imageUrl}
+              src={p.imageUrls[0]}
               alt={p.title}
               className="h-full w-full object-cover"
               loading="lazy"
