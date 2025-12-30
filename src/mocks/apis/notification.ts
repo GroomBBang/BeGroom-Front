@@ -1,11 +1,10 @@
-import { http, HttpResponse } from 'msw';
+import { delay, HttpResponse } from 'msw';
+import { api } from '../http';
+import { USER_NOTIFICATIONS } from './data/notification';
 
 export const notificationHandlers = [
-  http.get('/api/notification', () => {
-    return HttpResponse.json({});
-  }),
-
-  http.post('/api/notification', () => {
-    return HttpResponse.json({});
+  api.get('/noti', async () => {
+    await delay(1000);
+    return HttpResponse.json(USER_NOTIFICATIONS);
   }),
 ];

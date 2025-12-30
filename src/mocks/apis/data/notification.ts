@@ -1,6 +1,6 @@
-import { NotificationItem } from '../types/model';
+import { NotificationItem } from '@/features/notification/types/model';
 
-export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
+export const USER_NOTIFICATIONS: NotificationItem[] = [
   {
     id: 1,
     type: 'delivery',

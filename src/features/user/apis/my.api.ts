@@ -8,7 +8,7 @@ import {
 
 export default function myAPI() {
   const fetchMyProfile = async (): Promise<MyProfileResponseDTO> => {
-    const response = await axiosInstance.get('/my');
+    const response = await axiosInstance.get('/my/profile');
     return response.data;
   };
 
