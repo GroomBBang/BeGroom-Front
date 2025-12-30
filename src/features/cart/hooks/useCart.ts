@@ -1,30 +1,30 @@
 // src/features/cart/hooks/useCart.ts
 'use client';
 
+import type { CartContextType, CartItemType } from '@/features/cart/types';
 import type { Product } from '@/features/product/types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { CartItem } from '../types';
 
 const STORAGE_KEY = 'begroom_cart_v1';
 
-function readStorage(): CartItem[] {
+function readStorage(): CartItemType[] {
   if (typeof window === 'undefined') return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as CartItem[]) : [];
+    return raw ? (JSON.parse(raw) as CartItemType[]) : [];
   } catch {
     return [];
   }
 }
 
-function writeStorage(items: CartItem[]) {
+function writeStorage(items: CartItemType[]) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   } catch {}
 }
 
-export function useCart() {
-  const [items, setItems] = useState<CartItem[]>([]);
+export function useCart(): CartContextType {
+  const [items, setItems] = useState<CartItemType[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
