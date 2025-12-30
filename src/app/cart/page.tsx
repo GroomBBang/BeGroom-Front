@@ -2,7 +2,6 @@
 'use client';
 
 import CartContainer from '@/features/cart/components/CartContainer';
-import CartRecommend from '@/features/cart/components/CartRecommend';
 
 export default function CartPage() {
   return (
@@ -10,7 +9,6 @@ export default function CartPage() {
       <h1 className="mb-6 text-2xl font-bold text-foreground">장바구니</h1>
 
       <CartContainer />
-      <CartRecommend />
     </div>
   );
 }
