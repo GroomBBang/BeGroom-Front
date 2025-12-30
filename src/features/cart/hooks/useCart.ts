@@ -1,75 +1,75 @@
 // src/features/cart/hooks/useCart.ts
 'use client';
 
-import type { Product } from '@/features/product/types';
+import cartAPI from '@/features/cart/apis/cart.api';
+import type { CartContextType, CartItemType } from '@/features/cart/types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { CartItem } from '../types';
 
-const STORAGE_KEY = 'begroom_cart_v1';
+export function useCart(): CartContextType {
+  const [items, setItems] = useState<CartItemType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-function readStorage(): CartItem[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as CartItem[]) : [];
-  } catch {
-    return [];
-  }
-}
+  const api = useMemo(() => cartAPI(), []);
 
-function writeStorage(items: CartItem[]) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  } catch {}
-}
-
-export function useCart() {
-  const [items, setItems] = useState<CartItem[]>([]);
-  const [hydrated, setHydrated] = useState(false);
+  const refetch = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const data = await api.fetchCart();
+      setItems(data.items);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [api]);
 
   useEffect(() => {
-    setItems(readStorage());
-    setHydrated(true);
-  }, []);
+    refetch();
+  }, [refetch]);
 
-  useEffect(() => {
-    if (!hydrated) return;
-    writeStorage(items);
-  }, [items, hydrated]);
+  const removeItem = async (id: string) => {
+    const prev = items;
+    setItems((cur) => cur.filter((x) => x.id !== id));
 
-  const addToCart = useCallback((product: Product, quantity = 1) => {
-    setItems((prev) => {
-      const found = prev.find((x) => x.id === product.id);
-      if (!found) {
-        return [...prev, { ...product, quantity, selected: true }];
-      }
-      return prev.map((x) =>
-        x.id === product.id ? { ...x, quantity: x.quantity + quantity, selected: true } : x,
-      );
-    });
-  }, []);
+    try {
+      await api.removeCartItem(id);
+    } catch (e) {
+      setItems(prev);
+    }
+  };
 
-  const removeItem = useCallback((id: string) => {
-    setItems((prev) => prev.filter((x) => x.id !== id));
-  }, []);
+  const updateQty = async (id: string, nextQty: number) => {
+    const safeQty = Math.max(1, nextQty);
+    const prev = items;
 
-  const updateQty = useCallback((id: string, nextQty: number) => {
-    setItems((prev) =>
-      prev.map((x) => (x.id === id ? { ...x, quantity: Math.max(1, nextQty) } : x)),
-    );
-  }, []);
+    setItems((cur) => cur.map((x) => (x.id === id ? { ...x, quantity: safeQty } : x)));
 
-  const toggleSelect = useCallback((id: string) => {
+    try {
+      await api.updateCartItemQty(id, safeQty);
+    } catch (e) {
+      setItems(prev);
+    }
+  };
+
+  const toggleSelect = (id: string) => {
     setItems((prev) => prev.map((x) => (x.id === id ? { ...x, selected: !x.selected } : x)));
-  }, []);
+  };
 
-  const setAllSelected = useCallback((selected: boolean) => {
+  const setAllSelected = (selected: boolean) => {
     setItems((prev) => prev.map((x) => ({ ...x, selected })));
-  }, []);
+  };
 
-  const removeSelected = useCallback(() => {
-    setItems((prev) => prev.filter((x) => !x.selected));
-  }, []);
+  const removeSelected = async () => {
+    const selectedIds = items.filter((x) => x.selected).map((x) => x.id);
+    if (selectedIds.length === 0) return;
+
+    const prev = items;
+    setItems((cur) => cur.filter((x) => !x.selected));
+
+    try {
+      await api.removeSelectedItems(selectedIds); // DELETE /cart/items body: { ids }
+    } catch (e) {
+      setItems(prev);
+    }
+  };
 
   const totals = useMemo(() => {
     const selectedItems = items.filter((x) => x.selected);
@@ -80,13 +80,13 @@ export function useCart() {
     return { subtotal, shipping, total, selectedCount };
   }, [items]);
 
-  const allSelected = useMemo(() => items.length > 0 && items.every((x) => x.selected), [items]);
+  const allSelected = items.length > 0 && items.every((x) => x.selected);
 
   return {
     items,
+    isLoading,
     totals,
     allSelected,
-    addToCart,
     removeItem,
     updateQty,
     toggleSelect,
