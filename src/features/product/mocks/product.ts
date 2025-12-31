@@ -6,6 +6,7 @@ export const products: Product[] = [
     category: 'veg',
     categoryLabel: '채소',
     title: '[KF365] 유기농 샐러드 믹스',
+    stock: 99,
     price: 5900,
     originalPrice: 7900,
     discountRate: 25,
@@ -22,6 +23,7 @@ export const products: Product[] = [
     category: 'bakery',
     categoryLabel: '베이커리',
     title: '수제 식빵',
+    stock: 99,
     price: 4500,
     likes: 421,
     imageUrls: [
@@ -35,6 +37,7 @@ export const products: Product[] = [
     category: 'fruit',
     categoryLabel: '과일',
     title: '프리미엄 과일 모음',
+    stock: 79,
     price: 29900,
     likes: 156,
     imageUrls: [
@@ -48,6 +51,7 @@ export const products: Product[] = [
     category: 'dairy',
     categoryLabel: '유제품',
     title: '[Kurly Only] 저지방 우유 1L',
+    stock: 50,
     price: 3200,
     originalPrice: 3900,
     discountRate: 18,
