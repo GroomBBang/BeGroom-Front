@@ -5,6 +5,7 @@ export type Product = {
   category: CategoryKey;
   categoryLabel: string;
   title: string;
+  stock: number;
   description: string;
   price: number;
   originalPrice?: number;
@@ -12,3 +13,5 @@ export type Product = {
   likes: number;
   imageUrls: string[];
 };
+
+export type TabKey = 'desc' | 'info';
