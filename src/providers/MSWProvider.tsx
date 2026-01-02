@@ -1,27 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function MSWProvider({ children }: { children: React.ReactNode }) {
   const [mswReady, setMswReady] = useState(false);
 
-  // useEffect(() => {
-  //   const init = async () => {
-  //     if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
-  //       const { worker } = await import('../mocks/browser');
-  //       await worker.start({
-  //         onUnhandledRequest: 'bypass',
-  //       });
-  //       setMswReady(true);
-  //     } else {
-  //       setMswReady(true);
-  //     }
-  //   };
+  useEffect(() => {
+    const init = async () => {
+      const isMockingEnabled = process.env.NEXT_PUBLIC_API_MOCKING === 'enabled';
 
-  //   init();
-  // }, []);
+      if (isMockingEnabled && typeof window !== 'undefined') {
+        const { worker } = await import('../mocks/browser');
 
-  // if (!mswReady) return null;
+        await worker.start({
+          onUnhandledRequest: 'bypass',
+        });
+
+        setMswReady(true);
+      } else {
+        setMswReady(true);
+      }
+    };
+
+    init();
+  }, []);
+
+  if (!mswReady) return null;
 
   return <>{children}</>;
 }
