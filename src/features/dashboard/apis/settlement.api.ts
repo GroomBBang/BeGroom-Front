@@ -1,5 +1,5 @@
 import axiosInstance from '@/shared/apis';
-import { CommonSuccessDto } from '@/shared/types/response';
+import { CommonSuccessDto } from '@/shared/types/response/CommonSuccessDto';
 import {
   DashboardPeriodType,
   FetchSettlementDataDTO,
