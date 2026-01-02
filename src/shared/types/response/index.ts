@@ -1,6 +1,3 @@
-import { CommonErrorDto } from './CommonErrorDto';
-import { CommonSuccessDto } from './CommonSuccessDto';
+import { CommonDto } from './CommonDto';
 
-export type { CommonErrorDto, CommonSuccessDto };
-export type ApiSuccess<T> = CommonSuccessDto<T>;
-export type ApiError = CommonErrorDto;
+export type CommonApiDto = CommonDto;

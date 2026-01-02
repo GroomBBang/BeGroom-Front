@@ -33,10 +33,15 @@ export default function NotificationList({ notifications }: Props) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      {notifications.map((item) => (
+    <div className="w-full h-full overflow-y-auto p-4">
+      {notifications?.length === 0 && (
+        <div className="flex flex-col items-center justify-center h-40">
+          <p className="text-t3 text-gray-500">새로운 알림이 없습니다.</p>
+        </div>
+      )}
+      {(notifications || []).map((item, index) => (
         <div
-          key={item.id}
+          key={item.id || index}
           className={`relative flex gap-4 rounded-xl border border-gray-100 p-5 transition-all ${item.isRead ? 'bg-white' : 'bg-primary-50/30'} cursor-pointer hover:border-gray-200 hover:shadow-sm`}
         >
           <div className="shrink-0">{renderIcon(item.type)}</div>

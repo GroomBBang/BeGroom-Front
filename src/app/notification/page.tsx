@@ -19,9 +19,7 @@ export default function NotificationPage() {
     });
   }, []);
 
-  const handleMarkAllRead = () => {
-    setData((prev) => prev.map((item) => ({ ...item, isRead: true })));
-  };
+  const handleMarkAllRead = () => {};
 
   return (
     <div className="mx-auto min-h-screen max-w-screen-md bg-background px-5 py-8">
