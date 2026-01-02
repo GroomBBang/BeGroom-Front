@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function MSWProvider({ children }: { children: React.ReactNode }) {
   const [mswReady, setMswReady] = useState(false);
@@ -22,10 +22,10 @@ export default function MSWProvider({ children }: { children: React.ReactNode })
       }
     };
 
-  //   init();
-  // }, []);
+    init();
+  }, []);
 
-  // if (!mswReady) return null;
+  if (!mswReady) return null;
 
   return <>{children}</>;
 }
