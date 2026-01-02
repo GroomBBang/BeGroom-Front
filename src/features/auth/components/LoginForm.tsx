@@ -1,12 +1,10 @@
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import TextInput from '@/shared/components/common/TextInput';
-
 import { useState } from 'react';
 import MemberTypeSelector from './MemberTypeSelector';
 
 export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
   const { login } = useAuth();
-
   const [userType, setUserType] = useState<'USER' | 'SELLER'>('USER');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

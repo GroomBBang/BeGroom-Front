@@ -1,13 +1,15 @@
 'use client';
 
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 import { Bell, ChevronDown, Search, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 export default function Header() {
-  const { isLogin, logout } = useAuth();
+  const { logout } = useAuth();
+  const { isLoggedIn, userInfo, unreadNotisCount } = useAuthStore();
   const [q, setQ] = useState('');
 
   const [open, setOpen] = useState(false);
@@ -42,9 +44,8 @@ export default function Header() {
 
   return (
     <header className="w-full bg-background">
-      {/* Top utility bar */}
       <div className="mx-auto flex h-10 max-w-6xl items-center justify-end px-4 text-xs">
-        {!isLogin ? (
+        {!isLoggedIn ? (
           <>
             <Link
               href="/auth?mode=login"
@@ -67,6 +68,7 @@ export default function Header() {
               aria-haspopup="menu"
               aria-expanded={open}
             >
+              {userInfo?.name} 님
               <ChevronDown size={16} className="text-muted-foreground" />
             </button>
 
@@ -146,14 +148,18 @@ export default function Header() {
           {/* Right icons (모바일/데스크탑 동일) */}
           <div className="flex items-center justify-end gap-2">
             {/* Notification */}
-            <Link
-              href="/notification"
-              aria-label="알림"
-              className="relative grid h-10 w-10 place-items-center rounded-full hover:bg-muted"
-            >
-              <Bell size={22} />
-              {/* <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" /> */}
-            </Link>
+            {isLoggedIn && (
+              <Link
+                href="/notification"
+                aria-label="알림"
+                className="relative grid h-10 w-10 place-items-center rounded-full hover:bg-muted"
+              >
+                <Bell size={22} />
+                {unreadNotisCount > 0 && (
+                  <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" />
+                )}
+              </Link>
+            )}
 
             {/* Cart */}
             <Link
