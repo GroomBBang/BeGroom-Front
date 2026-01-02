@@ -1,33 +1,14 @@
 'use client';
 
+import { useAuth } from '@/features/auth/hooks/useAuth';
 import { Bell, ChevronDown, Search, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
-const AUTH_KEY = 'begroom_auth_v1';
-
-type AuthState = { isLoggedIn: false } | { isLoggedIn: true; name: string };
-
-function readAuth(): AuthState {
-  if (typeof window === 'undefined') return { isLoggedIn: false };
-  try {
-    const raw = localStorage.getItem(AUTH_KEY);
-    return raw ? (JSON.parse(raw) as AuthState) : { isLoggedIn: false };
-  } catch {
-    return { isLoggedIn: false };
-  }
-}
-
-function writeAuth(next: AuthState) {
-  try {
-    localStorage.setItem(AUTH_KEY, JSON.stringify(next));
-  } catch {}
-}
-
 export default function Header() {
+  const { isLogin, logout } = useAuth();
   const [q, setQ] = useState('');
-  const [auth, setAuth] = useState<AuthState>({ isLoggedIn: false });
 
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -41,10 +22,6 @@ export default function Header() {
   };
 
   useEffect(() => {
-    setAuth(readAuth());
-  }, []);
-
-  useEffect(() => {
     const onDown = (e: MouseEvent) => {
       if (!menuRef.current) return;
       if (!menuRef.current.contains(e.target as Node)) setOpen(false);
@@ -55,15 +32,11 @@ export default function Header() {
 
   const handleLogin = (e: React.MouseEvent) => {
     e.preventDefault();
-    const next: AuthState = { isLoggedIn: true, name: '정윤석' };
-    writeAuth(next);
-    setAuth(next);
+    router.push('/auth?mode=login');
   };
 
   const handleLogout = () => {
-    const next: AuthState = { isLoggedIn: false };
-    writeAuth(next);
-    setAuth(next);
+    logout();
     setOpen(false);
   };
 
@@ -71,7 +44,7 @@ export default function Header() {
     <header className="w-full bg-background">
       {/* Top utility bar */}
       <div className="mx-auto flex h-10 max-w-6xl items-center justify-end px-4 text-xs">
-        {!auth.isLoggedIn ? (
+        {!isLogin ? (
           <>
             <Link
               href="/auth?mode=login"
@@ -94,7 +67,6 @@ export default function Header() {
               aria-haspopup="menu"
               aria-expanded={open}
             >
-              <span>{auth.name} 님</span>
               <ChevronDown size={16} className="text-muted-foreground" />
             </button>
 
@@ -180,7 +152,7 @@ export default function Header() {
               className="relative grid h-10 w-10 place-items-center rounded-full hover:bg-muted"
             >
               <Bell size={22} />
-              <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" />
+              {/* <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" /> */}
             </Link>
 
             {/* Cart */}

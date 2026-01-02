@@ -1,14 +1,9 @@
-import { ApiError, ApiSuccess } from '@/shared/types/response';
+import { CommonApiDto } from '@/shared/types/response';
+import { error } from 'console';
 
-const success: ApiSuccess<{ id: number }> = {
+const success: CommonApiDto = {
   statusCode: 200,
   message: 'Success',
-  result: { id: 1 },
-};
-
-const error: ApiError = {
-  statusCode: 400,
-  statusMessage: 'Bad Request',
 };
 
 console.log('Types work!', success, error);

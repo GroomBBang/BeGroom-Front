@@ -6,11 +6,15 @@ export default function TextInput({
   type = 'text',
   placeholder,
   required = false,
+  value,
+  onChange,
 }: {
   label: string;
   type?: string;
   placeholder: string;
   required?: boolean;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === 'password';
@@ -27,6 +31,8 @@ export default function TextInput({
         <input
           type={inputType}
           placeholder={placeholder}
+          value={value}
+          onChange={onChange}
           className="w-full rounded-md border border-gray-300 px-4 py-3 text-sm placeholder-gray-400 focus:border-[#5f0080] focus:outline-none"
         />
         {isPassword && (

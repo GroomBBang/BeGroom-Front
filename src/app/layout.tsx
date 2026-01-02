@@ -1,6 +1,7 @@
 import QuickMenu from '@/features/user/components/QuickMenu';
 import MSWProvider from '@/providers/MSWProvider';
 import ToastProvider from '@/providers/ToastProvider';
+import SSEConnection from '@/shared/components/common/SSEConnection';
 import Header from '@/shared/components/layout/Header';
 import type { Metadata } from 'next';
 import './globals.css';
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen bg-background text-foreground antialiased">
         <Header />
         <MSWProvider>
+          <SSEConnection />
           <div className="relative">
             {children}
             <div className="fixed top-[25%] right-[30px] hidden xl:block">
