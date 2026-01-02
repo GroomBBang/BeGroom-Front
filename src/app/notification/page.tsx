@@ -14,7 +14,7 @@ export default function NotificationPage() {
 
   useEffect(() => {
     fetchNotification().then((response) => {
-      setData(response);
+      setData(response.result.notification);
       setIsLoading(false);
     });
   }, []);
