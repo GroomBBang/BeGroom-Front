@@ -6,11 +6,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import authAPI from '../apis/auth.api';
 import { useAuthStore } from '../stores/useAuthStore';
-import {
-  LoginRequestDTO,
-  MemberRegisterRequestDTO,
-  SellerRegisterRequestDTO,
-} from '../types/request';
+import { LoginRequestDTO, RegisterRequestDTO } from '../types/request';
 
 export const useAuth = () => {
   const router = useRouter();
@@ -39,28 +35,20 @@ export const useAuth = () => {
       throw error;
     }
   };
-  const memberRegister = async (data: MemberRegisterRequestDTO) => {
+  const register = async (data: RegisterRequestDTO) => {
     setIsLoading(true);
     try {
-      const response = await authAPI().memberRegister(data);
+      const response = await authAPI().register(data);
       setIsLoading(false);
+      toast.success('회원가입 성공');
+      router.push('/auth?mode=login');
       return response;
     } catch (error) {
       setIsLoading(false);
       throw error;
     }
   };
-  const sellerRegister = async (data: SellerRegisterRequestDTO) => {
-    setIsLoading(true);
-    try {
-      const response = await authAPI().sellerRegister(data);
-      setIsLoading(false);
-      return response;
-    } catch (error) {
-      setIsLoading(false);
-      throw error;
-    }
-  };
+
   const logout = () => {
     Cookies.remove(STORAGE_KEY.JWT_TOKEN);
     setIsLogin(false);
@@ -70,8 +58,7 @@ export const useAuth = () => {
 
   return {
     login,
-    memberRegister,
-    sellerRegister,
+    register,
     logout,
     isLogin,
     isLoading,

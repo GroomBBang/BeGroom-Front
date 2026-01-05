@@ -15,7 +15,7 @@ export default function PointsContent() {
 
   useEffect(() => {
     fetchMyPoints().then((response) => {
-      setData(response);
+      setData(response.result);
       setIsLoading(false);
     });
   }, []);

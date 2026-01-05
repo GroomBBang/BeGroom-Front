@@ -1,10 +1,10 @@
 import { STORAGE_KEY } from '@/shared/constants/storage';
-import axios, { InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
+import { CommonErrorResponse, CommonSuccessResponse } from '../types/response/CommonDto';
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
-  withCredentials: true,
 });
 
 const attachAccessToken = (config: InternalAxiosRequestConfig, token: string) => {
@@ -22,12 +22,24 @@ axiosInstance.interceptors.request.use(
 );
 
 axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // if (error.response?.status === 401) {
-    //   window.location.replace('/auth?mode=login');
-    // }
-    return Promise.reject(error);
+  (response: AxiosResponse<CommonSuccessResponse<unknown>>) => {
+    return response;
+  },
+
+  (error: AxiosError<CommonErrorResponse>) => {
+    if (error.response && error.response.data) {
+      const errorData = error.response.data;
+
+      return Promise.reject({
+        code: errorData.status_code,
+        message: errorData.status_message,
+      });
+    }
+
+    return Promise.reject({
+      code: 500,
+      message: 'Network Error',
+    });
   },
 );
 

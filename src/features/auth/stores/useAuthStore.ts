@@ -2,13 +2,13 @@ import Cookies from 'js-cookie';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-interface UserInfo {
+export interface UserInfo {
   id: number;
   email: string;
   name: string;
 }
 
-interface AuthState {
+export interface AuthState {
   userInfo: UserInfo | null;
   isLoggedIn: boolean;
   unreadNotisCount: number;
