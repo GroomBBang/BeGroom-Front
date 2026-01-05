@@ -3,18 +3,18 @@
 import notificationAPI from '@/features/notification/apis/notification.api';
 import NotificationHeader from '@/features/notification/components/NotificationHeader';
 import NotificationList from '@/features/notification/components/NotificationList';
-import { NotificationItem } from '@/features/notification/types/model';
+import { NotificationResponseDto } from '@/features/notification/types/response';
 import { Skeleton } from '@/shared/components/common/skeleton';
 import { useEffect, useState } from 'react';
 
 export default function NotificationPage() {
   const { fetchNotification } = notificationAPI();
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState<NotificationItem[] | null>(null);
+  const [data, setData] = useState<NotificationResponseDto | null>(null);
 
   useEffect(() => {
     fetchNotification().then((response) => {
-      setData(response.result.notification);
+      setData(response);
       setIsLoading(false);
     });
   }, []);
@@ -32,7 +32,7 @@ export default function NotificationPage() {
           ))}
         </div>
       ) : (
-        <NotificationList notifications={data || []} />
+        <NotificationList notifications={data?.result.notification || []} />
       )}
     </div>
   );

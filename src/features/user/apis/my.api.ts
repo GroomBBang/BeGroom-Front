@@ -1,4 +1,4 @@
-import axiosInstance from '@/shared/apis';
+import http from '@/shared/apis/http';
 import {
   MyOrdersResponseDTO,
   MyPointsResponseDTO,
@@ -7,24 +7,24 @@ import {
 } from '../types/response';
 
 export default function myAPI() {
-  const fetchMyProfile = async (): Promise<MyProfileResponseDTO> => {
-    const response = await axiosInstance.get('/my/profile');
-    return response.data;
+  const fetchMyProfile = async () => {
+    const response = await http.get<MyProfileResponseDTO>('/members/profile');
+    return response;
   };
 
-  const fetchMyPoints = async (): Promise<MyPointsResponseDTO> => {
-    const response = await axiosInstance.get('/my/points');
-    return response.data;
+  const fetchMyPoints = async () => {
+    const response = await http.get<MyPointsResponseDTO>('/members/points');
+    return response;
   };
 
-  const fetchMyOrders = async (): Promise<MyOrdersResponseDTO> => {
-    const response = await axiosInstance.get('/my/orders');
-    return response.data;
+  const fetchMyOrders = async () => {
+    const response = await http.get<MyOrdersResponseDTO>('/members/orders');
+    return response;
   };
 
-  const fetchMyWish = async (): Promise<MyWishResponseDTO> => {
-    const response = await axiosInstance.get('/my/wish');
-    return response.data;
+  const fetchMyWish = async () => {
+    const response = await http.get<MyWishResponseDTO>('/members/wish');
+    return response;
   };
 
   return {

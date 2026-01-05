@@ -1,8 +1,8 @@
 import axiosInstance from '@/shared/apis';
-import { NotificationItem } from '../types/model';
+import { NotificationResponseDto } from '../types/response';
 
 export default function notificationAPI() {
-  const fetchNotification = async (): Promise<NotificationItem[]> => {
+  const fetchNotification = async (): Promise<NotificationResponseDto> => {
     const response = await axiosInstance.get('/noti');
     return response.data;
   };

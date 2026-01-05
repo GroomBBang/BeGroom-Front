@@ -1,18 +1,33 @@
 import TextInput from '@/shared/components/common/TextInput';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { useAuth } from '../hooks/useAuth';
 import MemberTypeSelector from './MemberTypeSelector';
 
 export default function SignupForm({ onSwitch }: { onSwitch: () => void }) {
-  const router = useRouter();
+  const { register } = useAuth();
   const [userType, setUserType] = useState<'USER' | 'SELLER'>('USER');
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+
+  const handleRegister = () => {
+    if (password !== passwordConfirm) {
+      toast.error('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    register({
+      email,
+      password,
+      name,
+      phoneNumber,
+      role: userType,
+    });
+  };
 
   return (
     <div className="w-full max-w-[500px] rounded-2xl bg-white p-8 shadow-lg md:p-12">
@@ -24,18 +39,44 @@ export default function SignupForm({ onSwitch }: { onSwitch: () => void }) {
       <form className="flex flex-col gap-5">
         <MemberTypeSelector userType={userType} setUserType={setUserType} />
 
-        <TextInput label="이메일" placeholder="example@email.com" required />
-        <TextInput label="비밀번호" type="password" placeholder="8자 이상 입력하세요" required />
+        <TextInput
+          label="이메일"
+          placeholder="example@email.com"
+          required
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+        />
+        <TextInput
+          label="비밀번호"
+          type="password"
+          placeholder="8자 이상 입력하세요"
+          required
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+        />
         <TextInput
           label="비밀번호 확인"
           type="password"
           placeholder="비밀번호를 다시 입력하세요"
           required
+          onChange={(e) => setPasswordConfirm(e.target.value)}
+          value={passwordConfirm}
         />
-        <TextInput label="이름" placeholder="이름을 입력하세요" required />
-        <TextInput label="휴대폰 번호" placeholder="010-0000-0000" required />
+        <TextInput
+          label="이름"
+          placeholder="이름을 입력하세요"
+          required
+          onChange={(e) => setName(e.target.value)}
+          value={name}
+        />
+        <TextInput
+          label="휴대폰 번호"
+          placeholder="010-0000-0000"
+          required
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          value={phoneNumber}
+        />
 
-        {/* 약관 동의 */}
         <div className="mt-2 flex flex-col gap-2">
           <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
             <input type="checkbox" className="accent-[#5f0080]" />
@@ -53,10 +94,7 @@ export default function SignupForm({ onSwitch }: { onSwitch: () => void }) {
 
         <button
           type="button"
-          onClick={() => {
-            toast.success('회원가입 성공');
-            router.push('/auth?mode=login');
-          }}
+          onClick={handleRegister}
           className="mt-4 w-full rounded-md bg-[#5f0080] py-3.5 text-base font-bold text-white transition-colors hover:bg-[#4a0063]"
         >
           회원가입

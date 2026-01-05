@@ -1,11 +1,11 @@
-import { ChevronRight } from 'lucide-react';
 import { MyOrdersResponseDTO } from '../types/response';
 
 interface MyOrderHistoryProps {
   orders: MyOrdersResponseDTO['orders'];
+  onRefundModal: () => void;
 }
 
-export default function MyOrderHistory({ orders }: MyOrderHistoryProps) {
+export default function MyOrderHistory({ orders, onRefundModal }: MyOrderHistoryProps) {
   return (
     <div className="flex flex-col gap-4">
       {orders?.map((order) => (
@@ -15,10 +15,19 @@ export default function MyOrderHistory({ orders }: MyOrderHistoryProps) {
               <span className="font-medium text-gray-800">주문일자: {order.created_at}</span>
               <span className="text-sm text-gray-400">주문번호: {order.order_number}</span>
             </div>
-            <button className="flex items-center gap-1 rounded bg-primary-50 px-3 py-1.5 text-xs font-bold text-primary-600 transition-colors hover:bg-primary-100">
-              {order.status}
-              <ChevronRight size={14} />
-            </button>
+            <div className="flex items-center gap-2">
+              <button className="flex items-center gap-1 rounded bg-primary-50 px-3 py-1.5 text-xs font-bold text-primary-600 transition-colors hover:bg-primary-100">
+                {order.status}
+              </button>
+              {order.status === 'COMPLETED' && (
+                <button
+                  onClick={onRefundModal}
+                  className="flex items-center gap-1 rounded bg-red-50 px-3 py-1.5 text-xs font-bold text-red-600 transition-colors hover:bg-red-100"
+                >
+                  환불 요청
+                </button>
+              )}
+            </div>
           </div>
           <div className="mx-5 h-px bg-gray-100"></div>
           <div className="flex gap-4 p-5">

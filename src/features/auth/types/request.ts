@@ -4,17 +4,10 @@ export interface LoginRequestDTO {
   role: string;
 }
 
-export interface MemberRegisterRequestDTO {
+export interface RegisterRequestDTO {
   email: string;
   name: string;
   password: string;
   phoneNumber: string;
   role: string;
-}
-
-export interface SellerRegisterRequestDTO {
-  email: string;
-  name: string;
-  password: string;
-  phoneNumber: string;
 }

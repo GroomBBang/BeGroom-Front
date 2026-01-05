@@ -26,7 +26,7 @@ export default function ProfileContent() {
 
   useEffect(() => {
     fetchMyProfile().then((response) => {
-      setData(response);
+      setData(response.result);
     });
   }, []);
 

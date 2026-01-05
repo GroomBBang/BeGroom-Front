@@ -1,5 +1,7 @@
 export type NotificationType = 'delivery' | 'coupon' | 'event' | 'system';
 
+
+
 export interface NotificationItem {
   id: number;
   type: NotificationType;

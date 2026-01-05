@@ -16,8 +16,6 @@ export interface MyPointsResponseDTO {
     tx_type: string;
     amount: number;
     balance_after: number;
-    reference_type: string;
-    reference_id: number;
     created_at: string;
     description: string;
   }[];

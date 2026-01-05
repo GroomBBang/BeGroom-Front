@@ -3,6 +3,7 @@ import MSWProvider from '@/providers/MSWProvider';
 import ToastProvider from '@/providers/ToastProvider';
 import SSEConnection from '@/shared/components/common/SSEConnection';
 import Header from '@/shared/components/layout/Header';
+import HideOnPopup from '@/shared/components/layout/HideOnPopup';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -23,7 +24,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body className="min-h-screen bg-background text-foreground antialiased">
-        <Header />
+        <HideOnPopup>
+          <Header />
+        </HideOnPopup>
+
         <MSWProvider>
           <SSEConnection />
           <div className="relative">

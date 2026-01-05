@@ -1,5 +1,5 @@
+import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 import { menus } from '../constants/sidebar';
-import { USER_PROFILE } from '../mocks/my';
 
 export type MenuType = 'orders' | 'coupons' | 'profile' | 'wishlist' | 'points';
 
@@ -9,16 +9,18 @@ interface MySidebarProps {
 }
 
 export default function MySidebar({ activeMenu, onMenuChange }: MySidebarProps) {
+  const { userInfo } = useAuthStore();
+
   return (
     <aside className="w-full flex-shrink-0 md:w-[250px]">
       <div className="h-fit rounded-xl border border-gray-200 bg-white p-6">
         <div className="mb-6 flex items-center gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-800 text-t5 font-medium text-white">
-            {USER_PROFILE.name.charAt(0)}
+            {userInfo?.name.charAt(0)}
           </div>
           <div className="overflow-hidden">
-            <div className="truncate font-bold text-gray-900">{USER_PROFILE.name}</div>
-            <div className="truncate text-t3 text-gray-500">{USER_PROFILE.email}</div>
+            <div className="truncate font-bold text-gray-900">{userInfo?.name}</div>
+            <div className="truncate text-t3 text-gray-500">{userInfo?.email}</div>
           </div>
         </div>
         <div className="my-4 h-px bg-gray-100"></div>

@@ -37,7 +37,7 @@ export default function QuickMenu() {
           href="#"
           className="border-b border-gray-100 py-2 text-center text-[11px] text-gray-700 hover:text-[#5f0080]"
         >
-          컬리 큐레이터
+          비구름 큐레이터
         </a>
       </div>
 
