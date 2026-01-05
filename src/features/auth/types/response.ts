@@ -1,11 +1,7 @@
-import { CommonApiDto } from '@/shared/types/response';
-
-export interface LoginResponseDTO extends CommonApiDto {
-  result: {
-    token: string;
-    id: number;
-    email: string;
-    name: string;
-    role: string;
-  };
+export interface LoginResponseDTO {
+  token: string;
+  id: number;
+  email: string;
+  name: string;
+  role: string;
 }
