@@ -1,3 +1,4 @@
+import RefundModal from '@/shared/components/common/BaseModal';
 import { Skeleton } from '@/shared/components/common/skeleton';
 import { useEffect, useState } from 'react';
 import myAPI from '../apis/my.api';
@@ -8,6 +9,7 @@ export default function OrdersContent() {
   const { fetchMyOrders } = myAPI();
   const [data, setData] = useState<MyOrdersResponseDTO | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefundModalOpen, setIsRefundModalOpen] = useState(false);
 
   useEffect(() => {
     fetchMyOrders().then((response) => {
@@ -31,7 +33,21 @@ export default function OrdersContent() {
           </div>
         </div>
       ) : (
-        <MyOrderHistory orders={data?.orders || []} />
+        <MyOrderHistory
+          orders={data?.orders || []}
+          onRefundModal={() => setIsRefundModalOpen(true)}
+        />
+      )}
+      {isRefundModalOpen && (
+        <RefundModal
+          isOpen={isRefundModalOpen}
+          onClose={() => setIsRefundModalOpen(false)}
+          onConfirm={() => setIsRefundModalOpen(false)}
+          title="환불 요청"
+          message="환불을 요청하시겠습니까?"
+          confirmText="환불하기"
+          cancelText="취소하기"
+        />
       )}
     </div>
   );
