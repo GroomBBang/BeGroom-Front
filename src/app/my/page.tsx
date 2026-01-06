@@ -28,23 +28,6 @@ export default function MyPage() {
     }
   };
 
-  const getActiveLabel = () => {
-    switch (activeMenu) {
-      case 'orders':
-        return '주문 내역';
-      case 'coupons':
-        return '쿠폰';
-      case 'profile':
-        return '회원정보';
-      case 'wishlist':
-        return '위시리스트';
-      case 'points':
-        return '적립금';
-      default:
-        return '회원정보';
-    }
-  };
-
   return (
     <div className="mx-auto min-h-screen max-w-screen-xl bg-background px-5 py-10">
       <h1 className="mb-8 text-t8 font-bold text-gray-900">마이페이지</h1>

@@ -2,9 +2,9 @@
 
 import Spinner from '@/shared/components/common/Spinner';
 import { AlertCircle } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import myAPI from '../apis/my.api';
-import { MyPointsResponseDTO } from '../types/response';
+import { MyPointsResponseDTO, TransactionDto } from '../types/response';
 import MyCurrentPoint from './MyCurrentPoint';
 import MyPointHistory from './MyPointHistory';
 
@@ -12,14 +12,43 @@ export default function PointsContent() {
   const { fetchMyPoints } = myAPI();
   const [data, setData] = useState<MyPointsResponseDTO | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isChargeModalOpen, setIsChargeModalOpen] = useState(false);
+  const [balance, setBalance] = useState(0);
+  const [transactions, setTransactions] = useState<TransactionDto[]>([]);
+  const [page, setPage] = useState(0);
+  const [isLast, setIsLast] = useState(false);
+
+  const loadTransactions = useCallback(async (pageNum: number) => {
+    try {
+      setIsLoading(true);
+      const response = await fetchMyPoints(pageNum, 10);
+      const { wallet, transactions: txPage } = response.result;
+
+      setBalance(wallet.balance);
+      setIsLast(txPage.last);
+
+      if (pageNum === 0) {
+        setTransactions(txPage.content);
+      } else {
+        setTransactions((prev) => [...prev, ...txPage.content]);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    fetchMyPoints().then((response) => {
-      setData(response.result);
-      setIsLoading(false);
-    });
-  }, []);
+    loadTransactions(0);
+  }, [loadTransactions]);
+
+  const handleLoadMore = () => {
+    if (!isLast) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      loadTransactions(nextPage);
+    }
+  };
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -41,7 +70,7 @@ export default function PointsContent() {
 
   return (
     <div className="flex flex-col gap-6">
-      <MyCurrentPoint balance={data?.wallet.balance || 0} />
+      <MyCurrentPoint balance={balance || 0} />
 
       <div className="rounded-xl border border-gray-200 bg-white">
         <div className="border-b border-gray-100 p-5">
@@ -53,8 +82,18 @@ export default function PointsContent() {
             <Spinner size="lg" />
             <p className="text-sm text-gray-500">거래 이력을 불러오는 중입니다...</p>
           </div>
-        ) : data?.transactions?.length !== undefined && data?.transactions.length > 0 ? (
-          <MyPointHistory transactions={data.transactions} />
+        ) : transactions !== undefined && transactions.length > 0 ? (
+          <>
+            <MyPointHistory transactions={transactions} />
+            {!isLast && !isLoading && (
+              <button
+                onClick={handleLoadMore}
+                className="mt-6 w-full rounded-xl bg-gray-100 py-4 font-medium text-gray-600 hover:bg-gray-200"
+              >
+                더 보기
+              </button>
+            )}
+          </>
         ) : (
           <div className="flex h-[200px] flex-col items-center justify-center text-gray-400">
             <AlertCircle size={40} className="mb-2 text-gray-300" strokeWidth={1.5} />

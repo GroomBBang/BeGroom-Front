@@ -12,11 +12,12 @@ export default function myAPI() {
     return response;
   };
 
-  const fetchMyPoints = async () => {
-    const response = await http.get<MyPointsResponseDTO>('/members/points');
+  const fetchMyPoints = async (page: number = 0, size: number = 10) => {
+    const response = await http.get<MyPointsResponseDTO>(
+      `/members/wallet?page=${page}&size=${size}`,
+    );
     return response;
   };
-
   const fetchMyOrders = async () => {
     const response = await http.get<MyOrdersResponseDTO>('/members/orders');
     return response;

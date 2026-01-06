@@ -6,19 +6,30 @@ export interface MyProfileResponseDTO {
   joinDate: string;
 }
 
+export interface TransactionDto {
+  id: number;
+  tx_type: 'CHARGE' | 'CHARGE';
+  amount: number;
+  balance_after: number;
+  created_at: string;
+  description: string | null;
+}
+
+export interface TransactionPageDto {
+  content: TransactionDto[];
+  last: boolean;
+  totalPages: number;
+  totalElements: number;
+  number: number;
+  size: number;
+}
+
 export interface MyPointsResponseDTO {
   wallet: {
     id: number;
     balance: number;
   };
-  transactions: {
-    id: number;
-    tx_type: string;
-    amount: number;
-    balance_after: number;
-    created_at: string;
-    description: string;
-  }[];
+  transactions: TransactionPageDto;
 }
 
 export interface MyOrdersResponseDTO {
@@ -45,4 +56,13 @@ export interface MyWishResponseDTO {
     description: string;
     likes: number;
   }[];
+}
+
+export interface FetchWalletDTO {
+  balance: number;
+}
+
+export interface ChargeCashtDTO {
+  pointChargeId: number;
+  balance: number;
 }

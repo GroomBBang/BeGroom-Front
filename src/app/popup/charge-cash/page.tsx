@@ -1,21 +1,25 @@
-// app/cash/charge-popup/page.jsx (Next.js app router 예시)
-// 또는 일반 React 라우터의 해당 페이지 컴포넌트
 'use client';
 
-import { useState } from 'react';
-
-const CHARGE_OPTIONS = [
-  { label: '+ 1만원', value: 10000 },
-  { label: '+ 3만원', value: 30000 },
-  { label: '+ 5만원', value: 50000 },
-  { label: '+ 10만원', value: 100000 },
-  { label: '+ 30만원', value: 300000 },
-  { label: '+ 50만원', value: 500000 },
-];
+import cashAPI from '@/features/user/apis/cash.api';
+import { CHARGE_OPTIONS } from '@/features/user/constants/cash';
+import NumberFlow from '@number-flow/react';
+import { useEffect, useState } from 'react';
 
 export default function CashChargePopupContent() {
+  const { fetchBalance, chargeCash } = cashAPI();
   const [selectedAmount, setSelectedAmount] = useState(0);
-  const [currentBalance] = useState(5000);
+  const [currentBalance, setCurrentBalance] = useState(0);
+
+  useEffect(() => {
+    const fetchCashPopup = async () => {
+      try {
+        const response = await fetchBalance();
+        setCurrentBalance(response.result.balance);
+      } catch {}
+    };
+
+    fetchCashPopup();
+  }, []);
 
   const handleAddAmount = (amount: number) => {
     setSelectedAmount((prev) => prev + amount);
@@ -29,9 +33,8 @@ export default function CashChargePopupContent() {
     if (selectedAmount <= 0) return;
 
     try {
-      // await chargeCashApi(selectedAmount);
+      await chargeCash(selectedAmount);
 
-      console.log(`${selectedAmount}원 충전 요청 완료`);
       alert(`${selectedAmount.toLocaleString()}원 충전이 완료되었습니다.`);
 
       if (window.opener && !window.opener.closed) {
@@ -48,15 +51,16 @@ export default function CashChargePopupContent() {
 
   return (
     <div className="min-h-screen bg-background text-foreground p-5 flex flex-col">
-      {/* 헤더 */}
       <header className="mb-6">
         <h1 className="text-xl font-bold text-gray-900">캐시 충전</h1>
       </header>
 
-      {/* 보유 잔액 표시 */}
       <div className="bg-gray-50 rounded-lg p-4 mb-6 flex justify-between items-center border border-gray-200">
         <span className="text-gray-600 font-medium">보유 캐시</span>
-        <span className="text-lg font-bold text-gray-900">API 호출 원</span>
+        <div className="text-lg font-bold text-gray-900">
+          <NumberFlow value={currentBalance} format={{ useGrouping: true }} />
+          <span> 원</span>
+        </div>
       </div>
 
       <main className="flex-grow">

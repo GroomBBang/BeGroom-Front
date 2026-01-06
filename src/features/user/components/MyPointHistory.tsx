@@ -1,7 +1,7 @@
-import { MyPointsResponseDTO } from '../types/response';
+import { TransactionDto } from '../types/response';
 
 interface Props {
-  transactions: MyPointsResponseDTO['transactions'];
+  transactions: TransactionDto[];
 }
 
 export default function MyPointHistory({ transactions }: Props) {
