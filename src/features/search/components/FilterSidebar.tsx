@@ -1,7 +1,10 @@
+'use client';
+
+import { FiltersStateType } from '@/features/product/hooks/useProductFilter';
 import { Check, ChevronDown, ChevronUp, RefreshCw, Search } from 'lucide-react';
 import { useState } from 'react';
 
-// 필터 섹션 컴포넌트 (재사용)
+// 필터 섹션 컴포넌트
 const FilterSection = ({
   title,
   isOpen = true,
@@ -30,12 +33,24 @@ const FilterSection = ({
   );
 };
 
-// 체크박스 아이템 컴포넌트
-const CheckItem = ({ label, count }: { label: string; count: number }) => (
+// 체크박스 아이템
+const CheckItem = ({
+  label,
+  count,
+  checked,
+  onClick,
+}: {
+  label: string;
+  count: number;
+  checked?: boolean;
+  onClick?: () => void;
+}) => (
   <label className="flex items-center gap-2 py-2 cursor-pointer group">
     <div className="relative flex items-center">
       <input
         type="checkbox"
+        checked={checked}
+        onChange={onClick}
         className="peer h-5 w-5 appearance-none rounded-full border border-gray-300 checked:bg-[#5f0080] checked:border-transparent transition-colors"
       />
       <Check
@@ -48,23 +63,24 @@ const CheckItem = ({ label, count }: { label: string; count: number }) => (
   </label>
 );
 
-export default function FilterSidebar() {
+export default function FilterSidebar({ filtersState }: { filtersState: FiltersStateType }) {
+  const { filters, toggleBrand, toggleDelivery, togglePackaging, setIncludeSoldOut, resetFilters } =
+    filtersState;
+
   return (
     <aside className="w-[220px] shrink-0 hidden md:block">
       <div className="flex justify-between items-center pb-4 border-b border-gray-200">
         <span className="font-bold text-sm text-gray-900">필터</span>
-        <button className="flex items-center gap-1 text-[10px] text-gray-400">
+        <button
+          onClick={resetFilters}
+          className="flex items-center gap-1 text-[10px] text-gray-400"
+        >
           <RefreshCw size={10} />
           초기화
         </button>
       </div>
 
-      {/* 필터 항목들 */}
-      <FilterSection title="카테고리">
-        <CheckItem label="생수·얼음" count={15} />
-        <CheckItem label="탄산수" count={8} />
-      </FilterSection>
-
+      {/* 브랜드 */}
       <FilterSection title="브랜드">
         <div className="mb-3 flex overflow-hidden rounded border border-gray-200 bg-gray-50">
           <input
@@ -76,35 +92,85 @@ export default function FilterSidebar() {
           </button>
         </div>
         <div className="max-h-40 overflow-y-auto scrollbar-hide">
-          <CheckItem label="가야농장" count={3} />
-          <CheckItem label="갈배사이다" count={2} />
-          <CheckItem label="곡물도감" count={2} />
-          <CheckItem label="골든서클" count={5} />
-          <CheckItem label="곰표" count={1} />
+          <CheckItem
+            label="가야농장"
+            count={3}
+            checked={filters.brandIds.includes(1)}
+            onClick={() => toggleBrand(1)}
+          />
+          <CheckItem
+            label="갈배사이다"
+            count={2}
+            checked={filters.brandIds.includes(2)}
+            onClick={() => toggleBrand(2)}
+          />
+          <CheckItem
+            label="곡물도감"
+            count={2}
+            checked={filters.brandIds.includes(3)}
+            onClick={() => toggleBrand(3)}
+          />
+          <CheckItem
+            label="골든서클"
+            count={5}
+            checked={filters.brandIds.includes(4)}
+            onClick={() => toggleBrand(4)}
+          />
+          <CheckItem
+            label="곰표"
+            count={1}
+            checked={filters.brandIds.includes(5)}
+            onClick={() => toggleBrand(5)}
+          />
         </div>
-        <button className="mt-2 w-full text-center text-xs text-gray-400 border-t border-gray-100 pt-2">
-          브랜드 더보기 {'>'}
-        </button>
       </FilterSection>
 
-      <FilterSection title="가격">
-        <CheckItem label="4,800원 미만" count={141} />
-        <CheckItem label="4,800원 ~ 7,980원" count={148} />
-        <CheckItem label="7,980원 ~ 14,900원" count={147} />
-        <CheckItem label="14,900원 이상" count={146} />
+      {/* 포장 타입 */}
+      <FilterSection title="포장타입" isOpen={false}>
+        <CheckItem
+          label="상온"
+          count={252}
+          checked={filters.packagingTypes.includes('ROOM')}
+          onClick={() => togglePackaging('ROOM')}
+        />
+        <CheckItem
+          label="냉장"
+          count={200}
+          checked={filters.packagingTypes.includes('COLD')}
+          onClick={() => togglePackaging('COLD')}
+        />
+        <CheckItem
+          label="냉동"
+          count={17}
+          checked={filters.packagingTypes.includes('FROZEN')}
+          onClick={() => togglePackaging('FROZEN')}
+        />
       </FilterSection>
 
-      <FilterSection title="혜택" isOpen={false}>
-        <CheckItem label="할인상품" count={275} />
-      </FilterSection>
-
-      <FilterSection title="유형" isOpen={false}>
-        <CheckItem label="Kurly Only" count={7} />
-      </FilterSection>
-
+      {/* 배송 */}
       <FilterSection title="배송" isOpen={false}>
-        <CheckItem label="샛별배송" count={510} />
-        <CheckItem label="판매자배송" count={59} />
+        <CheckItem
+          label="샛별배송"
+          count={510}
+          checked={filters.deliveryTypes.includes('DAWN')}
+          onClick={() => toggleDelivery('DAWN')}
+        />
+        <CheckItem
+          label="판매자배송"
+          count={59}
+          checked={filters.deliveryTypes.includes('SELLER')}
+          onClick={() => toggleDelivery('SELLER')}
+        />
+      </FilterSection>
+
+      {/* 옵션 */}
+      <FilterSection title="옵션" isOpen={false}>
+        <CheckItem
+          label="품절 상품 포함"
+          count={580}
+          checked={!filters.excludeSoldOut}
+          onClick={() => setIncludeSoldOut(!filters.excludeSoldOut)}
+        />
       </FilterSection>
     </aside>
   );

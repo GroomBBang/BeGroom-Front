@@ -1,16 +1,15 @@
 'use client';
 
-import { Product } from '@/features/product/types';
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { ProductCardType } from '../types/model';
 
-type Props = {
-  product: Product;
-  formatWon: (n: number) => string;
-};
+interface Props {
+  product: ProductCardType;
+}
 
-export default function ProductCard({ product: p, formatWon }: Props) {
+export default function ProductCard({ product }: Props) {
   const [liked, setLiked] = useState(false);
 
   const toggleLike = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -19,91 +18,69 @@ export default function ProductCard({ product: p, formatWon }: Props) {
     setLiked((prev) => !prev);
   };
 
+  // const displayLikes = product.productLikes + (liked ? 1 : 0);
+  const displayLikes = 5 + (liked ? 1 : 0);
+
   return (
-    <Link href={`/products/${p.id}`} className="block">
-      <article
-        className="
-        h-full
-        group relative overflow-hidden
-        rounded-lg
-        border border-border
-        bg-background
-        shadow-sm
-        transition
-        hover:shadow-md
-      "
-      >
-        {/* 이미지 영역 */}
-        <div className="relative flex aspect-[4/3] items-center justify-center bg-muted">
-          {p.imageUrls.length > 0 ? (
-            <img
-              src={p.imageUrls[0]}
-              alt={p.title}
-              className="h-full w-full object-cover"
-              loading="lazy"
-            />
-          ) : (
-            <span className="text-xs font-semibold text-muted-foreground">NO IMAGE</span>
-          )}
+    <Link href={`/products/${product.productId}`} className="group cursor-pointer">
+      {/* 이미지 */}
+      <div className="relative mb-2 overflow-hidden rounded bg-gray-100 aspect-[5/6]">
+        <img
+          src={product.mainImageUrl}
+          alt={product.name}
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
 
-          {/* ❤️ Hover 시 노출되는 버튼 */}
-          <button
-            type="button"
-            aria-label="찜하기"
-            onClick={toggleLike}
-            className="
-            absolute right-3 top-3
-            grid h-9 w-9 place-items-center
+        {/* 하트 버튼 (hover 노출) */}
+        <button
+          type="button"
+          aria-label="좋아요"
+          onClick={toggleLike}
+          className={`
+            absolute right-2 top-2
+            flex h-9 w-9 items-center justify-center
             rounded-full
-            bg-background/90
+            bg-white/90
             shadow
-            opacity-0
             transition
-            group-hover:opacity-100 
             cursor-pointer
-          "
-          >
-            <Heart
-              className={`h-5 w-5 transition ${
-                liked ? 'fill-orange-500 text-orange-500' : 'text-muted-foreground'
-              }`}
-            />
-          </button>
-        </div>
+            ${liked ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
+          `}
+        >
+          <Heart
+            className={`h-5 w-5 transition ${
+              liked ? 'fill-orange-500 text-orange-500' : 'text-gray-400'
+            }`}
+          />
+        </button>
+      </div>
 
-        {/* 콘텐츠 */}
-        <div className="p-4">
-          <div className="text-xs font-semibold text-muted-foreground">{p.categoryLabel}</div>
+      {/* 텍스트 영역 */}
+      <div className="flex flex-col gap-1">
+        <div className="text-sm font-medium text-gray-400">{product.brand}</div>
 
-          <div className="mt-1 line-clamp-2 text-sm font-bold text-foreground">{p.title}</div>
+        <h3 className="line-clamp-2 text-base leading-relaxed text-gray-900">{product.name}</h3>
 
-          <div className="mt-3 flex items-end gap-2">
-            {typeof p.discountRate === 'number' && (
-              <span className="text-sm font-extrabold text-orange-500">{p.discountRate}%</span>
-            )}
-            <span className="text-base font-extrabold text-foreground">{formatWon(p.price)}</span>
-          </div>
-
-          {typeof p.originalPrice === 'number' && (
-            <div className="mt-1 text-xs text-muted-foreground line-through">
-              {formatWon(p.originalPrice)}
-            </div>
+        <p className="line-clamp-1 text-xs text-gray-400">{product.shortDescription}</p>
+        {/* 가격 */}
+        <div className="flex items-center gap-2">
+          {product.discountRate && (
+            <span className="text-lg font-bold text-orange-500">{product.discountRate}%</span>
           )}
-
-          {/* 하단 좋아요 */}
-          <div className="mt-3 flex items-center gap-1.5 text-xs">
-            <Heart
-              aria-hidden
-              className={`h-4 w-4 ${
-                liked ? 'fill-orange-500 text-orange-500' : 'text-muted-foreground'
-              }`}
-            />
-            <span className={liked ? 'text-orange-500' : 'text-muted-foreground'}>
-              {p.likes + (liked ? 1 : 0)}
-            </span>
-          </div>
+          <span className="py-1 text-lg font-bold text-gray-900">
+            {(product.discountedPrice ?? product.salesPrice).toLocaleString()}원
+          </span>
         </div>
-      </article>
+
+        {/* ❤️ 좋아요 영역 */}
+        <div className="flex items-center gap-1 text-xs">
+          <Heart
+            aria-hidden
+            className={`h-4 w-4 ${liked ? 'fill-orange-500 text-orange-500' : 'text-gray-300'}`}
+          />
+          <span className={liked ? 'text-orange-500' : 'text-gray-400'}>{displayLikes}</span>
+        </div>
+      </div>
     </Link>
   );
 }

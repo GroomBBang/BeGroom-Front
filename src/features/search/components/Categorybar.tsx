@@ -6,7 +6,6 @@ import { useState } from 'react';
 
 export default function Categorybar() {
   const [activeCategoryId, setActiveCategoryId] = useState<string>('newYear');
-
   const activeCategory = CATEGORIES.find((c) => c.id === activeCategoryId);
 
   return (
@@ -17,8 +16,12 @@ export default function Categorybar() {
           const Icon = category.icon;
 
           return (
-            <li
+            <Link
               key={category.id}
+              href={{
+                pathname: `/categories/${category.id}`,
+                query: { sort: 'productId', direction: 'DESC', page: 0, size: 30 },
+              }}
               onMouseEnter={() => setActiveCategoryId(category.id)}
               className={`
                     flex cursor-pointer items-center gap-3 px-4 py-3.5 transition-colors
@@ -33,13 +36,7 @@ export default function Categorybar() {
               <span className={`text-sm ${isActive ? 'font-bold' : 'font-medium'}`}>
                 {category.label}
               </span>
-
-              {category.isNew && (
-                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-                  N
-                </span>
-              )}
-            </li>
+            </Link>
           );
         })}
       </ul>
@@ -53,15 +50,12 @@ export default function Categorybar() {
             >
               <Link
                 href={{
-                  pathname: '/products',
-                  query: {
-                    main: activeCategory.label,
-                    sub: sub,
-                  },
+                  pathname: `/categories/${sub.id}`,
+                  query: { sort: 'productId', direction: 'DESC', page: 0, size: 30 },
                 }}
                 className="block w-full cursor-pointer rounded px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:text-[#5f0080] hover:underline"
               >
-                {sub}
+                {sub.label}
               </Link>
             </li>
           ))}

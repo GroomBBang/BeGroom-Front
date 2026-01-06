@@ -35,11 +35,11 @@ export default function SearchNavigation() {
   }, []);
 
   return (
-    <div className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white">
-      <div className="mx-auto flex h-[50px] max-w-screen-xl items-center justify-center px-4 relative">
-        <div ref={dropdownRef} className="absolute top-1 left-[5%] z-50">
+    <div className="sticky top-0 z-50 w-full bg-white shadow-[0_4px_8px_rgba(0,0,0,0.07)]">
+      <div className="mx-auto grid h-16 max-w-6xl grid-cols-[auto_1fr_91px] items-center px-4">
+        <div ref={dropdownRef} className="relative">
           <button
-            className="group flex items-center gap-3 py-2 text-gray-900 transition-colors hover:text-primary-500"
+            className="group flex items-center gap-3 py-2 text-gray-900 transition-colors hover:text-primary-500 cursor-pointer"
             onClick={() => setIsCategoryOpen(!isCategoryOpen)}
           >
             <Menu size={24} strokeWidth={2} />
@@ -53,8 +53,8 @@ export default function SearchNavigation() {
           )}
         </div>
 
-        <nav className="hidden md:flex">
-          <ul className="flex items-center gap-8 lg:gap-12">
+        <nav className="hidden md:flex justify-center">
+          <ul className="flex items-center gap-8 lg:gap-12 ">
             {NAV_LINKS.map((link) => (
               <li id={link.label} key={link.label}>
                 <Link
@@ -67,6 +67,7 @@ export default function SearchNavigation() {
             ))}
           </ul>
         </nav>
+
         <div />
       </div>
     </div>
