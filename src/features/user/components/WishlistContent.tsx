@@ -11,7 +11,7 @@ export default function WishlistContent() {
 
   useEffect(() => {
     fetchMyWish().then((response) => {
-      setData(response);
+      setData(response.result);
       setIsLoading(false);
     });
   }, []);

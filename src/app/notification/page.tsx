@@ -32,7 +32,7 @@ export default function NotificationPage() {
           ))}
         </div>
       ) : (
-        <NotificationList notifications={data?.result.notification || []} />
+        <NotificationList notifications={data?.notification || []} />
       )}
     </div>
   );

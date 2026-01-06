@@ -1,5 +1,4 @@
-import axiosInstance from '@/shared/apis';
-import { CommonSuccessDto } from '@/shared/types/response/CommonSuccessDto';
+import http from '@/shared/apis/http';
 import {
   DashboardPeriodType,
   FetchSettlementDataDTO,
@@ -8,25 +7,21 @@ import {
 } from '../types/response';
 
 export default function settlementAPI() {
-  const fetchSettlementData = async (): Promise<CommonSuccessDto<FetchSettlementDataDTO>> => {
-    const response = await axiosInstance.get('/settlement');
-    return response.data;
+  const fetchSettlementData = async () => {
+    const response = await http.get<FetchSettlementDataDTO>('/settlement');
+    return response;
   };
 
-  const fetchSettlementProductData = async (): Promise<
-    CommonSuccessDto<FetchSettlementProductDataDTO>
-  > => {
-    const response = await axiosInstance.get('/settlement/product');
-    return response.data;
+  const fetchSettlementProductData = async () => {
+    const response = await http.get<FetchSettlementProductDataDTO>('/settlement/product');
+    return response;
   };
 
-  const fetchSettlementPeriodData = async (
-    type: DashboardPeriodType,
-  ): Promise<CommonSuccessDto<FetchSettlementPeriodDataDTO>> => {
-    const response = await axiosInstance.get('/settlement/period', {
+  const fetchSettlementPeriodData = async (type: DashboardPeriodType) => {
+    const response = await http.get<FetchSettlementPeriodDataDTO>('/settlement/period', {
       params: { type },
     });
-    return response.data;
+    return response;
   };
 
   return {
