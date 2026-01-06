@@ -9,12 +9,28 @@ export const productsHandlers = [
     await delay(1000);
 
     const { id } = params as { id: string };
-    const product = productStore.find((product) => product.id === id);
+    const productId = Number(id);
 
-    if (!product) {
-      return HttpResponse.json({ error: 'Product not found' }, { status: 404 });
+    const result = productStore.find((p) => p.productId === productId);
+
+    if (!result) {
+      return HttpResponse.json(
+        {
+          statusCode: 404,
+          message: '상품을 찾을 수 없습니다.',
+          result: null,
+        },
+        { status: 404 },
+      );
     }
 
-    return HttpResponse.json({ product }, { status: 200 });
+    return HttpResponse.json(
+      {
+        statusCode: 200,
+        message: '요청이 성공적으로 처리되었습니다.',
+        result,
+      },
+      { status: 200 },
+    );
   }),
 ];

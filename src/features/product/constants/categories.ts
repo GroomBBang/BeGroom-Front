@@ -1,4 +1,4 @@
-import { CategoryKey } from "../types";
+import { CategoryKey } from '../types/model';
 
 export const categories: { key: CategoryKey; label: string }[] = [
   { key: 'all', label: '전체' },

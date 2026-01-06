@@ -3,11 +3,11 @@
 import { formatWon } from '@/shared/lib/format';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
-import { Product, TabKey } from '../types';
+import { ProductType, TabKey } from '../types/model';
 
-export default function ProductDetailTab({ product }: { product: Product }) {
+export default function ProductDetailTab({ product }: { product: ProductType }) {
   const [tab, setTab] = useState<TabKey>('desc');
-  const images = (product.imageUrls ?? []).slice(0, 5);
+  const images = (product.detailImageUrls ?? []).slice(0, 5);
 
   return (
     <section className="mt-12">
@@ -50,7 +50,7 @@ export default function ProductDetailTab({ product }: { product: Product }) {
           <div className="flex flex-col gap-4">
             <ImageCarousel images={images} />
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              {product.description}
+              {product.shortDescription}
             </p>
           </div>
         ) : (
@@ -58,13 +58,11 @@ export default function ProductDetailTab({ product }: { product: Product }) {
             <h2 className="mb-5 text-xl font-bold text-foreground">상품 정보</h2>
 
             <div className="overflow-hidden rounded-md border border-border bg-background">
-              <InfoRow label="카테고리" value={product.categoryLabel} />
-              <InfoRow label="판매가" value={formatWon(product.price)} />
+              <InfoRow label="카테고리" value={product.brand} />
+              <InfoRow label="판매가" value={formatWon(product.discountedPrice)} />
               <InfoRow
                 label="정상가"
-                value={
-                  typeof product.originalPrice === 'number' ? formatWon(product.originalPrice) : '-'
-                }
+                value={typeof product.salesPrice === 'number' ? formatWon(product.salesPrice) : '-'}
               />
               <InfoRow label="재고" value="50개" />
               <InfoRow label="배송" value="샛별배송 (새벽 7시 전 도착)" />
