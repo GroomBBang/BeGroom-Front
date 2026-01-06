@@ -3,7 +3,7 @@
 import { useRecentProducts } from '@/features/user/hooks/useRecentProducts';
 import { useEffect, useState } from 'react';
 import productAPI from '../api/product.api';
-import { Product } from '../types';
+import { ProductType } from '../types/model';
 import ProductDetailLoading from './ProductDetailLoading';
 import ProductDetailMain from './ProductDetailMain';
 import ProductDetailTab from './ProductDetailTab';
@@ -14,7 +14,7 @@ export default function ProductDetailContainer({ id }: { id: string }) {
   const { addProduct } = useRecentProducts();
   const { fetchProduct } = productAPI();
 
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<ProductType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // 상품 조회
@@ -28,8 +28,8 @@ export default function ProductDetailContainer({ id }: { id: string }) {
   useEffect(() => {
     if (product) {
       addProduct({
-        id: Number(product.id),
-        thumb: product.imageUrls[0],
+        id: Number(product.productId),
+        thumb: product.mainImageUrl,
         time: Date.now(),
       });
     }
