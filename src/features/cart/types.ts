@@ -1,6 +1,6 @@
-import { Product } from '../product/types';
+import { ProductType } from '../product/types/model';
 
-export type CartItemType = Product & {
+export type CartItemType = ProductType & {
   quantity: number;
   selected: boolean;
 };
