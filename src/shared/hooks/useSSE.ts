@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 
 export const useSSE = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const { increaseNotisCount } = useAuthStore();
 
   useEffect(() => {
     const token = Cookies.get(STORAGE_KEY.JWT_TOKEN);
@@ -33,14 +34,25 @@ export const useSSE = () => {
           },
 
           onmessage(msg) {
-            if (msg.event === 'sse') {
+            if (msg.event === 'connect') {
+              console.log('SSE 연결 성공:', msg.data);
+              return;
+            }
+
+            if (msg.event === 'sse' || msg.event === 'notification') {
               try {
                 const data = JSON.parse(msg.data);
-                if (data.message) {
+
+                if (data && data.message) {
                   toast.success(data.message);
+                  increaseNotisCount();
+                  window.dispatchEvent(new CustomEvent('notification-update'));
+                } else {
+                  console.log('알림 수신:', data);
                 }
-              } catch (e) {}
-            } else if (msg.event === 'connect') {
+              } catch (e) {
+                console.warn('SSE 데이터 파싱 실패:', msg.data);
+              }
             }
           },
 

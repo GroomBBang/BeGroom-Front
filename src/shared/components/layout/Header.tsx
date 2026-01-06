@@ -43,6 +43,8 @@ export default function Header() {
     setOpen(false);
   };
 
+  console.log('debug: ', unreadNotisCount);
+
   return (
     <header className="w-full bg-background">
       <div className="mx-auto flex h-10 max-w-6xl items-center justify-end px-4 text-xs">

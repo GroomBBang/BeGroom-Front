@@ -1,6 +1,4 @@
-export type NotificationType = 'delivery' | 'coupon' | 'event' | 'system';
-
-
+export type NotificationType = 'order' | 'coupon' | 'event' | 'system';
 
 export interface NotificationItem {
   id: number;
@@ -8,5 +6,5 @@ export interface NotificationItem {
   title: string;
   description: string;
   time: string;
-  isRead: boolean;
+  read: boolean;
 }

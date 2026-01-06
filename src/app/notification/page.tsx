@@ -1,29 +1,59 @@
 'use client';
 
+import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 import notificationAPI from '@/features/notification/apis/notification.api';
 import NotificationHeader from '@/features/notification/components/NotificationHeader';
 import NotificationList from '@/features/notification/components/NotificationList';
 import { NotificationResponseDto } from '@/features/notification/types/response';
 import { Skeleton } from '@/shared/components/common/skeleton';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function NotificationPage() {
-  const { fetchNotification } = notificationAPI();
+  const { fetchNotification, readAllNotification } = notificationAPI();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<NotificationResponseDto | null>(null);
+  const { resetNotisCount, unreadNotisCount } = useAuthStore();
 
-  useEffect(() => {
-    fetchNotification().then((response) => {
-      setData(response);
+  const refreshData = useCallback(async () => {
+    try {
+      const response = await fetchNotification();
+      setData(response.result);
+    } catch (error) {
+      console.error(error);
+    } finally {
       setIsLoading(false);
-    });
+    }
   }, []);
 
-  const handleMarkAllRead = () => {};
+  const handleMarkAllRead = () => {
+    readAllNotification().then(() => {
+      resetNotisCount();
+      refreshData();
+    });
+  };
+
+  useEffect(() => {
+    refreshData();
+  }, [refreshData]);
+
+  useEffect(() => {
+    const handleSSEReload = () => {
+      refreshData();
+    };
+
+    window.addEventListener('notification-update', handleSSEReload);
+
+    return () => {
+      window.removeEventListener('notification-update', handleSSEReload);
+    };
+  }, [refreshData]);
 
   return (
     <div className="mx-auto min-h-screen max-w-screen-md bg-background px-5 py-8">
-      <NotificationHeader handleMarkAllRead={handleMarkAllRead} />
+      <NotificationHeader
+        handleMarkAllRead={handleMarkAllRead}
+        isUnreadNoticeExist={unreadNotisCount > 0}
+      />
 
       {isLoading ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-1">
@@ -32,7 +62,7 @@ export default function NotificationPage() {
           ))}
         </div>
       ) : (
-        <NotificationList notifications={data?.notification || []} />
+        <NotificationList notifications={data?.notifications || []} reload={refreshData} />
       )}
     </div>
   );

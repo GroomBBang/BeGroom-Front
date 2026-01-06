@@ -26,6 +26,15 @@ const http = {
     return response.data;
   },
 
+  patch: async <T>(
+    url: string,
+    data?: unknown,
+    config?: AxiosRequestConfig,
+  ): Promise<CommonSuccessResponse<T>> => {
+    const response = await axiosInstance.patch<CommonSuccessResponse<T>>(url, data, config);
+    return response.data;
+  },
+
   delete: async <T>(
     url: string,
     config?: AxiosRequestConfig,
