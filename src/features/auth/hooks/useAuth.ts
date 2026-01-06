@@ -35,10 +35,24 @@ export const useAuth = () => {
       throw error;
     }
   };
-  const register = async (data: RegisterRequestDTO) => {
+  const registerMember = async (data: RegisterRequestDTO) => {
     setIsLoading(true);
     try {
-      const response = await authAPI().register(data);
+      const response = await authAPI().registerMember(data);
+      setIsLoading(false);
+      toast.success('회원가입 성공');
+      router.push('/auth?mode=login');
+      return response;
+    } catch (error) {
+      setIsLoading(false);
+      throw error;
+    }
+  };
+
+  const registerSeller = async (data: RegisterRequestDTO) => {
+    setIsLoading(true);
+    try {
+      const response = await authAPI().registerSeller(data);
       setIsLoading(false);
       toast.success('회원가입 성공');
       router.push('/auth?mode=login');
@@ -58,7 +72,8 @@ export const useAuth = () => {
 
   return {
     login,
-    register,
+    registerSeller,
+    registerMember,
     logout,
     isLogin,
     isLoading,

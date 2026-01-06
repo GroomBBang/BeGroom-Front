@@ -5,7 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 import MemberTypeSelector from './MemberTypeSelector';
 
 export default function SignupForm({ onSwitch }: { onSwitch: () => void }) {
-  const { register } = useAuth();
+  const { registerMember, registerSeller } = useAuth();
   const [userType, setUserType] = useState<'USER' | 'SELLER'>('USER');
 
   const [email, setEmail] = useState('');
@@ -19,14 +19,23 @@ export default function SignupForm({ onSwitch }: { onSwitch: () => void }) {
       toast.error('비밀번호가 일치하지 않습니다.');
       return;
     }
-
-    register({
-      email,
-      password,
-      name,
-      phoneNumber,
-      role: userType,
-    });
+    if (userType === 'SELLER') {
+      registerSeller({
+        email,
+        password,
+        name,
+        phoneNumber,
+        role: userType,
+      });
+    } else {
+      registerMember({
+        email,
+        password,
+        name,
+        phoneNumber,
+        role: userType,
+      });
+    }
   };
 
   return (
