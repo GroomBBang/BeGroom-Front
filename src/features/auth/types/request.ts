@@ -11,3 +11,10 @@ export interface RegisterRequestDTO {
   phoneNumber: string;
   role: string;
 }
+
+export interface RegisterSellerRequestDTO {
+  email: string;
+  name: string;
+  password: string;
+  phoneNumber: string;
+}

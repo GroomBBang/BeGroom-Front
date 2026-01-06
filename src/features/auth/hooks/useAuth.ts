@@ -6,7 +6,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import authAPI from '../apis/auth.api';
 import { useAuthStore } from '../stores/useAuthStore';
-import { LoginRequestDTO, RegisterRequestDTO } from '../types/request';
+import { LoginRequestDTO, RegisterRequestDTO, RegisterSellerRequestDTO } from '../types/request';
 
 export const useAuth = () => {
   const router = useRouter();
@@ -49,7 +49,7 @@ export const useAuth = () => {
     }
   };
 
-  const registerSeller = async (data: RegisterRequestDTO) => {
+  const registerSeller = async (data: RegisterSellerRequestDTO) => {
     setIsLoading(true);
     try {
       const response = await authAPI().registerSeller(data);

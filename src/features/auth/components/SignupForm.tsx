@@ -25,7 +25,6 @@ export default function SignupForm({ onSwitch }: { onSwitch: () => void }) {
         password,
         name,
         phoneNumber,
-        role: userType,
       });
     } else {
       registerMember({
