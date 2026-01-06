@@ -1,6 +1,5 @@
 import http from '@/shared/apis/http';
-import { register } from 'module';
-import { LoginRequestDTO, RegisterRequestDTO } from '../types/request';
+import { LoginRequestDTO, RegisterRequestDTO, RegisterSellerRequestDTO } from '../types/request';
 import { LoginResponseDTO } from '../types/response';
 
 export default function authAPI() {
@@ -14,14 +13,13 @@ export default function authAPI() {
     return response;
   };
 
-  const registerSeller = async (data: RegisterRequestDTO) => {
+  const registerSeller = async (data: RegisterSellerRequestDTO) => {
     const response = await http.post<LoginResponseDTO>('/seller/join', data);
     return response;
   };
 
   return {
     login,
-    register,
     registerMember,
     registerSeller,
   };
