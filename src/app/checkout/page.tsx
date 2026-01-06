@@ -195,39 +195,32 @@ export default function CheckoutPage() {
           </section>
 
           {/* ----------------------
-              쿠폰 선택
-          ---------------------- */}
-          <section className="rounded-md border border-border bg-background p-6">
-            <h2 className="mb-5 text-t6 font-bold text-foreground">쿠폰 선택</h2>
-
-            <select
-              value={form.couponId}
-              onChange={(e) => update('couponId', e.target.value)}
-              className="h-11 w-full rounded-sm border border-border bg-background px-4 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary-200"
-            >
-              {COUPONS.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.label}
-                </option>
-              ))}
-            </select>
-          </section>
-
-          {/* ----------------------
               결제 수단
           ---------------------- */}
-          <section className="rounded-md border border-border bg-background p-6">
-            <h2 className="mb-5 text-t6 font-bold text-foreground">결제 수단</h2>
+          <section className="flex flex-col gap-4 rounded-md border border-border bg-background p-6">
+            <h2 className="text-t6 font-bold text-foreground">결제 수단</h2>
 
-            <label className="flex items-center gap-3 rounded-sm border border-border bg-background p-4">
-              <input
-                type="radio"
-                checked={form.paymentMethod === 'tosspay'}
-                onChange={() => update('paymentMethod', 'tosspay')}
-                className="h-4 w-4"
-              />
-              <span className="text-sm font-semibold text-foreground">토스페이</span>
-            </label>
+            <div className="flex flex-col gap-3">
+              <label className="flex items-center gap-3 rounded-sm border border-border bg-background p-4">
+                <input
+                  type="radio"
+                  checked={form.paymentMethod === 'tosspay'}
+                  onChange={() => update('paymentMethod', 'tosspay')}
+                  className="h-4 w-4"
+                />
+                <span className="text-sm font-semibold text-foreground">토스페이</span>
+              </label>
+
+              <label className="flex items-center gap-3 rounded-sm border border-border bg-background p-4">
+                <input
+                  type="radio"
+                  checked={form.paymentMethod === 'tosspay'}
+                  onChange={() => update('paymentMethod', 'tosspay')}
+                  className="h-4 w-4"
+                />
+                <span className="text-sm font-semibold text-foreground">결재</span>
+              </label>
+            </div>
           </section>
         </div>
 
