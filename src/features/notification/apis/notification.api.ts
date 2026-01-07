@@ -1,4 +1,5 @@
 import http from '@/shared/apis/http';
+import { sendServiceInspectionNotiRequestDto } from '../types/request';
 import { NotificationResponseDto } from '../types/response';
 
 export default function notificationAPI() {
@@ -17,9 +18,15 @@ export default function notificationAPI() {
     return response;
   };
 
+  const sendServiceInspectionNoti = async (data: sendServiceInspectionNotiRequestDto) => {
+    const response = await http.post(`/noti/send/inspect`, data);
+    return response;
+  };
+
   return {
     fetchNotification,
     readNotification,
     readAllNotification,
+    sendServiceInspectionNoti,
   };
 }
