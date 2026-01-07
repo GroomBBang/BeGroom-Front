@@ -12,7 +12,6 @@ export default function SettlementSummary() {
 
   useEffect(() => {
     fetchSettlementData().then((res) => {
-      console.log(res.result.summary);
       setSummaryData(res.result.summary);
     });
   }, []);
