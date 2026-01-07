@@ -1,30 +1,32 @@
 import { Heart, X } from 'lucide-react';
+import { MyWishResponseDTO } from '../types/response';
 
 interface Props {
-  wish: {
-    id: number;
-    name: string;
-    price: number;
-    imageUrl: string;
-    category: string;
-    description: string;
-    likes: number;
-  }[];
+  wish: MyWishResponseDTO['wish'];
+  onCardClick: (id: number) => void;
+  onCancelClick: (id: number) => void;
 }
 
-export default function MyWishlist({ wish }: Props) {
+export default function MyWishlist({ wish, onCardClick, onCancelClick }: Props) {
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {wish.map((item) => (
         <div
           key={item.id}
+          onClick={() => onCardClick(item.productId)}
           className="overflow-hidden rounded-xl border border-gray-200 bg-white transition-shadow hover:shadow-md"
         >
           {/* 이미지 영역 */}
           <div className="relative h-48 bg-gray-100">
             <img src={item.imageUrl} alt={item.name} className="h-full w-full object-cover" />
             {/* 닫기 버튼 */}
-            <button className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-gray-500 backdrop-blur-sm transition-colors hover:bg-white hover:text-gray-900">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onCancelClick(item.productId);
+              }}
+              className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-gray-500 backdrop-blur-sm transition-colors hover:bg-white hover:text-gray-900"
+            >
               <X size={18} />
             </button>
           </div>

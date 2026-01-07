@@ -39,7 +39,6 @@ export default function CashChargePopupContent() {
       channel.postMessage('CASH_CHARGE_SUCCESS');
       channel.close();
 
-      alert('충전 완료');
       window.close();
     } catch (error) {
       alert('충전에 실패했습니다.');

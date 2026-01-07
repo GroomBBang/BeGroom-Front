@@ -9,6 +9,7 @@ import { Skeleton } from '@/shared/components/common/skeleton';
 import { useCallback, useEffect, useState } from 'react';
 
 export default function NotificationPage() {
+  const { setUnreadNotisCount } = useAuthStore();
   const { fetchNotification, readAllNotification } = notificationAPI();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<NotificationResponseDto | null>(null);
@@ -18,6 +19,7 @@ export default function NotificationPage() {
     try {
       const response = await fetchNotification();
       setData(response.result);
+      setUnreadNotisCount(response.result.unreadCount);
     } catch (error) {
       console.error(error);
     } finally {

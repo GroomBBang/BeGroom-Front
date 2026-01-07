@@ -1,14 +1,31 @@
+import productAPI from '@/features/product/api/product.api';
 import { Skeleton } from '@/shared/components/common/skeleton';
 import { Heart } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import myAPI from '../apis/my.api';
 import { MyWishResponseDTO } from '../types/response';
 import MyWishlist from './MyWishlist';
 
 export default function WishlistContent() {
+  const { addWishList } = productAPI();
+  const router = useRouter();
   const { fetchMyWish } = myAPI();
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<MyWishResponseDTO | null>(null);
+
+  const handleCardClick = (id: number) => {
+    router.push(`/products/${id}`);
+  };
+
+  const handleCancelClick = async (id: number) => {
+    await addWishList(id);
+    fetchMyWish().then((response) => {
+      setData(response.result);
+    });
+    toast.success('상품이 위시 리스트에서 삭제되었습니다.');
+  };
 
   useEffect(() => {
     fetchMyWish().then((response) => {
@@ -31,7 +48,11 @@ export default function WishlistContent() {
           <p className="text-lg">위시 리스트에 담긴 상품이 없습니다.</p>
         </div>
       ) : (
-        <MyWishlist wish={data?.wish || []} />
+        <MyWishlist
+          wish={data?.wish || []}
+          onCardClick={handleCardClick}
+          onCancelClick={handleCancelClick}
+        />
       )}
     </div>
   );

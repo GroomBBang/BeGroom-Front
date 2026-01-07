@@ -3,6 +3,7 @@
 import Spinner from '@/shared/components/common/Spinner';
 import { AlertCircle } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import myAPI from '../apis/my.api';
 import { TransactionDto } from '../types/response';
 import MyCurrentPoint from './MyCurrentPoint';
@@ -56,6 +57,7 @@ export default function PointsContent() {
       if (event.data === 'CASH_CHARGE_SUCCESS') {
         console.log('CASH_CHARGE_SUCCESS');
         loadTransactions(0);
+        toast.success('캐시 충전이 완료되었습니다.');
       }
     };
 

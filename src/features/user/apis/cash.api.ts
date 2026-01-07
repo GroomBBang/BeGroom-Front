@@ -1,5 +1,5 @@
 import http from '@/shared/apis/http';
-import { ChargeCashtDTO, FetchWalletDTO } from '../types/response';
+import { ChargeCashtDTO, FetchWalletDTO, RefundOrderResponseDTO } from '../types/response';
 
 export default function cashAPI() {
   const fetchBalance = async () => {
@@ -14,8 +14,14 @@ export default function cashAPI() {
     return response;
   };
 
+  const refundOrder = async (orderId: number) => {
+    const response = await http.post<RefundOrderResponseDTO>(`/orders/${orderId}/cancel`);
+    return response;
+  };
+
   return {
     fetchBalance,
     chargeCash,
+    refundOrder,
   };
 }

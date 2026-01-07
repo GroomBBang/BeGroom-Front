@@ -19,7 +19,7 @@ export default function MyPointHistory({ transactions }: Props) {
               <span className="text-xs text-gray-400">{tx.created_at}</span>
               <span className="font-medium text-gray-900">{tx.description}</span>
               <span className="text-xs text-gray-500">
-                {tx.tx_type === 'CHARGE' ? '충전' : tx.tx_type === 'ORDER' ? '사용' : '환불'}
+                {tx.tx_type === 'CHARGE' ? '충전' : tx.tx_type === 'PAYMENT' ? '사용' : '환불'}
               </span>
             </div>
 

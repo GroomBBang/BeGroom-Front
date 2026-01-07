@@ -17,7 +17,7 @@ export default function SearchPage() {
       <div className="mx-auto max-w-6xl px-4 pb-16 pt-12">
         <div className="pb-12 text-center">
           <h1 className="text-3xl font-medium text-gray-900">
-            '{<span className="font-bold text-primary-600">{keyword}</span>}'에 대한 검색결과
+            {<span className="font-bold text-primary-600">{keyword}</span>}에 대한 검색결과
           </h1>
         </div>
 

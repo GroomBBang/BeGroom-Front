@@ -1,15 +1,34 @@
 import RefundModal from '@/shared/components/common/BaseModal';
 import { Skeleton } from '@/shared/components/common/skeleton';
 import { useEffect, useState } from 'react';
+import cashAPI from '../apis/cash.api';
 import myAPI from '../apis/my.api';
 import { MyOrdersResponseDTO } from '../types/response';
 import MyOrderHistory from './MyOrderHistory';
 
 export default function OrdersContent() {
   const { fetchMyOrders } = myAPI();
+  const { refundOrder } = cashAPI();
   const [data, setData] = useState<MyOrdersResponseDTO | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefundModalOpen, setIsRefundModalOpen] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState<number>(0);
+
+  const handleRefundOrder = async () => {
+    if (!selectedOrderId) return;
+
+    try {
+      await refundOrder(selectedOrderId);
+
+      setIsRefundModalOpen(false);
+      setSelectedOrderId(0);
+
+      const response = await fetchMyOrders();
+      setData(response.result);
+    } catch (error) {
+      console.error('환불 처리 중 오류 발생', error);
+    }
+  };
 
   useEffect(() => {
     fetchMyOrders().then((response) => {
@@ -35,14 +54,18 @@ export default function OrdersContent() {
       ) : (
         <MyOrderHistory
           orders={data?.orders || []}
-          onRefundModal={() => setIsRefundModalOpen(true)}
+          onRefundModal={(orderId: number) => {
+            setSelectedOrderId(orderId);
+            setIsRefundModalOpen(true);
+          }}
         />
       )}
+
       {isRefundModalOpen && (
         <RefundModal
           isOpen={isRefundModalOpen}
           onClose={() => setIsRefundModalOpen(false)}
-          onConfirm={() => setIsRefundModalOpen(false)}
+          onConfirm={handleRefundOrder}
           title="환불 요청"
           message="환불을 요청하시겠습니까?"
           confirmText="환불하기"

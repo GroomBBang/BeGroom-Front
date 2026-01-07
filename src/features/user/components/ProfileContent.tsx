@@ -1,4 +1,5 @@
 import Spinner from '@/shared/components/common/Spinner';
+import { formatDateOnly } from '@/shared/lib/date';
 import { useEffect, useState } from 'react';
 import myAPI from '../apis/my.api';
 import { MyProfileResponseDTO } from '../types/response';
@@ -37,7 +38,7 @@ export default function ProfileContent() {
         <ProfileItem label="이름" value={data?.name} />
         <ProfileItem label="휴대폰 번호" value={data?.phoneNumber} />
         <ProfileItem label="회원 등급" value={data?.role} />
-        <ProfileItem label="가입일" value={data?.joinDate} />
+        <ProfileItem label="가입일" value={formatDateOnly(data?.joinDate)} />
       </div>
     </div>
   );

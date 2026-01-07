@@ -1,10 +1,10 @@
-export type NotificationType = 'order' | 'coupon' | 'event' | 'system';
+export type NotificationType = 'ORDER' | 'AD' | 'NOTICE' | 'SYSTEM';
 
 export interface NotificationItem {
   id: number;
   type: NotificationType;
   title: string;
-  description: string;
+  message: string;
   time: string;
   read: boolean;
 }

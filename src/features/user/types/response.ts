@@ -32,23 +32,29 @@ export interface MyPointsResponseDTO {
   transactions: TransactionPageDto;
 }
 
+export interface OrderItemDTO {
+  imageUrl: string;
+  productName: string;
+  price: number;
+  quantity: number;
+}
+
+export interface OrderDTO {
+  order_number: number;
+  created_at: string;
+  status: string;
+  total_amount: number;
+  items: OrderItemDTO[];
+}
+
 export interface MyOrdersResponseDTO {
-  orders: {
-    id: number;
-    order_number: string;
-    total_amount: number;
-    status: string;
-    created_at: string;
-    imageUrl: string;
-    productName: string;
-    price: number;
-    quantity: number;
-  }[];
+  orders: OrderDTO[];
 }
 
 export interface MyWishResponseDTO {
   wish: {
     id: number;
+    productId: number;
     name: string;
     price: number;
     imageUrl: string;
@@ -65,4 +71,8 @@ export interface FetchWalletDTO {
 export interface ChargeCashtDTO {
   pointChargeId: number;
   balance: number;
+}
+
+export interface RefundOrderResponseDTO {
+  orderId: number;
 }

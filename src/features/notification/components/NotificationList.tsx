@@ -14,32 +14,31 @@ export default function NotificationList({ notifications, reload }: Props) {
 
   const renderIcon = (type: NotificationType) => {
     switch (type) {
-      case 'order':
+      case 'ORDER':
         return (
           <div className="rounded-full bg-info/10 p-3 text-info">
             <Truck size={24} />
           </div>
         );
-      case 'coupon':
+      case 'AD':
         return (
           <div className="rounded-full bg-primary-100 p-3 text-primary-600">
             <Gift size={24} />
           </div>
         );
-      case 'event':
+      case 'NOTICE':
         return (
           <div className="rounded-full bg-success/10 p-3 text-success">
             <Bell size={24} />
           </div>
         );
-      case 'system':
       default:
         return <div className="rounded-full bg-gray-100 p-3 text-gray-600"></div>;
     }
   };
 
   const handleNoticeClick = (noticeId: number) => {
-    const response = readNotification(noticeId).then(() => {
+    readNotification(noticeId).then(() => {
       decreaseNotisCount();
       reload();
     });
@@ -73,7 +72,7 @@ export default function NotificationList({ notifications, reload }: Props) {
               )}
             </div>
             <p className="mb-2 line-clamp-2 text-t3 leading-relaxed text-gray-500">
-              {item.description}
+              {item.message}
             </p>
             <span className="text-t2 font-light text-gray-400">{item.time}</span>
           </div>
