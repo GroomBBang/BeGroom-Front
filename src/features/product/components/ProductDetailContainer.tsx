@@ -33,7 +33,7 @@ export default function ProductDetailContainer({ id }: { id: string }) {
         time: Date.now(),
       });
     }
-  }, [product, addProduct]);
+  }, [product?.productId]);
 
   // 로딩 중
   if (isLoading) {

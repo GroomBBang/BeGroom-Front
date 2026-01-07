@@ -23,9 +23,6 @@ export const dashboardHandlers = [
     const url = new URL(request.url);
     const type = url.searchParams.get('type');
 
-    console.log(type);
-    console.log(isDashboardPeriodType(type));
-
     if (!isDashboardPeriodType(type)) {
       return HttpResponse.json(
         { statusCode: 400, message: 'type 파라미터가 올바르지 않습니다.', result: [] },

@@ -3,6 +3,7 @@
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import productAPI from '../api/product.api';
 import { ProductCardType } from '../types/model';
 
 interface Props {
@@ -11,15 +12,22 @@ interface Props {
 
 export default function ProductCard({ product }: Props) {
   const [liked, setLiked] = useState(false);
+  const { addWishList } = productAPI();
 
-  const toggleLike = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const toggleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
+
     setLiked((prev) => !prev);
+
+    try {
+      await addWishList(product.productId);
+    } catch (err) {
+      setLiked((prev) => !prev);
+    }
   };
 
-  // const displayLikes = product.productLikes + (liked ? 1 : 0);
-  const displayLikes = 5 + (liked ? 1 : 0);
+  const displayLikes = product.wishlistCount + (liked ? 1 : 0);
 
   return (
     <Link href={`/products/${product.productId}`} className="group cursor-pointer">
@@ -62,9 +70,10 @@ export default function ProductCard({ product }: Props) {
         <h3 className="line-clamp-2 text-base leading-relaxed text-gray-900">{product.name}</h3>
 
         <p className="line-clamp-1 text-xs text-gray-400">{product.shortDescription}</p>
+
         {/* 가격 */}
         <div className="flex items-center gap-2">
-          {product.discountRate && (
+          {product.discountRate !== 0 && (
             <span className="text-lg font-bold text-orange-500">{product.discountRate}%</span>
           )}
           <span className="py-1 text-lg font-bold text-gray-900">

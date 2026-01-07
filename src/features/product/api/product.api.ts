@@ -7,7 +7,13 @@ export default function productAPI() {
     return response.result;
   };
 
+  const addWishList = async (id: number) => {
+    const response = await http.post(`/wishlist/toggle`, { productId: id });
+    return response.result;
+  };
+
   return {
     fetchProduct,
+    addWishList,
   };
 }

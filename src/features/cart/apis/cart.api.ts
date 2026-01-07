@@ -1,40 +1,55 @@
-import axiosInstance from '@/shared/apis';
-import type { CartItemType } from '../types';
-
-type GetCartResponseDTO = {
-  items: CartItemType[];
-};
+import http from '@/shared/apis/http';
+import { addCartItemRequestDTO, getCartResponseDTO } from '../types/response';
 
 export default function cartAPI() {
-  const fetchCart = async (): Promise<GetCartResponseDTO> => {
-    const response = await axiosInstance.get('/cart');
-    return response.data;
+  // 장바구니 조회
+  const fetchCart = async () => {
+    const response = await http.get<getCartResponseDTO>('/cart');
+    return response.result;
   };
 
-  const addCartItem = async (productId: string, quantity: number) => {
-    await axiosInstance.post('/cart/items', { productId, quantity });
+  // 장바구니 선택 여부 (단일)
+  const selectCartItem = async (id: number, isSelected: boolean) => {
+    await http.put(`/cart/items/${id}/select`, { isSelected });
   };
 
-  const updateCartItemQty = async (id: string, quantity: number) => {
-    await axiosInstance.patch(`/cart/items/${id}`, { quantity });
+  // 장바구니 선택 (전체)
+  const selectAllCartItems = async () => {
+    await http.put(`/cart/select-all`);
   };
 
-  const removeCartItem = async (id: string) => {
-    await axiosInstance.delete(`/cart/items/${id}`);
+  // 장바구니 선택 취소 (전체)
+  const deselectAllCartItems = async () => {
+    await http.put(`/cart/deselect-all`);
+  };
+
+  const addCartItem = async (data: addCartItemRequestDTO) => {
+    await http.post('/cart/items', data);
+  };
+
+  const updateCartItemQty = async (id: number, quantity: number) => {
+    await http.put(`/cart/items/${id}/quantity`, { quantity });
+  };
+
+  const removeCartItem = async (id: number) => {
+    await http.delete(`/cart/items/${id}`);
   };
 
   const clearCart = async () => {
-    await axiosInstance.delete('/cart');
+    await http.delete('/cart');
   };
 
-  const removeSelectedItems = async (ids: string[]) => {
-    await axiosInstance.delete('/cart/items', {
+  const removeSelectedItems = async (ids: number[]) => {
+    await http.delete('/cart/selected', {
       data: { ids },
     });
   };
 
   return {
     fetchCart,
+    selectCartItem,
+    selectAllCartItems,
+    deselectAllCartItems,
     addCartItem,
     updateCartItemQty,
     removeCartItem,

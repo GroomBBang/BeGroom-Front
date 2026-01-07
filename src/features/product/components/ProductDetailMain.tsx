@@ -1,9 +1,10 @@
 'use client';
 
-import { useAddToCart } from '@/features/cart/hooks/useAddToCart';
+import cartAPI from '@/features/cart/apis/cart.api';
 import { formatWon } from '@/shared/lib/format';
 import { Heart, ShoppingCart } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
 import { ProductType } from '../types/model';
 
 type SelectedDetail = {
@@ -11,24 +12,23 @@ type SelectedDetail = {
   name: string;
   basePrice: number;
   discountedPrice?: number;
-  quantity: number; // 재고
+  quantity: number;
   isAvailable: boolean;
-  qty: number; // 선택 수량
+  qty: number;
 };
 
 export default function ProductDetailMain({ product }: { product: ProductType }) {
-  const { addToCart } = useAddToCart();
+  const api = cartAPI();
 
   const [liked, setLiked] = useState(false);
 
-  // ✅ details 기반: 옵션 1개/여러개 판단
+  // details 기반: 옵션 1개/여러개 판단
   const details = product.details ?? [];
   const hasOptions = details.length > 1;
   const singleDetail = details.length === 1 ? details[0] : null;
 
-  // ✅ 선택된 옵션들(여러개일 수 있음)
+  // 선택된 옵션들(여러개일 수 있음)
   const [selected, setSelected] = useState<SelectedDetail[]>(() => {
-    // 옵션이 1개면 처음부터 선택된 상태로 시작
     if (singleDetail) {
       return [
         {
@@ -45,18 +45,15 @@ export default function ProductDetailMain({ product }: { product: ProductType })
     return [];
   });
 
-  // ✅ 상품 단가 계산(옵션별)
+  // 상품 단가 계산(옵션별)
   const getUnitPrice = (d: { discountedPrice?: number; basePrice: number }) =>
     typeof d.discountedPrice === 'number' ? d.discountedPrice : d.basePrice;
 
-  // ✅ 총액
+  // 총액
   const totalPrice = useMemo(() => {
     return selected.reduce((acc, cur) => acc + getUnitPrice(cur) * cur.qty, 0);
   }, [selected]);
 
-  // ✅ (상단 표시용) 대표 가격 UI는 “상품 레벨” 가격 유지
-  // - 네 DTO가 product.salesPrice / product.discountedPrice를 갖고 있으니 그걸 계속 사용
-  // - 할인율 계산 로직은 현재 코드가 반대로 되어있어서 바로잡음
   const hasDiscount =
     typeof product.discountedPrice === 'number' &&
     typeof product.salesPrice === 'number' &&
@@ -67,12 +64,11 @@ export default function ProductDetailMain({ product }: { product: ProductType })
     return Math.round(((product.salesPrice - product.discountedPrice!) / product.salesPrice) * 100);
   }, [hasDiscount, product.salesPrice, product.discountedPrice]);
 
-  // ✅ 옵션 선택(드롭다운)
+  // 옵션 선택(드롭다운)
   const onSelectOption = (productDetailId: number) => {
     const found = details.find((d) => d.productDetailId === productDetailId);
     if (!found) return;
 
-    // 이미 선택돼있으면 qty +1 (원하면 "이미 선택됨" 처리로 바꿀 수 있음)
     setSelected((prev) => {
       const exists = prev.find((x) => x.productDetailId === productDetailId);
       if (exists) {
@@ -98,7 +94,6 @@ export default function ProductDetailMain({ product }: { product: ProductType })
     });
   };
 
-  // ✅ 옵션 qty 변경
   const dec = (id: number) => {
     setSelected((prev) =>
       prev.map((x) => (x.productDetailId === id ? { ...x, qty: Math.max(1, x.qty - 1) } : x)),
@@ -112,19 +107,28 @@ export default function ProductDetailMain({ product }: { product: ProductType })
     );
   };
 
-  // ✅ 옵션 제거(X)
   const remove = (id: number) => {
-    // 옵션 1개짜리는 제거 못하게(원하면 가능하게 바꿔도 됨)
     if (!hasOptions) return;
     setSelected((prev) => prev.filter((x) => x.productDetailId !== id));
   };
 
-  // ✅ 장바구니 담기
+  // 장바구니 담기
   const onAddToCart = async () => {
     if (selected.length === 0) return;
 
-    const totalQty = selected.reduce((acc, cur) => acc + cur.qty, 0);
-    await addToCart(product.productId.toString(), totalQty);
+    const payload = {
+      items: selected.map((s) => ({
+        productDetailId: s.productDetailId,
+        quantity: s.qty,
+      })),
+    };
+
+    try {
+      await api.addCartItem(payload);
+      toast.success('상품이 장바구니에 추가되었습니다');
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -190,35 +194,12 @@ export default function ProductDetailMain({ product }: { product: ProductType })
             )}
           </div>
 
-          {/* 정보 테이블 */}
+          {/* ✅ 옵션 UI */}
           <div className="border-t border-border">
-            <div className="grid grid-cols-[120px_1fr] border-b border-border py-6">
-              <div className="text-sm font-medium text-muted-foreground">배송</div>
-              <div className="space-y-2">
-                <div className="text-sm font-medium text-foreground">샛별배송</div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-[120px_1fr] border-b border-border py-6">
-              <div className="text-sm font-medium text-muted-foreground">판매자</div>
-              <div className="space-y-2">
-                <div className="text-sm font-medium text-foreground">컬리</div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-[120px_1fr] border-b border-border py-6">
-              <div className="text-sm font-medium text-muted-foreground">포장타입</div>
-              <div className="space-y-2">
-                <div className="text-sm font-medium text-foreground">상온 (종이포장)</div>
-              </div>
-            </div>
-
-            {/* ✅ 옵션 UI (여기부터가 핵심 변경) */}
             <div className="grid grid-cols-[120px_1fr] border-b border-border py-6">
               <div className="text-sm font-medium text-muted-foreground">구매 수량</div>
 
               <div className="space-y-3">
-                {/* 옵션이 여러개면 드롭다운 노출 */}
                 {hasOptions && (
                   <select
                     className="h-12 w-full rounded-sm border border-border bg-background px-3 text-sm outline-none"
@@ -227,7 +208,7 @@ export default function ProductDetailMain({ product }: { product: ProductType })
                       const v = Number(e.target.value);
                       if (!v) return;
                       onSelectOption(v);
-                      e.currentTarget.value = ''; // 선택 후 placeholder로 되돌리기
+                      e.currentTarget.value = '';
                     }}
                   >
                     <option value="" disabled>
@@ -245,7 +226,6 @@ export default function ProductDetailMain({ product }: { product: ProductType })
                   </select>
                 )}
 
-                {/* 선택된 옵션 리스트 (1개든 여러개든 동일 UI) */}
                 {selected.map((s) => {
                   const unit = getUnitPrice(s);
                   return (
@@ -256,7 +236,6 @@ export default function ProductDetailMain({ product }: { product: ProductType })
                       <div className="flex items-start justify-between gap-3">
                         <div className="text-sm font-medium text-foreground">{s.name}</div>
 
-                        {/* 옵션이 여러개일 때만 제거 버튼 */}
                         {hasOptions && (
                           <button
                             type="button"
@@ -270,7 +249,6 @@ export default function ProductDetailMain({ product }: { product: ProductType })
                       </div>
 
                       <div className="mt-3 flex items-center justify-between">
-                        {/* 수량 스텝퍼 */}
                         <div className="inline-flex items-center overflow-hidden rounded-sm border border-border bg-background">
                           <button
                             type="button"
@@ -293,10 +271,9 @@ export default function ProductDetailMain({ product }: { product: ProductType })
                           </button>
                         </div>
 
-                        {/* 가격 */}
                         <div className="text-right">
                           <div className="text-sm font-bold text-foreground">
-                            {formatWon(unit * s.qty)}원
+                            {formatWon(unit * s.qty)}
                           </div>
                           {typeof s.discountedPrice === 'number' &&
                             s.discountedPrice < s.basePrice && (

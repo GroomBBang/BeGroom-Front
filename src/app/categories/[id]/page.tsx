@@ -10,14 +10,12 @@ import { use } from 'react';
 
 export default function SearchPage({ params }: { params: Promise<{ id: string }> }) {
   const categoryId = use(params).id;
-  console.log(categoryId);
-  console.log(Number(categoryId));
 
   const filtersState = useProductFilters();
 
-  // 중분류 id = 대분류 id(3자리) + 중분류 3자리
+  // 대분류 찾기 (본인이거나, subcategories에 포함된 경우)
   const currentCategory = CATEGORIES.find(
-    (c) => c.id === (categoryId.length === 6 ? categoryId.slice(0, 3) : categoryId),
+    (c) => c.id === categoryId || c.subcategories.some((sub) => sub.id === categoryId),
   );
 
   return (

@@ -5,9 +5,9 @@ import { notificationHandlers } from './apis/notification';
 import { productsHandlers } from './apis/products';
 
 export const handlers = [
+  ...cartHandlers,
   ...myHandlers,
   ...notificationHandlers,
-  ...cartHandlers,
   ...productsHandlers,
   ...dashboardHandlers,
 ];

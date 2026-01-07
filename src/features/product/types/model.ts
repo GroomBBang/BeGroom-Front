@@ -49,6 +49,7 @@ export type ProductCardType = {
   discountRate?: number;
   mainImageUrl: string;
   isSoldOut: boolean;
+  wishlistCount: number;
   productStatus: ProductStatus;
 };
 
