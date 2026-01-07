@@ -1,6 +1,6 @@
-import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 import { useEffect, useState } from 'react';
 import checkoutAPI from '../apis/checkout.api';
+import { useCheckoutStore } from '../stores/useCheckoutStore';
 import { orderInfoResponseDTO } from '../types/response';
 import CheckoutPaymentMethod from './CheckoutPaymentMethod';
 import CheckoutPriceSummary from './CheckoutPriceSummary';
@@ -10,13 +10,13 @@ export default function CheckoutContainer() {
   const [orderInfo, setOrderInfo] = useState<orderInfoResponseDTO | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<'POINT' | 'PG'>('POINT');
   const { fetchOrderInfo, payAndCheckout } = checkoutAPI();
-
-  const { userInfo } = useAuthStore();
+  const orderId = useCheckoutStore((s) => s.orderId);
+  const clearOrderId = useCheckoutStore((s) => s.clearOrderId);
 
   useEffect(() => {
-    if (!userInfo) return;
-    fetchOrderInfo(userInfo.memberId).then((res) => setOrderInfo(res));
-  }, [userInfo]);
+    if (!orderId) return;
+    fetchOrderInfo(orderId).then((res) => setOrderInfo(res));
+  }, [orderId]);
 
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_360px]">
@@ -36,6 +36,8 @@ export default function CheckoutContainer() {
         paymentMethod={paymentMethod}
         balance={orderInfo?.balance || 0}
         payAndCheckout={payAndCheckout}
+        orderId={orderId}
+        clearOrderId={clearOrderId}
       />
     </div>
   );

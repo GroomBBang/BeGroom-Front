@@ -2,17 +2,20 @@ import { useCart } from '@/features/cart/hooks/useCart';
 import { formatWon } from '@/shared/lib/format';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { useCheckoutStore } from '../stores/useCheckoutStore';
 
 export default function CheckoutPriceSummary({
   orderAmount,
   paymentMethod,
   balance,
   payAndCheckout,
+  orderId,
+  clearOrderId,
 }: {
   orderAmount: number;
   paymentMethod: 'POINT' | 'PG';
   balance: number;
+  orderId: number | null;
+  clearOrderId: () => void;
   payAndCheckout: (
     data1: { paymentMethod: 'POINT' | 'PG'; orderId: number },
     data2: { paymentMethod: 'POINT' | 'PG' },
@@ -20,8 +23,6 @@ export default function CheckoutPriceSummary({
 }) {
   const { totals, removeSelected } = useCart();
   const router = useRouter();
-  const orderId = useCheckoutStore((s) => s.orderId);
-  const clearOrderId = useCheckoutStore((s) => s.clearOrderId);
 
   const isPoint = paymentMethod === 'POINT';
   // 포인트 결제 시: 전액 포인트로 결제한다고 가정

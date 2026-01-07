@@ -15,8 +15,8 @@ export default function checkoutAPI() {
     return response.result;
   };
 
-  const fetchOrderInfo = async (userId: number) => {
-    const response = await http.get<orderInfoResponseDTO>(`/orders/${userId}/info`);
+  const fetchOrderInfo = async (orderId: number) => {
+    const response = await http.get<orderInfoResponseDTO>(`/orders/${orderId}/info`);
     return response.result;
   };
 
