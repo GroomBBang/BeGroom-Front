@@ -27,7 +27,7 @@ export const useAuth = () => {
       router.push('/');
 
       loginStore({
-        memberId: response.result.id,
+        memberId: response.result.memberId,
         email: response.result.email,
         name: response.result.name,
       });

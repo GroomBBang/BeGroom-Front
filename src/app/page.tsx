@@ -1,15 +1,12 @@
 'use client';
 
+import FCFSCash from '@/features/event/component/FCFSCash';
 import ProductCard from '@/features/product/components/ProductCard';
 import { products } from '@/features/product/mocks/product';
-import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
-  const router = useRouter();
-
   return (
     <>
-      {/* Hero */}
       <section className="bg-primary-500 py-20 text-center text-white">
         <h1 className="text-4xl font-extrabold leading-tight md:text-5xl">
           신선한 식재료,
@@ -19,7 +16,8 @@ export default function HomePage() {
         <p className="mt-4 text-sm text-white/80 md:text-base">샛별배송, 새벽 7시 전 도착</p>
       </section>
 
-      {/* Products */}
+      <FCFSCash />
+
       <main className="mx-auto max-w-6xl px-4 pb-16 pt-12">
         <div className="mb-6">
           <h2 className="text-2xl font-extrabold text-foreground">이 상품 어때요?</h2>

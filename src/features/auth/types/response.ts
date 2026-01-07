@@ -1,6 +1,6 @@
 export interface LoginResponseDTO {
   token: string;
-  id: number;
+  memberId: number;
   email: string;
   name: string;
   role: string;
