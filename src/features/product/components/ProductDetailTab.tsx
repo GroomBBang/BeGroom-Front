@@ -7,7 +7,6 @@ import { ProductType, TabKey } from '../types/model';
 
 export default function ProductDetailTab({ product }: { product: ProductType }) {
   const [tab, setTab] = useState<TabKey>('desc');
-  const images = (product.detailImageUrls ?? []).slice(0, 5);
 
   return (
     <section className="mt-12">
@@ -48,7 +47,7 @@ export default function ProductDetailTab({ product }: { product: ProductType }) 
       <div className="py-8">
         {tab === 'desc' ? (
           <div className="flex flex-col gap-4">
-            <ImageCarousel images={images} />
+            <ImageCarousel images={product.detailImageUrls} />
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               {product.shortDescription}
             </p>
@@ -58,12 +57,12 @@ export default function ProductDetailTab({ product }: { product: ProductType }) 
             <h2 className="mb-5 text-xl font-bold text-foreground">상품 정보</h2>
 
             <div className="overflow-hidden rounded-md border border-border bg-background">
-              <InfoRow label="카테고리" value={product.brand} />
-              <InfoRow label="판매가" value={formatWon(product.discountedPrice)} />
+              <InfoRow label="브랜드" value={product.brand} />
               <InfoRow
-                label="정상가"
-                value={typeof product.salesPrice === 'number' ? formatWon(product.salesPrice) : '-'}
+                label="판매가"
+                value={formatWon(product.discountedPrice ?? product.salesPrice)}
               />
+              <InfoRow label="정상가" value={formatWon(product.salesPrice)} />
               <InfoRow label="재고" value="50개" />
               <InfoRow label="배송" value="샛별배송 (새벽 7시 전 도착)" />
               <InfoRow label="배송비" value="40,000원 이상 무료배송" />
