@@ -1,8 +1,7 @@
 'use client';
 
 import FCFSCash from '@/features/event/component/FCFSCash';
-import ProductCard from '@/features/product/components/ProductCard';
-import { products } from '@/features/product/mocks/product';
+// import { products } from '@/features/product/mocks/product';
 
 export default function HomePage() {
   return (
@@ -25,16 +24,16 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((product) => (
+          {/* {products.map((product: ProductCardType) => (
             <ProductCard key={String(product.productId)} product={product} />
-          ))}
+          ))} */}
         </div>
 
-        {products.length === 0 && (
+        {/* {products.length === 0 && (
           <div className="mt-12 rounded-xl border border-border bg-background p-8 text-center text-sm text-muted-foreground">
             상품이 없습니다.
           </div>
-        )}
+        )} */}
       </main>
     </>
   );

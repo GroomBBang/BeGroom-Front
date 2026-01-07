@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { getCartResponseDTO } from '@/features/cart/types/response';
 
 export const CART_ITEMS: getCartResponseDTO = {

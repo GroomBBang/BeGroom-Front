@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { NotificationItem } from '@/features/notification/types/model';
 
 export const USER_NOTIFICATIONS: NotificationItem[] = [

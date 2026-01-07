@@ -35,12 +35,11 @@ export default function CashChargePopupContent() {
     try {
       await chargeCash(selectedAmount);
 
-      alert(`${selectedAmount.toLocaleString()}원 충전이 완료되었습니다.`);
+      const channel = new BroadcastChannel('charge_channel');
+      channel.postMessage('CASH_CHARGE_SUCCESS');
+      channel.close();
 
-      if (window.opener && !window.opener.closed) {
-        window.opener.postMessage('CASH_CHARGE_SUCCESS', window.location.origin);
-      }
-
+      alert('충전 완료');
       window.close();
     } catch (error) {
       alert('충전에 실패했습니다.');

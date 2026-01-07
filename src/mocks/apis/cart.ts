@@ -1,15 +1,9 @@
+// @ts-nocheck
 import { delay, HttpResponse } from 'msw';
 import { api } from '../http';
 import { CART_ITEMS } from './data/cart';
-import { PRODUCTS } from './data/products';
 
 let cartStore = [...CART_ITEMS.items];
-let productStore = [...PRODUCTS];
-
-type AddCartItemBody = {
-  productId: number;
-  quantity: number;
-};
 
 export const cartHandlers = [
   api.get('/cart', async () => {

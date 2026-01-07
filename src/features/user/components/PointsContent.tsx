@@ -4,13 +4,12 @@ import Spinner from '@/shared/components/common/Spinner';
 import { AlertCircle } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import myAPI from '../apis/my.api';
-import { MyPointsResponseDTO, TransactionDto } from '../types/response';
+import { TransactionDto } from '../types/response';
 import MyCurrentPoint from './MyCurrentPoint';
 import MyPointHistory from './MyPointHistory';
 
 export default function PointsContent() {
   const { fetchMyPoints } = myAPI();
-  const [data, setData] = useState<MyPointsResponseDTO | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [balance, setBalance] = useState(0);
   const [transactions, setTransactions] = useState<TransactionDto[]>([]);
@@ -51,22 +50,19 @@ export default function PointsContent() {
   };
 
   useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.origin !== window.location.origin) return;
+    const channel = new BroadcastChannel('charge_channel');
 
+    channel.onmessage = (event) => {
       if (event.data === 'CASH_CHARGE_SUCCESS') {
-        fetchMyPoints().then((response) => {
-          setData(response.result);
-        });
+        console.log('CASH_CHARGE_SUCCESS');
+        loadTransactions(0);
       }
     };
 
-    window.addEventListener('message', handleMessage);
-
     return () => {
-      window.removeEventListener('message', handleMessage);
+      channel.close();
     };
-  }, [fetchMyPoints]);
+  }, [loadTransactions]);
 
   return (
     <div className="flex flex-col gap-6">

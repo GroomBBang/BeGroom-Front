@@ -5,6 +5,7 @@ import SSEConnection from '@/shared/components/common/SSEConnection';
 import Header from '@/shared/components/layout/Header';
 import HideOnPopup from '@/shared/components/layout/HideOnPopup';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -24,17 +25,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body className="min-h-screen bg-background text-foreground antialiased">
-        <HideOnPopup>
-          <Header />
-        </HideOnPopup>
+        <Suspense fallback={<div>Loading...</div>}>
+          <HideOnPopup>
+            <Header />
+          </HideOnPopup>
+        </Suspense>
 
         <MSWProvider>
           <SSEConnection />
           <div className="relative">
             {children}
-            <div className="fixed top-[25%] right-[30px] hidden xl:block">
-              <QuickMenu />
-            </div>
+            <Suspense fallback={<div>Loading...</div>}>
+              <div className="fixed top-[25%] right-[30px] hidden xl:block">
+                <QuickMenu />
+              </div>
+            </Suspense>
           </div>
         </MSWProvider>
         <ToastProvider />
