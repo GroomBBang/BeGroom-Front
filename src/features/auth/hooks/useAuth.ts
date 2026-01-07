@@ -26,7 +26,11 @@ export const useAuth = () => {
       toast.success('로그인 성공');
       router.push('/');
 
-      loginStore(response.result);
+      loginStore({
+        memberId: response.result.id,
+        email: response.result.email,
+        name: response.result.name,
+      });
 
       return response;
     } catch (error) {
