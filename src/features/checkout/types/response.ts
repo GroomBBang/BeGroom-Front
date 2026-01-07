@@ -1,6 +1,6 @@
 export interface createOrderRequestDTO {
   orderProductList: {
-    productId: number;
+    productDetailId: number;
     orderQuantity: number;
   }[];
 }

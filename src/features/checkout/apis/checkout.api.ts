@@ -4,6 +4,7 @@ import {
   checkoutResponseDTO,
   createOrderRequestDTO,
   createOrderResponseDTO,
+  orderInfoResponseDTO,
   paymentsRequestDTO,
   paymentsResponseDTO,
 } from '../types/response';
@@ -11,12 +12,12 @@ import {
 export default function checkoutAPI() {
   const createOrder = async (data: createOrderRequestDTO) => {
     const response = await http.post<createOrderResponseDTO>('/orders', data);
-    return response;
+    return response.result;
   };
 
-  const fetchOrderInfo = async ({ userId }: { userId: number }) => {
-    const response = await http.get(`/orders/${userId}/info`);
-    return response;
+  const fetchOrderInfo = async (userId: number) => {
+    const response = await http.get<orderInfoResponseDTO>(`/orders/${userId}/info`);
+    return response.result;
   };
 
   const requestPayment = async (data: paymentsRequestDTO) => {
