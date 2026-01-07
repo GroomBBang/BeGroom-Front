@@ -2,8 +2,8 @@
 'use client';
 
 import cartAPI from '@/features/cart/apis/cart.api';
-import type { CartContextType, CartItemType } from '@/features/cart/types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { CartContextType, CartItemType } from '../types/model';
 
 export function useCart(): CartContextType {
   const [items, setItems] = useState<CartItemType[]>([]);
@@ -15,7 +15,7 @@ export function useCart(): CartContextType {
     try {
       setIsLoading(true);
       const data = await api.fetchCart();
-      setItems(data.items);
+      setItems(data.groupItems[0].items);
     } finally {
       setIsLoading(false);
     }
@@ -25,9 +25,10 @@ export function useCart(): CartContextType {
     refetch();
   }, [refetch]);
 
-  const removeItem = async (id: string) => {
+  // 장바구니 단일 삭제
+  const removeItem = async (id: number) => {
     const prev = items;
-    setItems((cur) => cur.filter((x) => x.id !== id));
+    setItems((cur) => cur.filter((x) => x.cartItemId !== id));
 
     try {
       await api.removeCartItem(id);
@@ -36,11 +37,12 @@ export function useCart(): CartContextType {
     }
   };
 
-  const updateQty = async (id: string, nextQty: number) => {
+  // 장바구니 수량 변경
+  const updateQty = async (id: number, nextQty: number) => {
     const safeQty = Math.max(1, nextQty);
     const prev = items;
 
-    setItems((cur) => cur.map((x) => (x.id === id ? { ...x, quantity: safeQty } : x)));
+    setItems((cur) => cur.map((x) => (x.cartItemId === id ? { ...x, quantity: safeQty } : x)));
 
     try {
       await api.updateCartItemQty(id, safeQty);
@@ -49,38 +51,68 @@ export function useCart(): CartContextType {
     }
   };
 
-  const toggleSelect = (id: string) => {
-    setItems((prev) => prev.map((x) => (x.id === id ? { ...x, selected: !x.selected } : x)));
+  // 장바구니 선택
+  const toggleSelect = async (cartItemId: number) => {
+    const target = items.find((x) => x.cartItemId === cartItemId);
+    if (!target) return;
+
+    const isSelected = !target.isSelected;
+
+    setItems((prev) => prev.map((x) => (x.cartItemId === cartItemId ? { ...x, isSelected } : x)));
+
+    try {
+      await api.selectCartItem(cartItemId, isSelected);
+    } catch (e) {
+      setItems((prev) =>
+        prev.map((x) =>
+          x.cartItemId === cartItemId ? { ...x, isSelected: target.isSelected } : x,
+        ),
+      );
+    }
   };
 
-  const setAllSelected = (selected: boolean) => {
-    setItems((prev) => prev.map((x) => ({ ...x, selected })));
+  // 장바구니 전체 선택
+  const setAllSelected = async (selected: boolean) => {
+    setItems((prev) => prev.map((x) => ({ ...x, isSelected: selected })));
+
+    try {
+      if (selected) {
+        await api.selectAllCartItems();
+      } else {
+        await api.deselectAllCartItems();
+      }
+    } catch (e) {
+      setItems((prev) => prev.map((x) => ({ ...x, isSelected: !selected })));
+    }
   };
 
   const removeSelected = async () => {
-    const selectedIds = items.filter((x) => x.selected).map((x) => x.id);
+    const selectedIds = items.filter((x) => x.isSelected).map((x) => x.cartItemId);
     if (selectedIds.length === 0) return;
 
     const prev = items;
-    setItems((cur) => cur.filter((x) => !x.selected));
+    setItems((cur) => cur.filter((x) => !x.isSelected));
 
     try {
-      await api.removeSelectedItems(selectedIds); // DELETE /cart/items body: { ids }
+      await api.removeSelectedItems(selectedIds);
     } catch (e) {
       setItems(prev);
     }
   };
 
   const totals = useMemo(() => {
-    const selectedItems = items.filter((x) => x.selected);
-    const subtotal = selectedItems.reduce((acc, x) => acc + x.price * x.quantity, 0);
+    const selectedItems = items.filter((x) => x.isSelected);
+    const subtotal = selectedItems.reduce(
+      (acc, x) => acc + (x.discountedPrice ?? x.basePrice) * x.quantity,
+      0,
+    );
     const shipping = subtotal === 0 ? 0 : subtotal >= 40000 ? 0 : 3000;
     const total = subtotal + shipping;
     const selectedCount = selectedItems.reduce((acc, x) => acc + x.quantity, 0);
     return { subtotal, shipping, total, selectedCount };
   }, [items]);
 
-  const allSelected = items.length > 0 && items.every((x) => x.selected);
+  const allSelected = items.length > 0 && items.every((x) => x.isSelected);
 
   return {
     items,

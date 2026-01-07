@@ -3,7 +3,11 @@
 import { formatWon } from '@/shared/lib/format';
 import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { CartContextType } from '../types';
+
+import checkoutAPI from '@/features/checkout/apis/checkout.api';
+import { useCheckoutStore } from '@/features/checkout/stores/useCheckoutStore';
+import type { createOrderRequestDTO } from '@/features/checkout/types/response';
+import { CartContextType } from '../types/model';
 import CartItemCard from './CartItem';
 import CartRecommend from './CartRecommend';
 
@@ -20,6 +24,36 @@ export default function CartMain({ cart }: { cart: CartContextType }) {
   } = cart;
 
   const router = useRouter();
+  const { createOrder } = checkoutAPI();
+
+  const setCheckoutOrder = useCheckoutStore((s) => s.setOrderId);
+
+  const handleClickOrder = async () => {
+    try {
+      const selected = items.filter((x) => x.isSelected);
+      if (selected.length === 0) {
+        alert('주문할 상품을 선택해주세요.');
+        return;
+      }
+
+      const payload: createOrderRequestDTO = {
+        orderProductList: selected.map((x) => ({
+          productDetailId: x.productDetailId,
+          orderQuantity: x.quantity,
+        })),
+      };
+
+      const res = await createOrder(payload);
+
+      setCheckoutOrder(res.orderId);
+
+      router.push('/checkout');
+    } catch (e) {
+      const message = e instanceof Error ? e.message : '주문 생성에 실패했습니다.';
+      alert(message);
+    }
+  };
+
   return (
     <div>
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_360px]">
@@ -37,7 +71,7 @@ export default function CartMain({ cart }: { cart: CartContextType }) {
                     className="h-4 w-4"
                   />
                   <span className="text-foreground">
-                    전체 선택 ({items.filter((x) => x.selected).length}/{items.length})
+                    전체 선택 ({items.filter((x) => x.isSelected).length}/{items.length})
                   </span>
                 </label>
 
@@ -59,7 +93,7 @@ export default function CartMain({ cart }: { cart: CartContextType }) {
           <div className="space-y-4">
             {items.map((item) => (
               <CartItemCard
-                key={item.id}
+                key={item.productDetailId}
                 item={item}
                 actions={{ toggleSelect, updateQty, removeItem }}
               />
@@ -97,10 +131,13 @@ export default function CartMain({ cart }: { cart: CartContextType }) {
 
           <button
             type="button"
-            onClick={() => router.push('/checkout')}
-            className="mt-6 h-12 w-full rounded-sm bg-primary-700 text-sm font-bold text-white hover:bg-primary-800 cursor-pointer"
+            onClick={handleClickOrder}
+            disabled={totals.selectedCount === 0}
+            className="mt-6 h-12 w-full rounded-sm bg-primary-700 text-sm font-bold text-white hover:bg-primary-800 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {totals.selectedCount}개 상품 주문하기
+            {totals.selectedCount === 0
+              ? '상품을 선택해주세요'
+              : `${totals.selectedCount}개 상품 주문하기`}
           </button>
 
           <ul className="mt-5 list-disc space-y-2 pl-5 text-xs text-muted-foreground">
