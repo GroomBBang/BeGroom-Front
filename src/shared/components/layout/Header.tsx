@@ -101,19 +101,9 @@ export default function Header() {
       {/* Main header */}
       <div className="mx-auto grid h-20 max-w-6xl grid-cols-[auto_1fr_auto] items-center px-4">
         {/* Left */}
-        <div className="flex items-center gap-8">
+        <div className="">
           <Link href="/" className="text-2xl font-extrabold text-primary-600">
             BeGroom
-          </Link>
-
-          <Link
-            href={{
-              pathname: '/products',
-              query: { main: '베스트', sub: '전체보기' },
-            }}
-            className="text-sm font-semibold text-foreground hover:text-primary-600"
-          >
-            상품
           </Link>
         </div>
 
