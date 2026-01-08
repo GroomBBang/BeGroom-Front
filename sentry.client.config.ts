@@ -10,5 +10,6 @@ Sentry.init({
 
   integrations: [Sentry.replayIntegration()],
 
+  enabled: process.env.NEXT_PUBLIC_SENTRY_ENABLED === 'true',
   debug: false,
 });
