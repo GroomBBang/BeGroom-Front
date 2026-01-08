@@ -1,8 +1,10 @@
 'use client';
 
-import { ArrowLeft, Clock3, CreditCard, Package, Search, Undo2 } from 'lucide-react';
+import { OrderList } from '@/features/dashboard/components/order/OrderList';
+import { OrderSummary } from '@/features/dashboard/components/order/OrderSummary';
+import { ArrowLeft, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 type OrderStatus =
   | '결제완료'
@@ -51,63 +53,7 @@ function statusPill(status: OrderStatus) {
 export default function SellerOrdersPage() {
   const router = useRouter();
 
-  const rows: OrderRow[] = useMemo(
-    () => [
-      {
-        id: 'OD-20241228-12345',
-        orderedAt: '2024-12-28 11:10',
-        amount: 128000,
-        paymentMethod: '카드',
-        status: '정산대기',
-      },
-      {
-        id: 'OD-20241224-12312',
-        orderedAt: '2024-12-24 18:40',
-        amount: 54000,
-        paymentMethod: '간편결제',
-        status: '배송완료',
-      },
-      {
-        id: 'OD-20241222-12201',
-        orderedAt: '2024-12-22 09:20',
-        amount: 33000,
-        paymentMethod: '계좌이체',
-        status: '환불요청',
-      },
-      {
-        id: 'OD-20241219-12088',
-        orderedAt: '2024-12-19 15:05',
-        amount: 210000,
-        paymentMethod: '카드',
-        status: '정산완료',
-      },
-      {
-        id: 'OD-20241216-11902',
-        orderedAt: '2024-12-16 13:32',
-        amount: 76000,
-        paymentMethod: '간편결제',
-        status: '환불완료',
-      },
-    ],
-    [],
-  );
-
   const [query, setQuery] = useState('');
-
-  const filtered = useMemo(() => {
-    if (!query.trim()) return rows;
-    const q = query.trim().toLowerCase();
-    return rows.filter((r) => r.id.toLowerCase().includes(q) || r.status.toLowerCase().includes(q));
-  }, [rows, query]);
-
-  // ✅ 상단 요약(환불 수, 정산대기)
-  const summary = useMemo(() => {
-    const refundCount = rows.filter(
-      (r) => r.status === '환불요청' || r.status === '환불완료',
-    ).length;
-    const settlementPendingCount = rows.filter((r) => r.status === '정산대기').length;
-    return { refundCount, settlementPendingCount };
-  }, [rows]);
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -141,109 +87,22 @@ export default function SellerOrdersPage() {
           </div>
         </div>
 
-        {/* ✅ 상단 요약(디자인엔 없지만 추가) */}
-        <section className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2">
-          {/* 환불 수 */}
-          <div className="rounded-md bg-white p-6 shadow-sm">
-            <div className="mb-3 flex items-center justify-between">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100 text-red-600">
-                <Undo2 size={20} />
-              </div>
-              <span className="text-xs text-gray-400">최근 주문 기준</span>
-            </div>
-            <p className="text-sm text-gray-500">환불 수</p>
-            <p className="mt-1 text-2xl font-bold text-gray-900">
-              {summary.refundCount.toLocaleString('ko-KR')}건
-            </p>
-            <p className="mt-2 text-xs text-gray-500">환불요청/환불완료 포함</p>
-          </div>
-
-          {/* 정산대기 */}
-          <div className="rounded-md bg-white p-6 shadow-sm">
-            <div className="mb-3 flex items-center justify-between">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-700">
-                <Clock3 size={20} />
-              </div>
-              <span className="text-xs text-gray-400">지급 전</span>
-            </div>
-            <p className="text-sm text-gray-500">정산대기</p>
-            <p className="mt-1 text-2xl font-bold text-gray-900">
-              {summary.settlementPendingCount.toLocaleString('ko-KR')}건
-            </p>
-            <p className="mt-2 text-xs text-gray-500">정산 완료 전 주문</p>
-          </div>
-        </section>
+        {/* 상단 요약 */}
+        <OrderSummary />
 
         {/* 테이블 */}
         <section className="rounded-md bg-white shadow-sm">
           {/* 헤더 */}
-          <div className="hidden grid-cols-12 gap-3 border-b border-gray-100 px-6 py-4 text-sm font-medium text-gray-600 md:grid">
-            <div className="col-span-3">주문번호</div>
-            <div className="col-span-3">주문일시</div>
-            <div className="col-span-2 text-right">주문금액</div>
-            <div className="col-span-2">결제방법</div>
-            <div className="col-span-2">상태</div>
+          <div className="hidden grid-cols-10 gap-3 border-b border-gray-100 px-6 py-4 text-sm font-medium text-gray-600 md:grid">
+            <div className="col-span-1 text-center">주문번호</div>
+            <div className="col-span-3 text-center">주문일시</div>
+            <div className="col-span-2 text-center">주문금액</div>
+            <div className="col-span-2 text-center">결제방법</div>
+            <div className="col-span-2 text-center">상태</div>
           </div>
 
           {/* 바디 */}
-          <ul className="divide-y">
-            {filtered.map((r) => (
-              <li key={r.id} className="px-6 py-4">
-                {/* 모바일 */}
-                <div className="flex flex-col gap-2 md:hidden">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">{r.id}</p>
-                      <p className="mt-1 text-xs text-gray-500">{r.orderedAt}</p>
-                    </div>
-                    {statusPill(r.status)}
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div className="rounded-md bg-gray-50 p-3">
-                      <p className="text-xs text-gray-500">주문금액</p>
-                      <p className="mt-1 font-semibold text-gray-900">{formatKRW(r.amount)}</p>
-                    </div>
-                    <div className="rounded-md bg-gray-50 p-3">
-                      <p className="text-xs text-gray-500">결제방법</p>
-                      <p className="mt-1 font-semibold text-gray-900">{r.paymentMethod}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 데스크탑 */}
-                <div className="hidden grid-cols-12 items-center gap-3 md:grid">
-                  <div className="col-span-3">
-                    <div className="flex items-center gap-2">
-                      <Package size={18} className="text-gray-400" />
-                      <p className="text-sm font-semibold text-gray-900">{r.id}</p>
-                    </div>
-                  </div>
-
-                  <div className="col-span-3 text-sm text-gray-700">{r.orderedAt}</div>
-
-                  <div className="col-span-2 text-right text-sm font-semibold text-gray-900">
-                    {formatKRW(r.amount)}
-                  </div>
-
-                  <div className="col-span-2">
-                    <div className="inline-flex items-center gap-2 text-sm text-gray-700">
-                      <CreditCard size={16} className="text-gray-400" />
-                      {r.paymentMethod}
-                    </div>
-                  </div>
-
-                  <div className="col-span-2">{statusPill(r.status)}</div>
-                </div>
-              </li>
-            ))}
-          </ul>
-
-          {filtered.length === 0 && (
-            <div className="flex min-h-[220px] items-center justify-center px-6 py-10 text-sm text-gray-500">
-              주문 내역이 없습니다
-            </div>
-          )}
+          <OrderList />
         </section>
       </div>
     </main>
