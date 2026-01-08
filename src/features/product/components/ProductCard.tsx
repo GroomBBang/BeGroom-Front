@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function ProductCard({ product }: Props) {
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(product.isWishlisted);
   const { addWishList } = productAPI();
 
   const toggleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {

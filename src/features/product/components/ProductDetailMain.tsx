@@ -5,6 +5,7 @@ import { formatWon } from '@/shared/lib/format';
 import { Heart, ShoppingCart } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
+import productAPI from '../api/product.api';
 import { ProductType } from '../types/model';
 
 type SelectedDetail = {
@@ -19,8 +20,23 @@ type SelectedDetail = {
 
 export default function ProductDetailMain({ product }: { product: ProductType }) {
   const api = cartAPI();
+  const [liked, setLiked] = useState(product.isWishlisted);
+  const { addWishList } = productAPI();
 
-  const [liked, setLiked] = useState(false);
+  const toggleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setLiked((prev) => !prev);
+
+    try {
+      await addWishList(product.productId);
+    } catch (err) {
+      setLiked((prev) => !prev);
+    }
+  };
+
+  const displayLikes = product.wishlistCount + (liked ? 1 : 0);
 
   // details 기반: 옵션 1개/여러개 판단
   const details = product.details ?? [];
@@ -154,18 +170,13 @@ export default function ProductDetailMain({ product }: { product: ProductType })
           <div className="flex items-center justify-between">
             <div className="text-sm font-medium text-muted-foreground">{product.brand}</div>
 
-            <button
-              type="button"
-              onClick={() => setLiked((v) => !v)}
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground cursor-pointer"
-              aria-label="좋아요"
-            >
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Heart
                 className={liked ? 'fill-orange-500 text-orange-500' : 'text-muted-foreground'}
                 size={18}
               />
-              <span>2명이 좋아합니다</span>
-            </button>
+              <span>{displayLikes}명이 좋아합니다</span>
+            </div>
           </div>
 
           <h1 className="mt-2 text-3xl font-bold text-foreground">{product.name}</h1>
@@ -302,7 +313,7 @@ export default function ProductDetailMain({ product }: { product: ProductType })
           <div className="mt-4 flex items-center gap-3">
             <button
               type="button"
-              onClick={() => setLiked((v) => !v)}
+              onClick={toggleLike}
               className="grid h-12 w-12 place-items-center rounded-sm border border-border bg-background text-foreground hover:bg-muted cursor-pointer"
               aria-label="찜하기"
             >
