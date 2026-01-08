@@ -35,6 +35,9 @@ export type ProductType = {
   isSoldOut: boolean;
   productStatus: ProductStatus;
 
+  wishlistCount: number;
+  isWishlisted: boolean;
+
   details: ProductDetailOption[];
 };
 
@@ -50,6 +53,7 @@ export type ProductCardType = {
   mainImageUrl: string;
   isSoldOut: boolean;
   wishlistCount: number;
+  isWishlisted: boolean;
   productStatus: ProductStatus;
 };
 
