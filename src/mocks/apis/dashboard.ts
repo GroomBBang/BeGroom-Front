@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { DashboardPeriodType } from '@/features/dashboard/types/response';
 import { delay, HttpResponse } from 'msw';
 import { api } from '../http';

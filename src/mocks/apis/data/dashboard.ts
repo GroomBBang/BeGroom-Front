@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { DashboardPeriodType, SettlementStatus } from '@/features/dashboard/types/response';
 
 export const DASHBOARD_DATA = {

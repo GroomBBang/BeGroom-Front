@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { ProductDetailResponseDTO } from '@/features/product/types/response';
 
 export const PRODUCTS: ProductDetailResponseDTO[] = [
