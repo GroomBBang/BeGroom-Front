@@ -1,8 +1,8 @@
 'use client';
 
 import settlementAPI from '@/features/dashboard/apis/settlement.api';
-import SettlementContainer from '@/features/dashboard/components/SettlementContainer';
-import SettlementSummary from '@/features/dashboard/components/SettlementSummary';
+import SellerSettlementContainer from '@/features/dashboard/components/settlements/SettlementContainer';
+import SettlementSummary from '@/features/dashboard/components/settlements/SettlementSummary';
 import { ArrowLeft, Download } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -60,7 +60,7 @@ export default function SellerSettlementPageV2() {
           <SettlementSummary />
 
           {/* 컨테이너 */}
-          <SettlementContainer />
+          <SellerSettlementContainer />
         </div>
 
         {/* 안내 */}

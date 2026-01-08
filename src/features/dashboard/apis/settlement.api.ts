@@ -1,27 +1,58 @@
 import http from '@/shared/apis/http';
 import {
-  DashboardPeriodType,
-  FetchSettlementDataDTO,
-  FetchSettlementPeriodDataDTO,
-  FetchSettlementProductDataDTO,
+  SettlementPeriodResponseDTO,
+  SettlementProductRequestDTO,
+  SettlementProductResponseDTO,
+  SettlementResponseDTO,
 } from '../types/response';
 
 export default function settlementAPI() {
   const fetchSettlementData = async () => {
-    const response = await http.get<FetchSettlementDataDTO>('/settlement');
-    return response;
+    const response = await http.get<SettlementResponseDTO>('/settlement');
+    return response.result;
   };
 
-  const fetchSettlementProductData = async () => {
-    const response = await http.get<FetchSettlementProductDataDTO>('/settlement/product');
-    return response;
-  };
-
-  const fetchSettlementPeriodData = async (type: DashboardPeriodType) => {
-    const response = await http.get<FetchSettlementPeriodDataDTO>('/settlement/period', {
-      params: { type },
+  const fetchSettlementProductData = async ({
+    params,
+  }: {
+    params: SettlementProductRequestDTO;
+  }) => {
+    const response = await http.get<SettlementProductResponseDTO>('/settlement/product', {
+      params,
     });
-    return response;
+    return response.result;
+  };
+
+  const fetchSettlementDailyData = async ({ page }: { page: number }) => {
+    const response = await http.get<SettlementPeriodResponseDTO>('/settlement/period/daily', {
+      params: { page },
+    });
+
+    return response.result;
+  };
+
+  const fetchSettlementMonthlyData = async ({ page }: { page: number }) => {
+    const response = await http.get<SettlementPeriodResponseDTO>('/settlement/period/monthly', {
+      params: { page },
+    });
+
+    return response.result;
+  };
+
+  const fetchSettlementYearlyData = async ({ page }: { page: number }) => {
+    const response = await http.get<SettlementPeriodResponseDTO>('/settlement/period/yearly', {
+      params: { page },
+    });
+
+    return response.result;
+  };
+
+  const fetchSettlementWeeklyData = async ({ page }: { page: number }) => {
+    const response = await http.get<SettlementPeriodResponseDTO>('/settlement/period/weekly', {
+      params: { page },
+    });
+
+    return response.result;
   };
 
   const downloadSettlementInCSV = async () => {
@@ -34,7 +65,10 @@ export default function settlementAPI() {
   return {
     fetchSettlementData,
     fetchSettlementProductData,
-    fetchSettlementPeriodData,
+    fetchSettlementDailyData,
+    fetchSettlementMonthlyData,
+    fetchSettlementYearlyData,
+    fetchSettlementWeeklyData,
     downloadSettlementInCSV,
   };
 }
