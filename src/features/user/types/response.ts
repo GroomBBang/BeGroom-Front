@@ -1,9 +1,19 @@
+import { ORDER_STATUS_LABEL } from '../constants/order';
+
 export interface MyProfileResponseDTO {
   email: string;
   name: string;
   phoneNumber: string;
   role: string;
   joinDate: string;
+}
+
+export interface SellerProfileResponseDTO {
+  email: string;
+  name: string;
+  phoneNumber: string;
+  role: string;
+  createAt: string;
 }
 
 export interface TransactionDto {
@@ -39,10 +49,12 @@ export interface OrderItemDTO {
   quantity: number;
 }
 
+type ORDER_STATUS_LABEL_ITEM = keyof typeof ORDER_STATUS_LABEL;
+
 export interface OrderDTO {
   order_number: number;
   created_at: string;
-  status: string;
+  status: ORDER_STATUS_LABEL_ITEM;
   total_amount: number;
   items: OrderItemDTO[];
 }

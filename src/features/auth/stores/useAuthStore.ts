@@ -1,11 +1,13 @@
 import Cookies from 'js-cookie';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { ROLE } from '../types/model';
 
 export interface UserInfo {
   memberId: number;
   email: string;
   name: string;
+  role: ROLE;
 }
 
 export interface AuthState {

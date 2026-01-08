@@ -30,6 +30,7 @@ export const useAuth = () => {
         memberId: response.result.memberId,
         email: response.result.email,
         name: response.result.name,
+        role: response.result.role,
       });
 
       return response;

@@ -1,4 +1,5 @@
 import { formatDateTime } from '@/shared/lib/date';
+import { ORDER_STATUS_LABEL } from '../constants/order';
 import { MyOrdersResponseDTO } from '../types/response';
 
 interface MyOrderHistoryProps {
@@ -29,7 +30,7 @@ export default function MyOrderHistory({ orders, onRefundModal }: MyOrderHistory
                     : 'bg-primary-50 text-primary-600'
                 }`}
               >
-                {order.status}
+                {ORDER_STATUS_LABEL[order.status] ?? order.status}
               </button>
               {order.status === 'COMPLETED' && (
                 <button

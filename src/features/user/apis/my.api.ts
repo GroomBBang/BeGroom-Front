@@ -4,11 +4,17 @@ import {
   MyPointsResponseDTO,
   MyProfileResponseDTO,
   MyWishResponseDTO,
+  SellerProfileResponseDTO,
 } from '../types/response';
 
 export default function myAPI() {
   const fetchMyProfile = async () => {
     const response = await http.get<MyProfileResponseDTO>('/members/profile');
+    return response;
+  };
+
+  const fetchSellerProfile = async () => {
+    const response = await http.get<SellerProfileResponseDTO>('/seller/profile');
     return response;
   };
 
@@ -30,6 +36,7 @@ export default function myAPI() {
 
   return {
     fetchMyProfile,
+    fetchSellerProfile,
     fetchMyPoints,
     fetchMyOrders,
     fetchMyWish,

@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 import Spinner from '@/shared/components/common/Spinner';
 import { formatDateOnly } from '@/shared/lib/date';
 import { useEffect, useState } from 'react';
@@ -22,14 +23,36 @@ const ProfileItem = ({ label, value }: { label: string; value: string | undefine
 };
 
 export default function ProfileContent() {
-  const { fetchMyProfile } = myAPI();
+  const { userInfo } = useAuthStore();
+  const { fetchMyProfile, fetchSellerProfile } = myAPI();
   const [data, setData] = useState<MyProfileResponseDTO | null>(null);
 
   useEffect(() => {
-    fetchMyProfile().then((response) => {
-      setData(response.result);
-    });
-  }, []);
+    const loadData = async () => {
+      if (!userInfo) return;
+
+      try {
+        if (userInfo.role === 'USER') {
+          const response = await fetchMyProfile();
+          setData(response.result);
+        } else {
+          const response = await fetchSellerProfile();
+          const { result } = response;
+
+          if (result) {
+            const { createAt, ...rest } = result;
+            setData({
+              ...rest,
+              joinDate: createAt,
+            });
+          }
+        }
+      } catch (error) {
+        console.error('프로필 로딩 실패:', error);
+      }
+    };
+    loadData();
+  }, [userInfo]);
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-6 md:p-8">
