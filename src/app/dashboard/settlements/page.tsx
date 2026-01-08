@@ -1,5 +1,6 @@
 'use client';
 
+import settlementAPI from '@/features/dashboard/apis/settlement.api';
 import SettlementContainer from '@/features/dashboard/components/SettlementContainer';
 import SettlementSummary from '@/features/dashboard/components/SettlementSummary';
 import { ArrowLeft, Download } from 'lucide-react';
@@ -7,6 +8,24 @@ import { useRouter } from 'next/navigation';
 
 export default function SellerSettlementPageV2() {
   const router = useRouter();
+  const { downloadSettlementInCSV } = settlementAPI();
+
+  const handleDownloadSettlementInCSV = async () => {
+    const response = await downloadSettlementInCSV();
+    // @ts-ignore
+    const blob = new Blob([response], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'daily_settlement_all.csv');
+
+    document.body.appendChild(link);
+    link.click();
+
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  };
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -30,12 +49,10 @@ export default function SellerSettlementPageV2() {
           <button
             type="button"
             className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-sm border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-sm hover:bg-gray-50"
-            onClick={() => {
-              // TODO: CSV 다운로드(현재 화면 기준)
-            }}
+            onClick={handleDownloadSettlementInCSV}
           >
             <Download size={18} className="text-gray-500" />
-            CSV 내보내기
+            일별 정산 내역 CSV 내보내기
           </button>
         </div>
         <div className="space-y-6">

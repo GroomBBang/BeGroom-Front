@@ -24,9 +24,17 @@ export default function settlementAPI() {
     return response;
   };
 
+  const downloadSettlementInCSV = async () => {
+    const response = await http.get('/settlement/csv', {
+      responseType: 'blob',
+    });
+    return response;
+  };
+
   return {
     fetchSettlementData,
     fetchSettlementProductData,
     fetchSettlementPeriodData,
+    downloadSettlementInCSV,
   };
 }
