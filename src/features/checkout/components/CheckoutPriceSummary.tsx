@@ -1,4 +1,5 @@
 import { useCart } from '@/features/cart/hooks/useCart';
+import { useCartStore } from '@/features/cart/stores/useCartStore';
 import { formatWon } from '@/shared/lib/format';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -32,6 +33,8 @@ export default function CheckoutPriceSummary({
   const isPointInsufficient = isPoint && balance < orderAmount;
   const disabled = totals.subtotal === 0 || isPointInsufficient;
 
+  const fetchCartCount = useCartStore((s) => s.fetchCartCount);
+
   const onPay = async () => {
     if (disabled) return;
 
@@ -45,6 +48,7 @@ export default function CheckoutPriceSummary({
 
       removeSelected();
       clearOrderId?.();
+      fetchCartCount();
       router.push('/checkout/success');
     } catch (e) {
       const message = e instanceof Error ? e.message : '결제에 실패했습니다.';

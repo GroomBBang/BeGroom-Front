@@ -1,6 +1,7 @@
 'use client';
 
 import cartAPI from '@/features/cart/apis/cart.api';
+import { useCartStore } from '@/features/cart/stores/useCartStore';
 import { formatWon } from '@/shared/lib/format';
 import { Heart, ShoppingCart } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -20,6 +21,7 @@ type SelectedDetail = {
 
 export default function ProductDetailMain({ product }: { product: ProductType }) {
   const api = cartAPI();
+  const fetchCartCount = useCartStore((s) => s.fetchCartCount);
   const [liked, setLiked] = useState(product.isWishlisted);
   const { addWishList } = productAPI();
 
@@ -142,6 +144,7 @@ export default function ProductDetailMain({ product }: { product: ProductType })
     try {
       await api.addCartItem(payload);
       toast.success('상품이 장바구니에 추가되었습니다');
+      fetchCartCount();
     } catch (e) {
       console.error(e);
     }

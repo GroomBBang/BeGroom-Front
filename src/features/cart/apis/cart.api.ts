@@ -8,6 +8,12 @@ export default function cartAPI() {
     return response.result;
   };
 
+  // 장바구니 개수 조회
+  const fetchCartCount = async () => {
+    const response = await http.get<number>('/cart/count');
+    return response.result;
+  };
+
   // 장바구니 선택 여부 (단일)
   const selectCartItem = async (id: number, isSelected: boolean) => {
     await http.put(`/cart/items/${id}/select`, { isSelected });

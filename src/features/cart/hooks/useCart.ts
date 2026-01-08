@@ -3,11 +3,13 @@
 
 import cartAPI from '@/features/cart/apis/cart.api';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCartStore } from '../stores/useCartStore';
 import { CartContextType, CartItemType } from '../types/model';
 
 export function useCart(): CartContextType {
   const [items, setItems] = useState<CartItemType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const fetchCartCount = useCartStore((s) => s.fetchCartCount);
 
   const api = useMemo(() => cartAPI(), []);
 
@@ -32,6 +34,7 @@ export function useCart(): CartContextType {
 
     try {
       await api.removeCartItem(id);
+      fetchCartCount();
     } catch (e) {
       setItems(prev);
     }
@@ -95,6 +98,7 @@ export function useCart(): CartContextType {
 
     try {
       await api.removeSelectedItems(selectedIds);
+      fetchCartCount();
     } catch (e) {
       setItems(prev);
     }

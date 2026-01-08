@@ -67,7 +67,9 @@ export default function CartItemCard({ item, actions }: Props) {
           <div className="flex flex-col items-end gap-2">
             <button
               type="button"
-              onClick={() => removeItem(item.cartItemId)}
+              onClick={() => {
+                removeItem(item.cartItemId);
+              }}
               className="grid h-8 w-8 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
               aria-label="삭제"
             >

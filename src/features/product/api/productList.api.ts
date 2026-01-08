@@ -5,7 +5,7 @@ import { ProductSearchResponseDTO } from '../types/response';
 export type SearchProductsParams = {
   keyword?: string;
   categoryIds?: number;
-} & FiltersType;
+} & Partial<FiltersType>;
 
 export const productListAPI = {
   searchProducts: async (params: SearchProductsParams) => {
@@ -14,7 +14,7 @@ export const productListAPI = {
     const response = await http.get<ProductSearchResponseDTO>('/products/search', {
       params: {
         ...rest,
-        page: Math.max(0, page - 1),
+        page: Math.max(0, (page ?? 0) - 1),
       },
     });
 

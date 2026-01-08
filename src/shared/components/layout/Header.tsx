@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { useAuthStore } from '@/features/auth/stores/useAuthStore';
+import { useCartStore } from '@/features/cart/stores/useCartStore';
 import SearchNavigation from '@/features/search/components/SearchNavigation';
 import { Bell, ChevronDown, Search, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
@@ -11,12 +12,25 @@ import { useEffect, useRef, useState } from 'react';
 export default function Header() {
   const { logout } = useAuth();
   const { isLoggedIn, userInfo, unreadNotisCount } = useAuthStore();
-  const [keyword, setKeyword] = useState('');
+  const role = useAuthStore((s) => s.userInfo?.role);
 
+  const cartCount = useCartStore((s) => s.cartCount);
+  const fetchCartCount = useCartStore((s) => s.fetchCartCount);
+  const clearCartCount = useCartStore((s) => s.clearCartCount);
+
+  const [keyword, setKeyword] = useState('');
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      clearCartCount();
+      return;
+    }
+    fetchCartCount().catch(() => {});
+  }, [isLoggedIn]);
 
   const handleSearch = (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -40,6 +54,7 @@ export default function Header() {
 
   const handleLogout = () => {
     logout();
+    clearCartCount();
     setOpen(false);
   };
 
@@ -101,10 +116,18 @@ export default function Header() {
       {/* Main header */}
       <div className="mx-auto grid h-20 max-w-6xl grid-cols-[auto_1fr_auto] items-center px-4">
         {/* Left */}
-        <div className="">
+        <div className="flex gap-6 items-end">
           <Link href="/" className="text-2xl font-extrabold text-primary-600">
             BeGroom
           </Link>
+          {role === 'SELLER' && (
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="text-md font-semibold text-foreground hover:text-primary-600 cursor-pointer"
+            >
+              관리자
+            </button>
+          )}
         </div>
 
         {/* Center search (md 이상) */}
@@ -159,7 +182,7 @@ export default function Header() {
           >
             <ShoppingCart size={22} />
             <span className="absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-primary-600 px-1 text-[11px] font-bold text-white">
-              1
+              {cartCount}
             </span>
           </Link>
         </div>

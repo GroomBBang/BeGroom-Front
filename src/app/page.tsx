@@ -1,9 +1,36 @@
 'use client';
 
 import FCFSCash from '@/features/event/component/FCFSCash';
-// import { products } from '@/features/product/mocks/product';
+import { productListAPI } from '@/features/product/api/productList.api';
+import ProductCard from '@/features/product/components/ProductCard';
+import { ProductCardType } from '@/features/product/types/model';
+import { useEffect, useState } from 'react';
 
 export default function HomePage() {
+  const [products, setProducts] = useState<ProductCardType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+
+    productListAPI
+      .searchProducts({
+        page: 0,
+        size: 8,
+        sort: 'wishlistCount',
+        direction: 'DESC',
+      })
+      .then((res) => {
+        setProducts(res.content);
+      })
+      .catch(() => {
+        setProducts([]);
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  if (isLoading) return;
+
   return (
     <>
       <section className="bg-primary-500 py-20 text-center text-white">
@@ -23,17 +50,17 @@ export default function HomePage() {
           <p className="mt-2 text-sm text-muted-foreground">지금 가장 인기 있는 상품</p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {/* {products.map((product: ProductCardType) => (
+        <div className="grid grid-cols-2 grid-rows-2 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {products.map((product: ProductCardType) => (
             <ProductCard key={String(product.productId)} product={product} />
-          ))} */}
+          ))}
         </div>
 
-        {/* {products.length === 0 && (
+        {products.length === 0 && (
           <div className="mt-12 rounded-xl border border-border bg-background p-8 text-center text-sm text-muted-foreground">
             상품이 없습니다.
           </div>
-        )} */}
+        )}
       </main>
     </>
   );
