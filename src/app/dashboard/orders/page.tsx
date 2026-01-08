@@ -6,50 +6,6 @@ import { ArrowLeft, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-type OrderStatus =
-  | '결제완료'
-  | '배송중'
-  | '배송완료'
-  | '환불요청'
-  | '환불완료'
-  | '정산대기'
-  | '정산완료';
-
-type OrderRow = {
-  id: string; // 주문번호
-  orderedAt: string; // 주문일시
-  amount: number; // 주문금액
-  paymentMethod: '카드' | '간편결제' | '계좌이체';
-  status: OrderStatus;
-};
-
-function formatKRW(v: number) {
-  return `₩${v.toLocaleString('ko-KR')}`;
-}
-
-function statusPill(status: OrderStatus) {
-  const cls =
-    status === '배송완료'
-      ? 'bg-emerald-50 text-emerald-700'
-      : status === '배송중'
-        ? 'bg-indigo-50 text-indigo-700'
-        : status === '결제완료'
-          ? 'bg-gray-100 text-gray-700'
-          : status === '환불요청'
-            ? 'bg-amber-50 text-amber-700'
-            : status === '환불완료'
-              ? 'bg-red-50 text-red-700'
-              : status === '정산대기'
-                ? 'bg-blue-50 text-blue-700'
-                : 'bg-purple-50 text-purple-700';
-
-  return (
-    <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${cls}`}>
-      {status}
-    </span>
-  );
-}
-
 export default function SellerOrdersPage() {
   const router = useRouter();
 

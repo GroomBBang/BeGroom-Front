@@ -13,6 +13,7 @@ export interface SettlementProductType {
   feeAmount: number;
   settlementAmount: number;
   settlementStatus: 'SETTLED' | 'UNSETTLED';
+  paymentStatus: 'REFUND' | 'PAYMENT';
 }
 
 export type SettlementPeriodType = {
@@ -32,7 +33,7 @@ export type OrderItemType = {
   price: number;
   paymentMethod: 'POINT' | 'PG';
   settlementStatus: 'SETTLED' | 'UNSETTLED';
-  paymentStatus: 'REFUND' | 'PAYMENT';
+  paymentStatus: 'REFUNDED' | 'READY' | 'APPROVED' | 'CANCELLED' | 'PROCESSING' | 'FAILED';
 };
 
 export type SettlementDateProps = {

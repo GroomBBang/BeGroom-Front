@@ -1,12 +1,12 @@
 'use client';
 
 import Pagination from '@/features/search/components/Pagination';
-import Badge from '@/shared/components/common/Badge';
 import Spinner from '@/shared/components/common/Spinner';
 import { formatKRW } from '@/shared/lib/format';
 import { ContactRound } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import settlementAPI from '../../apis/settlement.api';
+import { getOrderStatusPill } from '../../lib/statusPill';
 import { SettlementProductType } from '../../types/model';
 
 export default function SettlementItemList() {
@@ -131,80 +131,87 @@ export default function SettlementItemList() {
           </div>
 
           <ul className="divide-y">
-            {data.map((r) => (
-              <li key={r.id} className="py-4">
-                {/* 모바일 */}
-                <div className="flex flex-col gap-2 md:hidden">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">{r.id}</p>
-                      <p className="mt-1 text-xs text-gray-500">
-                        {new Date(r.date).toLocaleString('ko-KR')}
-                      </p>
+            {data.map((r) => {
+              const { label, cls } = getOrderStatusPill(r.settlementStatus, r.paymentStatus);
+              return (
+                <li key={r.id} className="py-4">
+                  {/* 모바일 */}
+                  <div className="flex flex-col gap-2 md:hidden">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900">{r.id}</p>
+                        <p className="mt-1 text-xs text-gray-500">
+                          {new Date(r.date).toLocaleString('ko-KR')}
+                        </p>
+                      </div>
+                      <div className="col-span-2 text-center">
+                        <span
+                          className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${cls}`}
+                        >
+                          {label}
+                        </span>
+                      </div>
                     </div>
-                    <Badge
-                      label={r.settlementStatus === 'SETTLED' ? '정산완료' : '정산대기'}
-                      color={r.settlementStatus === 'SETTLED' ? 'emerald' : 'blue'}
-                    />
-                  </div>
 
-                  <div className="grid grid-cols-4 gap-2 text-sm">
-                    <div>
-                      <p className="text-xs text-gray-500">결제</p>
-                      <p className="mt-1 font-semibold text-gray-900">
-                        {formatKRW(r.paymentAmount)}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">환불</p>
-                      <p className="mt-1 font-semibold text-gray-900">
-                        {formatKRW(r.refundAmount)}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">수수료</p>
-                      <p className="mt-1 font-semibold text-gray-900">{formatKRW(r.feeAmount)}</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">정산</p>
-                      <p className="mt-1 font-semibold text-gray-900">
-                        {formatKRW(r.settlementAmount)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 데스크탑 */}
-                <div className="hidden grid-cols-13 items-center gap-3 md:grid">
-                  <div className="col-span-3 flex items-center justify-center gap-4">
-                    <ContactRound size={20} />
-                    <div>
-                      <p className="text-sm font-semibold text-gray-900">{r.id}</p>
-                      <p className="mt-1 text-xs text-gray-500">
-                        {new Date(r.date).toLocaleString('ko-KR')}
-                      </p>
+                    <div className="grid grid-cols-4 gap-2 text-sm">
+                      <div>
+                        <p className="text-xs text-gray-500">결제</p>
+                        <p className="mt-1 font-semibold text-gray-900">
+                          {formatKRW(r.paymentAmount)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">환불</p>
+                        <p className="mt-1 font-semibold text-gray-900">
+                          {formatKRW(r.refundAmount)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">수수료</p>
+                        <p className="mt-1 font-semibold text-gray-900">{formatKRW(r.feeAmount)}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">정산</p>
+                        <p className="mt-1 font-semibold text-gray-900">
+                          {formatKRW(r.settlementAmount)}
+                        </p>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="col-span-2 text-center text-sm font-medium">
-                    {formatKRW(r.paymentAmount)}
+                  {/* 데스크탑 */}
+                  <div className="hidden grid-cols-13 items-center gap-3 md:grid">
+                    <div className="col-span-3 flex items-center justify-center gap-4">
+                      <ContactRound size={20} />
+                      <div>
+                        <p className="text-sm font-semibold text-gray-900">{r.id}</p>
+                        <p className="mt-1 text-xs text-gray-500">
+                          {new Date(r.date).toLocaleString('ko-KR')}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="col-span-2 text-center text-sm font-medium">
+                      {formatKRW(r.paymentAmount)}
+                    </div>
+                    <div className="col-span-2 text-center text-sm font-medium">
+                      {formatKRW(r.refundAmount)}
+                    </div>
+                    <div className="col-span-2 text-center text-sm">{formatKRW(r.feeAmount)}</div>
+                    <div className="col-span-2 text-center text-sm font-semibold">
+                      {formatKRW(r.settlementAmount)}
+                    </div>
+                    <div className="col-span-2 text-center">
+                      <span
+                        className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${cls}`}
+                      >
+                        {label}
+                      </span>
+                    </div>
                   </div>
-                  <div className="col-span-2 text-center text-sm font-medium">
-                    {formatKRW(r.refundAmount)}
-                  </div>
-                  <div className="col-span-2 text-center text-sm">{formatKRW(r.feeAmount)}</div>
-                  <div className="col-span-2 text-center text-sm font-semibold">
-                    {formatKRW(r.settlementAmount)}
-                  </div>
-                  <div className="col-span-2 flex justify-center">
-                    <Badge
-                      label={r.settlementStatus === 'SETTLED' ? '정산완료' : '정산대기'}
-                      color={r.settlementStatus === 'SETTLED' ? 'emerald' : 'blue'}
-                    />
-                  </div>
-                </div>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
 
           <Pagination
