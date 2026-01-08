@@ -3,20 +3,21 @@
 import { formatKRW } from '@/shared/lib/format';
 import { BadgePercent, PiggyBank, Undo2, Wallet } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import settlementAPI from '../apis/settlement.api';
-import { DashboardSummaryDTO } from '../types/response';
+import settlementAPI from '../../apis/settlement.api';
+import { SettlementSummaryType } from '../../types/model';
 
 export default function SettlementSummary() {
   const { fetchSettlementData } = settlementAPI();
-  const [summaryData, setSummaryData] = useState<DashboardSummaryDTO | null>(null);
+  const [data, setData] = useState<SettlementSummaryType | null>(null);
 
   useEffect(() => {
-    fetchSettlementData().then((res) => {
-      setSummaryData(res.result.summary);
-    });
+    (async () => {
+      const res = await fetchSettlementData();
+      setData(res);
+    })();
   }, []);
 
-  if (!summaryData) return <SummarySkeleton />;
+  if (!data) return <div>로딩...</div>;
 
   return (
     <section className="grid grid-cols-1 gap-4 md:grid-cols-4">
@@ -25,9 +26,7 @@ export default function SettlementSummary() {
           <Wallet size={20} />
         </div>
         <p className="text-sm text-gray-500">결제금액</p>
-        <p className="mt-1 text-xl font-bold text-gray-900">
-          {formatKRW(summaryData.totalPaymentAmount)}
-        </p>
+        <p className="mt-1 text-xl font-bold text-gray-900">{formatKRW(data.totalPaymentAmount)}</p>
       </div>
 
       <div className="rounded-md bg-white p-5 shadow-sm">
@@ -35,9 +34,7 @@ export default function SettlementSummary() {
           <Undo2 size={20} />
         </div>
         <p className="text-sm text-gray-500">환불금액</p>
-        <p className="mt-1 text-xl font-bold text-gray-900">
-          {formatKRW(summaryData.totalRefundAmount)}
-        </p>
+        <p className="mt-1 text-xl font-bold text-gray-900">{formatKRW(data.totalRefundAmount)}</p>
       </div>
 
       <div className="rounded-md bg-white p-5 shadow-sm">
@@ -45,9 +42,7 @@ export default function SettlementSummary() {
           <BadgePercent size={20} />
         </div>
         <p className="text-sm text-gray-500">수수료</p>
-        <p className="mt-1 text-xl font-bold text-gray-900">
-          {formatKRW(summaryData.totalFeeAmount)}
-        </p>
+        <p className="mt-1 text-xl font-bold text-gray-900">{formatKRW(data.totalFeeAmount)}</p>
       </div>
 
       <div className="rounded-md bg-white p-5 shadow-sm">
@@ -56,7 +51,7 @@ export default function SettlementSummary() {
         </div>
         <p className="text-sm text-gray-500">정산금액</p>
         <p className="mt-1 text-xl font-bold text-gray-900">
-          {formatKRW(summaryData.totalSettlementAmount)}
+          {formatKRW(data.totalSettlementAmount)}
         </p>
       </div>
     </section>

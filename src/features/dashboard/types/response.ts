@@ -1,40 +1,61 @@
-export type SettlementStatus = 'SETTLED' | 'PENDING' | 'FAILED';
+import {
+  OrderItemType,
+  SettlementPeriodType,
+  SettlementProductType,
+  SettlementSummaryType,
+} from './model';
 
-export interface DashboardSummaryDTO {
-  totalPaymentAmount: number;
-  totalRefundAmount: number;
-  totalFeeAmount: number;
-  totalSettlementAmount: number;
-}
+// settlement
+export type SettlementResponseDTO = SettlementSummaryType;
 
-export interface DashboardSettlementProductDTO {
-  id: number;
-  paidAt: string;
-  paymentAmount: number;
-  refundAmount: number;
-  feeAmount: number;
-  settlementAmount: number;
-  settlementStatus: SettlementStatus;
-}
+export type SettlementProductRequestDTO = {
+  startDate: string;
+  endDate: string;
+  page: number;
+};
 
-export interface DashboardResultDTO {
-  summary: DashboardSummaryDTO;
-  settlementByItemList: DashboardSettlementProductDTO[];
-}
+export type SettlementProductResponseDTO = {
+  totalPages: number;
+  content: SettlementProductType[];
+};
 
-export type FetchSettlementDataDTO = DashboardResultDTO;
+export type SettlementPeriodResponseDTO = {
+  totalPages: number;
+  content: SettlementPeriodType[];
+};
 
-export type FetchSettlementProductDataDTO = DashboardSettlementProductDTO[];
-
-export type DashboardPeriodType = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
-
-export interface DashboardPeriodItemDTO {
-  period: string;
+// Dashboard
+export type FetchDashboardDataDTO = {
   orderCnt: number;
-  totalSalesAmount: number;
-  totalFeeAmount: number;
-  settlementAmount: number;
-  status: SettlementStatus;
-}
+  productCnt: number;
+  salesAmount: number;
+};
 
-export type FetchSettlementPeriodDataDTO = DashboardPeriodItemDTO[];
+export type FetchDashboardRecentDataDTO = {
+  recentOrder: {
+    orderId: number;
+    amount: number;
+    orderedAt: string;
+  };
+  recentRefund: {
+    paymentId: number;
+    refundAmount: number;
+    refundAt: string;
+  };
+  recentSettlement: {
+    settlementId: number;
+    settlementAmount: number;
+    settleAt: string;
+  };
+};
+
+//order
+export type FetchOrderInfoDataDTO = {
+  refundCnt: number;
+  unsettledCnt: number;
+};
+
+export type FetchOrderListDataDTO = {
+  totalPages: number;
+  content: OrderItemType[];
+};

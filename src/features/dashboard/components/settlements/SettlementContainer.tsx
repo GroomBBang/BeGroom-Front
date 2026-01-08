@@ -2,7 +2,6 @@
 
 import { Layers, List } from 'lucide-react';
 import { useState } from 'react';
-
 import SettlementItemList from './SettlementItemList';
 import SettlementPeriodList from './SettlementPeriodList';
 
