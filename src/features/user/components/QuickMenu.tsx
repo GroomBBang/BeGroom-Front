@@ -2,11 +2,13 @@
 
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useRecentProducts } from '../hooks/useRecentProducts';
 
 export default function QuickMenu() {
   const [startIndex, setStartIndex] = useState(0);
+  const router = useRouter();
   const itemsPerPage = 2;
 
   const { items } = useRecentProducts();
@@ -56,6 +58,7 @@ export default function QuickMenu() {
           {items.slice(startIndex, startIndex + itemsPerPage).map((product) => (
             <div
               key={product.id}
+              onClick={() => router.push(`/products/${product.id}`)}
               className="h-[65px] w-[60px] cursor-pointer overflow-hidden border border-gray-100"
             >
               <Image
