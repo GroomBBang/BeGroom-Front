@@ -57,7 +57,7 @@ export default function HomePage() {
         </div>
 
         {products.length === 0 && (
-          <div className="mt-12 rounded-xl border border-border bg-background p-8 text-center text-sm text-muted-foreground">
+          <div className=" rounded-xl border border-border bg-background p-12 text-center text-sm text-muted-foreground">
             상품이 없습니다.
           </div>
         )}

@@ -100,7 +100,7 @@ export default function CheckoutPriceSummary({
 
             {isPointInsufficient && (
               <p className="mt-2 text-xs text-red-600">
-                포인트가 부족해 결제할 수 없습니다. 결제 수단을 일반 결제로 변경해주세요.
+                포인트가 부족합니다. 포인트를 충전해주세요.
               </p>
             )}
           </>

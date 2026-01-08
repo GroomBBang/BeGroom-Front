@@ -24,12 +24,14 @@ export default function ProductDetailMain({ product }: { product: ProductType })
   const fetchCartCount = useCartStore((s) => s.fetchCartCount);
   const [liked, setLiked] = useState(product.isWishlisted);
   const { addWishList } = productAPI();
+  const [displayLikes, setDisplayLikes] = useState(product.wishlistCount);
 
   const toggleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
     setLiked((prev) => !prev);
+    setDisplayLikes((prev) => (liked ? prev - 1 : prev + 1));
 
     try {
       await addWishList(product.productId);
@@ -37,8 +39,6 @@ export default function ProductDetailMain({ product }: { product: ProductType })
       setLiked((prev) => !prev);
     }
   };
-
-  const displayLikes = product.wishlistCount + (liked ? 1 : 0);
 
   // details 기반: 옵션 1개/여러개 판단
   const details = product.details ?? [];
@@ -147,6 +147,7 @@ export default function ProductDetailMain({ product }: { product: ProductType })
       fetchCartCount();
     } catch (e) {
       console.error(e);
+      toast.error('장바구니 추가 실패');
     }
   };
 

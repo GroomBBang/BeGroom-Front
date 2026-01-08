@@ -18,12 +18,12 @@ export default function CheckoutSuccessPage() {
         </p>
 
         <div className="mt-8 flex items-center justify-center gap-3">
-          <button
-            type="button"
-            className="h-11 rounded-sm border border-border bg-background px-5 text-sm font-bold text-foreground hover:bg-muted"
+          <Link
+            href="/my"
+            className="inline-flex items-center justify-center h-11 rounded-sm border border-border bg-background px-5 text-sm font-bold text-foreground hover:bg-muted"
           >
             주문 내역 확인
-          </button>
+          </Link>
 
           <Link
             href="/"

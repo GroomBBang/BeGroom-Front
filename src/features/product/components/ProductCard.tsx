@@ -13,21 +13,22 @@ interface Props {
 export default function ProductCard({ product }: Props) {
   const [liked, setLiked] = useState(product.isWishlisted);
   const { addWishList } = productAPI();
+  const [displayLikes, setDisplayLikes] = useState(product.wishlistCount);
 
   const toggleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
     setLiked((prev) => !prev);
+    setDisplayLikes((prev) => (liked ? prev - 1 : prev + 1));
 
     try {
       await addWishList(product.productId);
     } catch (err) {
+      console.log(err);
       setLiked((prev) => !prev);
     }
   };
-
-  const displayLikes = product.wishlistCount + (liked ? 1 : 0);
 
   return (
     <Link href={`/products/${product.productId}`} className="group cursor-pointer">

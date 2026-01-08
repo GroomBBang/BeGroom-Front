@@ -27,16 +27,6 @@ export default function CheckoutPaymentMethod({
           </span>
         </div>
       </label>
-
-      <label className="flex items-center gap-3 rounded-sm border border-border bg-background p-4 cursor-pointer">
-        <input
-          type="radio"
-          checked={paymentMethod === 'PG'}
-          onChange={() => onPaymentMethodChange('PG')}
-          className="h-4 w-4"
-        />
-        <span className="text-sm font-semibold text-foreground">일반 결제</span>
-      </label>
     </section>
   );
 }

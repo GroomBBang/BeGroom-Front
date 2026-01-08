@@ -117,9 +117,10 @@ export default function CartMain({ cart }: { cart: CartContextType }) {
           </div>
 
           <div className="mt-4 rounded-md bg-primary-50 px-4 py-3 text-sm text-primary-700">
-            {totals.subtotal >= 40000
+            {/* {totals.subtotal >= 40000
               ? '무료배송 대상입니다'
-              : `${formatWon(40000 - totals.subtotal)} 추가 주문 시 무료배송`}
+              : `${formatWon(40000 - totals.subtotal)} 추가 주문 시 무료배송`} */}
+            무료배송 대상입니다
           </div>
 
           <div className="my-5 h-px bg-border" />
@@ -142,7 +143,7 @@ export default function CartMain({ cart }: { cart: CartContextType }) {
 
           <ul className="mt-5 list-disc space-y-2 pl-5 text-xs text-muted-foreground">
             <li>샛별배송: 새벽 7시 전 도착</li>
-            <li>40,000원 이상 무료배송</li>
+            <li>최소금액 없이 모두 무료배송</li>
             <li>신선식품 품질 보증</li>
           </ul>
         </aside>

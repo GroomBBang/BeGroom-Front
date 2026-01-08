@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'product-image.kurly.com',
       },
+      {
+        protocol: 'https',
+        hostname: '3p-image.kurly.com',
+      },
     ],
   },
 

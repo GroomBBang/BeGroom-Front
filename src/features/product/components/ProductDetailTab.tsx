@@ -63,10 +63,8 @@ export default function ProductDetailTab({ product }: { product: ProductType }) 
                 value={formatWon(product.discountedPrice ?? product.salesPrice)}
               />
               <InfoRow label="정상가" value={formatWon(product.salesPrice)} />
-              <InfoRow label="재고" value="50개" />
               <InfoRow label="배송" value="샛별배송 (새벽 7시 전 도착)" />
-              <InfoRow label="배송비" value="40,000원 이상 무료배송" />
-              <InfoRow label="포장 타입" value="냉장 포장" />
+              <InfoRow label="배송비" value="무료배송" />
               <InfoRow label="판매자" value="컬리" />
             </div>
 

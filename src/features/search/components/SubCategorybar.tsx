@@ -14,7 +14,7 @@ export default function SubCategorybar({
         {subCategories.map((cat) => (
           <Link
             key={cat.id}
-            href={`/categories/${cat.id}?sort=productId&direction=DESC`}
+            href={`/categories/${cat.id}?sort=wishlistCount&direction=DESC&page=0&size=30`}
             className={`text-sm hover:text-primary-500 hover:font-bold ${categoryId === cat.id ? 'text-primary-500 font-bold' : ''}`}
           >
             {cat.label}

@@ -20,7 +20,7 @@ export default function Categorybar() {
               key={category.id}
               href={{
                 pathname: `/categories/${category.id}`,
-                query: { sort: 'productId', direction: 'DESC', page: 0, size: 30 },
+                query: { sort: 'wishlistCount', direction: 'DESC', page: 0, size: 30 },
               }}
               onMouseEnter={() => setActiveCategoryId(category.id)}
               className={`
@@ -51,7 +51,7 @@ export default function Categorybar() {
               <Link
                 href={{
                   pathname: `/categories/${sub.id}`,
-                  query: { sort: 'productId', direction: 'DESC', page: 0, size: 30 },
+                  query: { sort: 'wishlistCount', direction: 'DESC', page: 0, size: 30 },
                 }}
                 className="block w-full cursor-pointer rounded px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:text-[#5f0080] hover:underline"
               >
