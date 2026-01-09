@@ -112,7 +112,7 @@ export default function CartMain({ cart }: { cart: CartContextType }) {
             </div>
             <div className="flex items-center justify-between">
               <div className="text-muted-foreground">배송비</div>
-              <div className="font-medium text-foreground">{formatWon(totals.shipping)}</div>
+              <div className="font-medium text-foreground">0</div>
             </div>
           </div>
 

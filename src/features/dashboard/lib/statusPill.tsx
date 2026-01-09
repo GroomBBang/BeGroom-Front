@@ -1,4 +1,8 @@
 export const getOrderStatusPill = (settlementStatus: string, paymentStatus: string) => {
+  if (settlementStatus === null) {
+    settlementStatus = 'SETTLED';
+  }
+
   if (paymentStatus === 'REFUNDED') {
     return { label: '환불완료', cls: 'bg-red-50 text-red-700' };
   }

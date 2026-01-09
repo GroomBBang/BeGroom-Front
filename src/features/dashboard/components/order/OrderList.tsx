@@ -46,7 +46,9 @@ export const OrderList = () => {
                   </div>
                 </div>
 
-                <div className="col-span-3 text-center text-sm text-gray-700">{r.createdAt}</div>
+                <div className="col-span-3 text-center text-sm text-gray-700">
+                  {r.createdAt.replace('T', ' ').split('.')[0]}
+                </div>
 
                 <div className="col-span-2 text-center text-sm font-semibold">
                   {formatKRW(r.price)}

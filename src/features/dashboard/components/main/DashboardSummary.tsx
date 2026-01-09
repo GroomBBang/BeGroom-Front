@@ -1,5 +1,6 @@
 'use client';
 
+import { formatKRW } from '@/shared/lib/format';
 import { Package, ShoppingBag, Wallet } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { fetchDashboardData } from '../../apis/dashboard.api';
@@ -41,7 +42,7 @@ export default function DashboardSummary() {
         <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-yellow-100 text-yellow-600">
           <Wallet size={20} />
         </div>
-        <p className="text-2xl font-bold">₩{data.salesAmount}</p>
+        <p className="text-2xl font-bold">{formatKRW(data.salesAmount)}</p>
         <p className="mt-1 text-sm text-gray-500">총 매출</p>
       </div>
     </section>
