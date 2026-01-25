@@ -1,7 +1,9 @@
 'use client';
 
+import ConfirmModal from '@/shared/components/common/ConfirmModal';
 import { formatWon } from '@/shared/lib/format';
 import { X } from 'lucide-react';
+import { useState } from 'react';
 import type { CartActionsType, CartItemType } from '../types/model';
 
 type ItemActions = Pick<CartActionsType, 'toggleSelect' | 'updateQty' | 'removeItem'>;
@@ -13,6 +15,7 @@ type Props = {
 
 export default function CartItemCard({ item, actions }: Props) {
   const { toggleSelect, updateQty, removeItem } = actions;
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   return (
     <div className="rounded-md border border-border bg-background p-5">
@@ -45,8 +48,9 @@ export default function CartItemCard({ item, actions }: Props) {
             <div className="mt-3 inline-flex items-center overflow-hidden rounded-sm border border-border">
               <button
                 type="button"
-                onClick={() => updateQty(item.cartItemId, item.quantity - 1)}
-                className="grid h-9 w-10 place-items-center hover:bg-muted cursor-pointer"
+                disabled={item.quantity === 1}
+                onClick={() => updateQty(item.cartItemId, item.quantity - 1, item.stockQuantity)}
+                className="grid h-9 w-10 place-items-center hover:bg-muted cursor-pointer disabled:cursor-not-allowed disabled:text-muted-foreground disabled:hover:bg-transparent"
               >
                 −
               </button>
@@ -55,12 +59,14 @@ export default function CartItemCard({ item, actions }: Props) {
               </div>
               <button
                 type="button"
-                onClick={() => updateQty(item.cartItemId, item.quantity + 1)}
+                onClick={() => updateQty(item.cartItemId, item.quantity + 1, item.stockQuantity)}
                 className="grid h-9 w-10 place-items-center hover:bg-muted cursor-pointer"
               >
                 +
               </button>
             </div>
+
+            <div className="mt-2 text-xs text-muted-foreground">재고: {item.stockQuantity}개</div>
           </div>
 
           {/* 가격 + 삭제 */}
@@ -68,9 +74,9 @@ export default function CartItemCard({ item, actions }: Props) {
             <button
               type="button"
               onClick={() => {
-                removeItem(item.cartItemId);
+                setIsConfirmOpen(true);
               }}
-              className="grid h-8 w-8 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
+              className="grid h-8 w-8 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
               aria-label="삭제"
             >
               <X size={18} />
@@ -81,6 +87,14 @@ export default function CartItemCard({ item, actions }: Props) {
             </div>
           </div>
         </div>
+
+        <ConfirmModal
+          isOpen={isConfirmOpen}
+          confirmLabel="삭제"
+          message="삭제하시겠습니까?"
+          onConfirm={() => removeItem(item.cartItemId)}
+          onClose={() => setIsConfirmOpen(false)}
+        />
       </div>
     </div>
   );

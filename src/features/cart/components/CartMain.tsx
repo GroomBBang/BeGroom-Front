@@ -2,11 +2,9 @@
 
 import { formatWon } from '@/shared/lib/format';
 import { Trash2 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
-import checkoutAPI from '@/features/checkout/apis/checkout.api';
-import { useCheckoutStore } from '@/features/checkout/stores/useCheckoutStore';
-import type { createOrderRequestDTO } from '@/features/checkout/types/response';
+import ConfirmModal from '@/shared/components/common/ConfirmModal';
+import { useState } from 'react';
 import { CartContextType } from '../types/model';
 import CartItemCard from './CartItem';
 import CartRecommend from './CartRecommend';
@@ -21,38 +19,10 @@ export default function CartMain({ cart }: { cart: CartContextType }) {
     removeSelected,
     removeItem,
     updateQty,
+    handleClickOrder,
   } = cart;
 
-  const router = useRouter();
-  const { createOrder } = checkoutAPI();
-
-  const setCheckoutOrder = useCheckoutStore((s) => s.setOrderId);
-
-  const handleClickOrder = async () => {
-    try {
-      const selected = items.filter((x) => x.isSelected);
-      if (selected.length === 0) {
-        alert('주문할 상품을 선택해주세요.');
-        return;
-      }
-
-      const payload: createOrderRequestDTO = {
-        orderProductList: selected.map((x) => ({
-          productDetailId: x.productDetailId,
-          orderQuantity: x.quantity,
-        })),
-      };
-
-      const res = await createOrder(payload);
-
-      setCheckoutOrder(res.orderId);
-
-      router.push('/checkout');
-    } catch (e) {
-      const message = e instanceof Error ? e.message : '주문 생성에 실패했습니다.';
-      alert(message);
-    }
-  };
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   return (
     <div>
@@ -77,7 +47,7 @@ export default function CartMain({ cart }: { cart: CartContextType }) {
 
                 <button
                   type="button"
-                  onClick={removeSelected}
+                  onClick={() => setIsConfirmOpen(true)}
                   className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
                 >
                   <Trash2 size={16} />
@@ -134,6 +104,7 @@ export default function CartMain({ cart }: { cart: CartContextType }) {
             type="button"
             onClick={handleClickOrder}
             disabled={totals.selectedCount === 0}
+            aria-label="주문 버튼"
             className="mt-6 h-12 w-full rounded-sm bg-primary-700 text-sm font-bold text-white hover:bg-primary-800 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
           >
             {totals.selectedCount === 0
@@ -149,6 +120,14 @@ export default function CartMain({ cart }: { cart: CartContextType }) {
         </aside>
       </div>
       <CartRecommend />
+
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        confirmLabel="삭제"
+        message="삭제하시겠습니까?"
+        onConfirm={removeSelected}
+        onClose={() => setIsConfirmOpen(false)}
+      />
     </div>
   );
 }

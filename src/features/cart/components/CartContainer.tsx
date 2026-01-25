@@ -1,5 +1,6 @@
 'use client';
 
+import AlertModal from '@/shared/components/common/AlertModal';
 import { useCart } from '../hooks/useCart';
 import CartEmpty from './CartEmpty';
 import CartLoading from './CartLoading';
@@ -12,5 +13,10 @@ export default function CartContainer() {
 
   if (cart.isLoading) return <CartLoading />;
 
-  return <div>{isEmpty ? <CartEmpty /> : <CartMain cart={cart} />}</div>;
+  return (
+    <>
+      <AlertModal isOpen={!!cart.error} message={cart.error || ''} onClose={cart.clearError} />
+      <div>{isEmpty ? <CartEmpty /> : <CartMain cart={cart} />}</div>
+    </>
+  );
 }
