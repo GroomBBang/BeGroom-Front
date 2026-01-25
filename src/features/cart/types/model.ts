@@ -33,15 +33,18 @@ export type CartTotalsType = {
 
 export type CartActionsType = {
   removeItem: (id: number) => void;
-  updateQty: (id: number, nextQty: number) => void;
+  updateQty: (id: number, nextQty: number, stockQty: number) => void;
   toggleSelect: (id: number) => void;
   setAllSelected: (selected: boolean) => void;
   removeSelected: () => void;
+  handleClickOrder: () => void;
 };
 
 export type CartStateType = {
   items: CartItemType[];
   isLoading: boolean;
+  error: string | null;
+  clearError: () => void;
   totals: CartTotalsType;
   allSelected: boolean;
 };
