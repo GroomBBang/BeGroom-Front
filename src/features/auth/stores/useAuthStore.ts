@@ -19,8 +19,8 @@ export interface AuthState {
   logout: () => void;
 
   setUnreadNotisCount: (count: number) => void;
-  increaseNotisCount: () => void;
-  decreaseNotisCount: () => void;
+  increaseNotisCount: (amount: number) => void;
+  decreaseNotisCount: (amount: number) => void;
   resetNotisCount: () => void;
 }
 
@@ -35,8 +35,10 @@ export const useAuthStore = create<AuthState>()(
       logout: () => set({ userInfo: null, isLoggedIn: false, unreadNotisCount: 0 }),
 
       setUnreadNotisCount: (count) => set({ unreadNotisCount: count }),
-      increaseNotisCount: () => set((state) => ({ unreadNotisCount: state.unreadNotisCount + 1 })),
-      decreaseNotisCount: () => set((state) => ({ unreadNotisCount: state.unreadNotisCount - 1 })),
+      increaseNotisCount: (amount: number) =>
+        set((state) => ({ unreadNotisCount: state.unreadNotisCount + amount })),
+      decreaseNotisCount: (amount: number) =>
+        set((state) => ({ unreadNotisCount: state.unreadNotisCount - amount })),
       resetNotisCount: () => set({ unreadNotisCount: 0 }),
     }),
     {
