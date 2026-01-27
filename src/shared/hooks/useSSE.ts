@@ -85,7 +85,6 @@ export const useSSE = () => {
 
     return () => {
       controller.abort();
-      console.log('SSE 연결 종료');
     };
   }, []);
 };

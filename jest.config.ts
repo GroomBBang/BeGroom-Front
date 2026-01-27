@@ -15,8 +15,14 @@ const customJestConfig = {
   moduleDirectories: ['node_modules', '<rootDir>/'],
   testEnvironment: 'jest-environment-jsdom',
 
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
+  // 커버리지 수집 활성화
+  collectCoverage: true,
+
+  // 커버리지 임계값 설정
+  coverageThreshold: {
+    global: {
+      lines: 80,
+    },
   },
 };
 
