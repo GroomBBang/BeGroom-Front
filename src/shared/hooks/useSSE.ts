@@ -27,32 +27,46 @@ export const useSSE = () => {
           signal: controller.signal,
 
           async onopen(response) {
-            if (response.ok) {
+            if (response.ok && isLoggedIn) {
               return;
             }
             throw new Error(`Connection failed: ${response.status}`);
           },
 
           onmessage(msg) {
-            if (msg.event === 'connect') {
-              console.log('SSE 연결 성공:', msg.data);
-              return;
-            }
+            switch (msg.event) {
+              case 'notification':
+              case 'unread-notification':
+              case 'recovered-notification':
+                try {
+                  const data = JSON.parse(msg.data);
 
-            if (msg.event === 'sse' || msg.event === 'notification') {
-              try {
-                const data = JSON.parse(msg.data);
+                  if (data?.message) {
+                    toast.success(data.message);
+                    let amount = 1;
 
-                if (data && data.message) {
-                  toast.success(data.message);
-                  increaseNotisCount();
-                  window.dispatchEvent(new CustomEvent('notification-update'));
-                } else {
-                  console.log('알림 수신:', data);
+                    if (msg.event !== 'notification') {
+                      const match = data.message.match(/\d+/);
+                      if (match) {
+                        amount = parseInt(match[0], 10);
+                      }
+                    }
+
+                    if (amount > 0) {
+                      increaseNotisCount(amount);
+                    }
+
+                    window.dispatchEvent(new CustomEvent('notification-update'));
+                  } else {
+                    console.log('알림 수신:', data);
+                  }
+                } catch (e) {
+                  console.warn('SSE 데이터 파싱 실패: ', e);
                 }
-              } catch (e) {
-                console.warn('SSE 데이터 파싱 실패:', msg.data);
-              }
+                break;
+
+              default:
+                break;
             }
           },
 
@@ -73,5 +87,5 @@ export const useSSE = () => {
       controller.abort();
       console.log('SSE 연결 종료');
     };
-  }, [isLoggedIn]);
+  }, []);
 };
