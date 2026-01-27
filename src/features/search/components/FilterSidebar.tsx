@@ -41,7 +41,7 @@ const CheckItem = ({
   onClick,
 }: {
   label: string;
-  count: number;
+  count?: number;
   checked?: boolean;
   onClick?: () => void;
 }) => (
@@ -59,7 +59,7 @@ const CheckItem = ({
       />
     </div>
     <span className="text-sm text-gray-600 group-hover:text-gray-900">{label}</span>
-    <span className="text-xs text-gray-400 font-light">{count}</span>
+    {count && <span className="text-xs text-gray-400 font-light">{count}</span>}
   </label>
 );
 
@@ -129,19 +129,16 @@ export default function FilterSidebar({ filtersState }: { filtersState: FiltersS
       <FilterSection title="포장타입" isOpen={false}>
         <CheckItem
           label="상온"
-          count={252}
           checked={filters.packagingTypes.includes('ROOM')}
           onClick={() => togglePackaging('ROOM')}
         />
         <CheckItem
           label="냉장"
-          count={200}
           checked={filters.packagingTypes.includes('COLD')}
           onClick={() => togglePackaging('COLD')}
         />
         <CheckItem
           label="냉동"
-          count={17}
           checked={filters.packagingTypes.includes('FROZEN')}
           onClick={() => togglePackaging('FROZEN')}
         />
@@ -151,13 +148,11 @@ export default function FilterSidebar({ filtersState }: { filtersState: FiltersS
       <FilterSection title="배송" isOpen={false}>
         <CheckItem
           label="샛별배송"
-          count={510}
           checked={filters.deliveryTypes.includes('DAWN')}
           onClick={() => toggleDelivery('DAWN')}
         />
         <CheckItem
           label="판매자배송"
-          count={59}
           checked={filters.deliveryTypes.includes('SELLER')}
           onClick={() => toggleDelivery('SELLER')}
         />
@@ -167,7 +162,6 @@ export default function FilterSidebar({ filtersState }: { filtersState: FiltersS
       <FilterSection title="옵션" isOpen={false}>
         <CheckItem
           label="품절 상품 포함"
-          count={580}
           checked={!filters.excludeSoldOut}
           onClick={() => setIncludeSoldOut(!filters.excludeSoldOut)}
         />

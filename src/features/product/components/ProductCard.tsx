@@ -1,7 +1,10 @@
 'use client';
 
+import { useAuthStore } from '@/features/auth/stores/useAuthStore';
+import AlertModal from '@/shared/components/common/AlertModal';
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import productAPI from '../api/product.api';
 import { ProductCardType } from '../types/model';
@@ -15,9 +18,18 @@ export default function ProductCard({ product }: Props) {
   const { addWishList } = productAPI();
   const [displayLikes, setDisplayLikes] = useState(product.wishlistCount);
 
+  const { isLoggedIn } = useAuthStore();
+  const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
   const toggleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (!isLoggedIn) {
+      setIsOpen(true);
+      return;
+    }
 
     setLiked((prev) => !prev);
     setDisplayLikes((prev) => (liked ? prev - 1 : prev + 1));
@@ -25,27 +37,28 @@ export default function ProductCard({ product }: Props) {
     try {
       await addWishList(product.productId);
     } catch (err) {
-      console.log(err);
       setLiked((prev) => !prev);
+      setDisplayLikes((prev) => (liked ? prev + 1 : prev - 1));
     }
   };
 
   return (
-    <Link href={`/products/${product.productId}`} className="group cursor-pointer">
-      {/* 이미지 */}
-      <div className="relative mb-2 overflow-hidden rounded bg-gray-100 aspect-[5/6]">
-        <img
-          src={product.mainImageUrl}
-          alt={product.name}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-        />
+    <>
+      <Link href={`/products/${product.productId}`} className="group cursor-pointer">
+        {/* 이미지 */}
+        <div className="relative mb-2 overflow-hidden rounded bg-gray-100 aspect-[5/6]">
+          <img
+            src={product.mainImageUrl}
+            alt={product.name}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
 
-        {/* 하트 버튼 (hover 노출) */}
-        <button
-          type="button"
-          aria-label="좋아요"
-          onClick={toggleLike}
-          className={`
+          {/* 하트 버튼 (hover 노출) */}
+          <button
+            type="button"
+            aria-label="좋아요"
+            onClick={toggleLike}
+            className={`
             absolute right-2 top-2
             flex h-9 w-9 items-center justify-center
             rounded-full
@@ -55,42 +68,51 @@ export default function ProductCard({ product }: Props) {
             cursor-pointer
             ${liked ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
           `}
-        >
-          <Heart
-            className={`h-5 w-5 transition ${
-              liked ? 'fill-orange-500 text-orange-500' : 'text-gray-400'
-            }`}
-          />
-        </button>
-      </div>
-
-      {/* 텍스트 영역 */}
-      <div className="flex flex-col gap-1">
-        <div className="text-sm font-medium text-gray-400">{product.brand}</div>
-
-        <h3 className="line-clamp-2 text-base leading-relaxed text-gray-900">{product.name}</h3>
-
-        <p className="line-clamp-1 text-xs text-gray-400">{product.shortDescription}</p>
-
-        {/* 가격 */}
-        <div className="flex items-center gap-2">
-          {product.discountRate !== 0 && (
-            <span className="text-lg font-bold text-orange-500">{product.discountRate}%</span>
-          )}
-          <span className="py-1 text-lg font-bold text-gray-900">
-            {(product.discountedPrice ?? product.salesPrice).toLocaleString()}원
-          </span>
+          >
+            <Heart
+              className={`h-5 w-5 transition ${
+                liked ? 'fill-orange-500 text-orange-500' : 'text-gray-400'
+              }`}
+            />
+          </button>
         </div>
 
-        {/* ❤️ 좋아요 영역 */}
-        <div className="flex items-center gap-1 text-xs">
-          <Heart
-            aria-hidden
-            className={`h-4 w-4 ${liked ? 'fill-orange-500 text-orange-500' : 'text-gray-300'}`}
-          />
-          <span className={liked ? 'text-orange-500' : 'text-gray-400'}>{displayLikes}</span>
+        {/* 텍스트 영역 */}
+        <div className="flex flex-col gap-1">
+          <div className="text-sm font-medium text-gray-400">{product.brand}</div>
+
+          <h3 className="line-clamp-2 text-base leading-relaxed text-gray-900">{product.name}</h3>
+
+          <p className="line-clamp-1 text-xs text-gray-400">{product.shortDescription}</p>
+
+          {/* 가격 */}
+          <div className="flex items-center gap-2">
+            {product.discountRate !== 0 && (
+              <span className="text-lg font-bold text-orange-500">{product.discountRate}%</span>
+            )}
+            <span className="py-1 text-lg font-bold text-gray-900">
+              {(product.discountedPrice ?? product.salesPrice).toLocaleString()}원
+            </span>
+          </div>
+
+          {/* ❤️ 좋아요 영역 */}
+          <div className="flex items-center gap-1 text-xs">
+            <Heart
+              aria-hidden
+              className={`h-4 w-4 ${liked ? 'fill-orange-500 text-orange-500' : 'text-gray-300'}`}
+            />
+            <span className={liked ? 'text-orange-500' : 'text-gray-400'}>{displayLikes}</span>
+          </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+      <AlertModal
+        isOpen={isOpen}
+        message="해당 기능은 로그인 후 이용해주세요."
+        onClose={() => {
+          setIsOpen(false);
+          router.push('/auth?mode=login');
+        }}
+      />
+    </>
   );
 }

@@ -3,8 +3,10 @@
 import { productListAPI } from '@/features/product/api/productList.api';
 import ProductCard from '@/features/product/components/ProductCard';
 import { FiltersType, ProductCardType } from '@/features/product/types/model';
+import AlertModal from '@/shared/components/common/AlertModal';
 import { useEffect, useState } from 'react';
 import Pagination from './Pagination';
+import ProductListLoading from './ProductListLoading';
 
 interface Props {
   keyword?: string;
@@ -16,6 +18,7 @@ interface Props {
 export default function ProductList({ keyword, categoryIds, filters, setPage }: Props) {
   const [products, setProducts] = useState<ProductCardType[]>([]);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalElements, setTotalElements] = useState(0);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,6 +41,7 @@ export default function ProductList({ keyword, categoryIds, filters, setPage }: 
 
         setProducts(data.content ?? []);
         setTotalPages(data.totalPages ?? 1);
+        setTotalElements(data.totalElements ?? 0);
       } catch (e) {
         if (!alive) return;
         setError('상품을 불러오지 못했습니다.');
@@ -55,28 +59,36 @@ export default function ProductList({ keyword, categoryIds, filters, setPage }: 
   }, [keyword, filters]);
 
   if (isLoading) {
-    return <div className="py-20 text-center text-sm text-gray-400">로딩 중…</div>;
-  }
-
-  if (error) {
-    return <div className="py-20 text-center text-sm text-red-500">{error}</div>;
-  }
-
-  if (products.length === 0) {
-    return <div className="py-20 text-center text-sm text-gray-400">검색 결과가 없습니다.</div>;
+    return (
+      <>
+        <ProductListLoading />
+        <AlertModal isOpen={!!error} message={error ?? ''} onClose={() => setError(null)} />
+      </>
+    );
   }
 
   return (
-    <div>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10">
-        {products.map((product) => (
-          <ProductCard key={String(product.productId)} product={product} />
-        ))}
-      </div>
+    <>
+      {products.length === 0 ? (
+        <div className="py-20 text-center text-sm text-gray-400">검색 결과가 없습니다.</div>
+      ) : (
+        <div className="relative">
+          <div className="absolute top-[-34px] left-0 text-sm text-gray-900 font-semibold">
+            총 {totalElements}개
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10">
+            {products.map((product) => (
+              <ProductCard key={String(product.productId)} product={product} />
+            ))}
+          </div>
 
-      <div className="mt-10">
-        <Pagination page={filters.page} totalPages={totalPages} onChange={setPage} />
-      </div>
-    </div>
+          <div className="mt-10">
+            <Pagination page={filters.page} totalPages={totalPages} onChange={setPage} />
+          </div>
+        </div>
+      )}
+
+      <AlertModal isOpen={!!error} message={error ?? ''} onClose={() => setError(null)} />
+    </>
   );
 }
