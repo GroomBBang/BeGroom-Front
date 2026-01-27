@@ -122,7 +122,7 @@ export function useProductFilters(keyword?: string) {
       excludeSoldOut: false,
       page: 0,
       size: 30,
-      sort: 'productId',
+      sort: 'wishlistCount',
       direction: 'DESC',
     });
   };

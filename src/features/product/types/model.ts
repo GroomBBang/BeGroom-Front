@@ -54,6 +54,7 @@ export type ProductCardType = {
   isSoldOut: boolean;
   wishlistCount: number;
   isWishlisted: boolean;
+  totalElements: number;
   productStatus: ProductStatus;
 };
 

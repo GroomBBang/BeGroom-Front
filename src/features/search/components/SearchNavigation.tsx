@@ -58,7 +58,10 @@ export default function SearchNavigation() {
             {NAV_LINKS.map((link) => (
               <li id={link.label} key={link.label}>
                 <Link
-                  href={link.href}
+                  href={{
+                    pathname: link.href,
+                    query: { sort: 'wishlistCount', direction: 'DESC', page: 0, size: 30 },
+                  }}
                   className={`text-base font-semibold text-gray-900 transition-colors hover:text-primary-500`}
                 >
                   {link.label}
