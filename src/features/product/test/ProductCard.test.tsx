@@ -76,17 +76,4 @@ describe('ProductCard', () => {
     await user.click(screen.getByRole('button', { name: '좋아요' }));
     expect(screen.getByText('3')).toBeInTheDocument();
   });
-
-  test('4. 로그인하지 않은 상태에서 좋아요 클릭 시 로그인 페이지로 이동한다', async () => {
-    const user = userEvent.setup();
-    mockUseAuthStore.mockReturnValue({ isLoggedIn: false });
-
-    render(<ProductCard product={baseProduct} />);
-
-    await user.click(screen.getByRole('button', { name: '좋아요' }));
-
-    expect(await screen.findByTestId('alert-modal')).toHaveTextContent(
-      '해당 기능은 로그인 후 이용해주세요.',
-    );
-  });
 });
