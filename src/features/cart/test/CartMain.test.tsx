@@ -12,19 +12,27 @@ jest.mock('../components/CartRecommend', () => ({
   default: () => <div data-testid="cart-recommend" />,
 }));
 
+const mockCart = {
+  items: [],
+  totals: {
+    subtotal: 0,
+    total: 0,
+    selectedCount: 0,
+  },
+  setAllSelected: jest.fn(),
+  removeSelected: jest.fn(),
+  handleClickOrder: jest.fn(),
+} as any;
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
 describe('CartMain', () => {
   describe('전체 상품 선택 변경', () => {
-    test('1. 전체 선택 체크박스 클릭 시 api가 호출된다.', async () => {
+    test('1. 전체 선택 체크박스 클릭 시 함수가 호출된다.', async () => {
       const user = userEvent.setup();
-      const cart = {
-        items: [],
-        totals: {
-          subtotal: 0,
-          total: 0,
-          selectedCount: 0,
-        },
-        setAllSelected: jest.fn(),
-      } as any;
+      const cart = mockCart;
 
       render(<CartMain cart={cart} />);
 
@@ -39,14 +47,7 @@ describe('CartMain', () => {
   describe('선택 상품 삭제', () => {
     test('1. 선택 삭제 버튼 클릭 시 삭제 확인 모달 출력', async () => {
       const user = userEvent.setup();
-      const cart = {
-        items: [],
-        totals: {
-          subtotal: 0,
-          total: 0,
-          selectedCount: 0,
-        },
-      } as any;
+      const cart = mockCart;
 
       render(<CartMain cart={cart} />);
 
@@ -54,17 +55,9 @@ describe('CartMain', () => {
       expect(screen.getByTestId('confirm-modal')).toBeInTheDocument();
     });
 
-    test('2. 삭제 확인 모달 확인 버튼 클릭 시 api 요청이 호출된다', async () => {
+    test('2. 삭제 확인 모달 확인 버튼 클릭 시 함수가 호출된다', async () => {
       const user = userEvent.setup();
-      const cart = {
-        items: [],
-        totals: {
-          subtotal: 0,
-          total: 0,
-          selectedCount: 0,
-        },
-        removeSelected: jest.fn(),
-      } as any;
+      const cart = mockCart;
 
       render(<CartMain cart={cart} />);
 
@@ -73,17 +66,9 @@ describe('CartMain', () => {
       expect(cart.removeSelected).toHaveBeenCalledTimes(1);
     });
 
-    test('3. 삭제 확인 모달 취소 버튼 클릭 시 모달이 닫히고 api 요청이 호출되지 않는다', async () => {
+    test('3. 삭제 확인 모달 취소 버튼 클릭 시 모달이 닫히고 함수가 호출되지 않는다', async () => {
       const user = userEvent.setup();
-      const cart = {
-        items: [],
-        totals: {
-          subtotal: 0,
-          total: 0,
-          selectedCount: 0,
-        },
-        removeSelected: jest.fn(),
-      } as any;
+      const cart = mockCart;
 
       render(<CartMain cart={cart} />);
 
@@ -96,15 +81,7 @@ describe('CartMain', () => {
 
   describe('주문하기 버튼 클릭', () => {
     test('1. 체크된 상품이 없으면 버튼 비활성화 및 문구 변경', () => {
-      const cart = {
-        items: [],
-        totals: {
-          subtotal: 0,
-          total: 0,
-          selectedCount: 0,
-        },
-        removeSelected: jest.fn(),
-      } as any;
+      const cart = mockCart;
 
       render(<CartMain cart={cart} />);
 
@@ -133,7 +110,7 @@ describe('CartMain', () => {
       expect(orderButton).toHaveTextContent('2개 상품 주문하기');
     });
 
-    test(`2. 주문하기 버튼 클릭 시 api가 호출된다.`, async () => {
+    test(`2. 주문하기 버튼 클릭 시 함수가 호출된다.`, async () => {
       const user = userEvent.setup();
       const cart = {
         items: [],

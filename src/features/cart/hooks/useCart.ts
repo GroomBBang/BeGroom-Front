@@ -14,7 +14,7 @@ export function useCart(): CartContextType {
   const [items, setItems] = useState<CartItemType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const fetchCartCount = useCartStore((s) => s.fetchCartCount);
+  const setCartCount = useCartStore((s) => s.setCartCount);
 
   const router = useRouter();
   const { createOrder } = checkoutAPI();
@@ -42,37 +42,39 @@ export function useCart(): CartContextType {
 
   useEffect(() => {
     refetch();
-  }, [refetch]);
+  }, []);
 
   // 장바구니 단일 삭제
   const removeItem = async (id: number) => {
-    const prev = items;
-    setItems((cur) => cur.filter((x) => x.cartItemId !== id));
+    const backup = items;
+    setItems((prev) => prev.filter((x) => x.cartItemId !== id));
 
     try {
       await api.removeCartItem(id);
-      fetchCartCount();
+      setCartCount(items.length - 1);
     } catch (e) {
-      setItems(prev);
+      setItems(backup);
       setError('상품 삭제에 실패했습니다.');
     }
   };
 
   // 장바구니 수량 변경
   const updateQty = async (id: number, nextQty: number, stockQty: number) => {
+    // 수량이 1보다 작을 때
     if (nextQty < 1) return;
+    // 수량이 재고를 넘길 때
     if (stockQty < nextQty) {
       setError('선택하신 상품의 재고가 부족합니다.');
       return;
     }
-    const prev = items;
 
-    setItems((cur) => cur.map((x) => (x.cartItemId === id ? { ...x, quantity: nextQty } : x)));
+    const backup = items;
+    setItems((prev) => prev.map((x) => (x.cartItemId === id ? { ...x, quantity: nextQty } : x)));
 
     try {
       await api.updateCartItemQty(id, nextQty);
     } catch (e) {
-      setItems(prev);
+      setItems(backup);
       setError('상품 수량 변경에 실패했습니다.');
     }
   };
@@ -113,18 +115,20 @@ export function useCart(): CartContextType {
     }
   };
 
+  // 장바구니 선택 삭제
   const removeSelected = async () => {
     const selectedIds = items.filter((x) => x.isSelected).map((x) => x.cartItemId);
     if (selectedIds.length === 0) return;
 
     const prev = items;
-    setItems((cur) => cur.filter((x) => !x.isSelected));
+    setItems((prev) => prev.filter((x) => !x.isSelected));
 
     try {
       await api.removeSelectedItems(selectedIds);
-      fetchCartCount();
+      setCartCount(items.length - selectedIds.length);
     } catch (e) {
       setItems(prev);
+      setError('상품 삭제에 실패했습니다.');
     }
   };
 
@@ -132,10 +136,6 @@ export function useCart(): CartContextType {
   const handleClickOrder = async () => {
     try {
       const selected = items.filter((x) => x.isSelected);
-      if (selected.length === 0) {
-        alert('주문할 상품을 선택해주세요.');
-        return;
-      }
 
       const payload: createOrderRequestDTO = {
         orderProductList: selected.map((x) => ({
@@ -150,7 +150,7 @@ export function useCart(): CartContextType {
 
       router.push('/checkout');
     } catch (e) {
-      const message = e instanceof Error ? e.message : '주문 생성에 실패했습니다.';
+      const message = e instanceof Error ? e.message : '주문하기 요청이 실패했습니다.';
       setError(message);
     }
   };
