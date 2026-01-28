@@ -50,8 +50,6 @@ export default function ProductDetailMain({ product }: { product: ProductType })
     addToCart(options.selected);
   };
 
-  console.log(product);
-
   return (
     <>
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-[480px_1fr]">
