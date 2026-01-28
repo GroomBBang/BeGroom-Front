@@ -80,3 +80,11 @@ export type SelectedDetail = {
   isAvailable: boolean;
   qty: number;
 };
+
+// 홈화면 카테고리 타입
+export type HomeCategory = {
+  emoji: string;
+  title: string;
+  subtitle: string;
+  id: string;
+};

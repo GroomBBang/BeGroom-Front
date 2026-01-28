@@ -1,6 +1,7 @@
 'use client';
 
 import FCFSCash from '@/features/event/component/FCFSCash';
+import InfiniteHomeSections from '@/features/home/components/InfiniteHomeSections';
 import { productListAPI } from '@/features/product/api/productList.api';
 import ProductCard from '@/features/product/components/ProductCard';
 import { ProductCardType } from '@/features/product/types/model';
@@ -44,17 +45,30 @@ export default function HomePage() {
 
       <FCFSCash />
 
-      <main className="mx-auto max-w-6xl px-4 pb-16 pt-12">
-        <div className="mb-6">
-          <h2 className="text-2xl font-extrabold text-foreground">이 상품 어때요?</h2>
-          <p className="mt-2 text-sm text-muted-foreground">지금 가장 인기 있는 상품</p>
+      <main className="mx-auto max-w-6xl px-4 pb-16 pt-16">
+        {/* 인기상품 */}
+        <div className="flex flex-col gap-8">
+          <div className="flex gap-2 flex-col items-center text-center w-full">
+            <h2 className="flex items-center gap-2 text-[28px] font-semibold text-gray-900">
+              <span className="text-2xl">🏆</span>
+              실시간 인기 랭킹
+              <span className="text-2xl">🏆</span>
+            </h2>
+
+            <p className="text-md font-semibold text-gray-400">
+              지금 가장 인기 있는 상품만 모아보세요!
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 grid-rows-2 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {products.map((product: ProductCardType) => (
+              <ProductCard key={String(product.productId)} product={product} />
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 grid-rows-2 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((product: ProductCardType) => (
-            <ProductCard key={String(product.productId)} product={product} />
-          ))}
-        </div>
+        {/* 카테고리 */}
+        <InfiniteHomeSections />
 
         {products.length === 0 && (
           <div className=" rounded-xl border border-border bg-background p-12 text-center text-sm text-muted-foreground">
