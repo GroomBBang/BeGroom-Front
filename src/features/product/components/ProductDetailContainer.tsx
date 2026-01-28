@@ -1,54 +1,41 @@
 'use client';
 
-import { useRecentProducts } from '@/features/user/hooks/useRecentProducts';
-import { useEffect, useState } from 'react';
-import productAPI from '../api/product.api';
-import { ProductType } from '../types/model';
+import AlertModal from '@/shared/components/common/AlertModal';
+import { useProductDetail } from '../hooks/useProductDetail';
 import ProductDetailLoading from './ProductDetailLoading';
 import ProductDetailMain from './ProductDetailMain';
 import ProductDetailTab from './ProductDetailTab';
 import ProductEmpty from './ProductEmpty';
 
 export default function ProductDetailContainer({ id }: { id: string }) {
-  // 최근 본 상품 추가
-  const { addProduct } = useRecentProducts();
-  const { fetchProduct } = productAPI();
-
-  const [product, setProduct] = useState<ProductType | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // 상품 조회
-  useEffect(() => {
-    fetchProduct(id)
-      .then((product) => setProduct(product))
-      .finally(() => setIsLoading(false));
-  }, [id]);
-
-  // 최근 본 상품 추가
-  useEffect(() => {
-    if (product) {
-      addProduct({
-        id: Number(product.productId),
-        thumb: product.mainImageUrl,
-        time: Date.now(),
-      });
-    }
-  }, [product?.productId]);
+  const { product, isLoading, error, clearError } = useProductDetail(id);
 
   // 로딩 중
   if (isLoading) {
     return <ProductDetailLoading />;
   }
 
-  // 상품이 없음
+  // 상품 없음
   if (!product) {
-    return <ProductEmpty />;
+    return (
+      <>
+        <ProductEmpty />
+
+        <AlertModal
+          isOpen={!!error}
+          message={error || '상품 조회 중 오류가 발생했습니다.'}
+          onClose={clearError}
+        />
+      </>
+    );
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10">
-      <ProductDetailMain product={product} />
-      <ProductDetailTab product={product} />
-    </div>
+    <>
+      <div className="mx-auto max-w-6xl px-4 py-10">
+        <ProductDetailMain product={product} />
+        <ProductDetailTab product={product} />
+      </div>
+    </>
   );
 }

@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import productAPI from '../api/product.api';
+import { useWishlistToggle } from '../hooks/useWishlistToggle';
 import { ProductCardType } from '../types/model';
 
 interface Props {
@@ -14,33 +15,23 @@ interface Props {
 }
 
 export default function ProductCard({ product }: Props) {
-  const [liked, setLiked] = useState(product.isWishlisted);
   const { addWishList } = productAPI();
-  const [displayLikes, setDisplayLikes] = useState(product.wishlistCount);
 
   const { isLoggedIn } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
-  const toggleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!isLoggedIn) {
-      setIsOpen(true);
-      return;
-    }
-
-    setLiked((prev) => !prev);
-    setDisplayLikes((prev) => (liked ? prev - 1 : prev + 1));
-
-    try {
-      await addWishList(product.productId);
-    } catch (err) {
-      setLiked((prev) => !prev);
-      setDisplayLikes((prev) => (liked ? prev + 1 : prev - 1));
-    }
-  };
+  const {
+    liked,
+    count: displayLikes,
+    toggle: toggleLike,
+  } = useWishlistToggle({
+    initialLiked: product.isWishlisted,
+    initialCount: product.wishlistCount,
+    isLoggedIn,
+    onError: () => setIsOpen(true),
+    onToggleRequest: () => addWishList(product.productId),
+  });
 
   return (
     <>

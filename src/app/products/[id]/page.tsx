@@ -1,5 +1,4 @@
 // src/app/product/[id]/page.tsx
-'use client';
 
 import ProductDetailContainer from '@/features/product/components/ProductDetailContainer';
 import { use } from 'react';

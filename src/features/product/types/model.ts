@@ -69,3 +69,14 @@ export type FiltersType = {
   sort: string;
   direction: string;
 };
+
+// 상품 옵션 타입(상세)
+export type SelectedDetail = {
+  productDetailId: number;
+  name: string;
+  basePrice: number;
+  discountedPrice?: number;
+  quantity: number;
+  isAvailable: boolean;
+  qty: number;
+};
