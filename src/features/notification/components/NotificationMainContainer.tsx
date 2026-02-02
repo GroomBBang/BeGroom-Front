@@ -1,6 +1,5 @@
 'use client';
 
-import AlertModal from '@/shared/components/common/AlertModal';
 import { useEffect } from 'react';
 import { useNotification } from '../hooks/useNotification';
 import NotificationList from './NotificationList';
@@ -8,7 +7,7 @@ import NotificationListLoading from './NotificationListLoading';
 import NotificationMainEmptyPlaceHolder from './NotificationMainEmptyPlaceHolder';
 
 export default function NotificationMainContainer() {
-  const { items, isLoading, fetchNotificationList, error, clearError } = useNotification();
+  const { items, isLoading, fetchNotificationList } = useNotification();
 
   useEffect(() => {
     const handleSSEReload = () => {
@@ -28,7 +27,6 @@ export default function NotificationMainContainer() {
 
   return (
     <div>
-      <AlertModal isOpen={!!error} message={error || ''} onClose={clearError} />
       {items?.notifications?.length === 0 ? (
         <NotificationMainEmptyPlaceHolder />
       ) : (
