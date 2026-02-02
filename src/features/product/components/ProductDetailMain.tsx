@@ -1,11 +1,8 @@
 'use client';
 
-import { useAuthStore } from '@/features/auth/stores/useAuthStore';
-import AlertModal from '@/shared/components/common/AlertModal';
 import { formatWon } from '@/shared/lib/format';
 import { Heart, ShoppingCart } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import productAPI from '../api/product.api';
 import { useAddToCart } from '../hooks/useAddToCart';
 import { useProductOptions } from '../hooks/useProductOption';
@@ -16,17 +13,10 @@ import ProductOptionsSection from './ProductOptionSection';
 export default function ProductDetailMain({ product }: { product: ProductType }) {
   const { addWishList } = productAPI();
 
-  //로그인 모달
-  const { isLoggedIn } = useAuthStore();
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
-
   //좋아요 훅
   const { liked, count, toggle } = useWishlistToggle({
     initialLiked: product.isWishlisted,
     initialCount: product.wishlistCount,
-    isLoggedIn,
-    onError: (error: string) => setError(error),
     onToggleRequest: () => addWishList(product.productId),
   });
 
@@ -176,17 +166,6 @@ export default function ProductDetailMain({ product }: { product: ProductType })
           </div>
         </section>
       </div>
-
-      <AlertModal
-        isOpen={!!error}
-        message={error || '오류가 발생하였습니다.'}
-        onClose={() => {
-          setError(null);
-          if (error === '해당 기능은 로그인 후 이용해주세요.') {
-            router.push('/auth?mode=login');
-          }
-        }}
-      />
     </>
   );
 }

@@ -3,7 +3,7 @@
 import { productListAPI } from '@/features/product/api/productList.api';
 import ProductCard from '@/features/product/components/ProductCard';
 import { FiltersType, ProductCardType } from '@/features/product/types/model';
-import AlertModal from '@/shared/components/common/AlertModal';
+import { useModalStore } from '@/shared/stores/useModalStore';
 import { useEffect, useState } from 'react';
 import Pagination from './Pagination';
 import ProductListLoading from './ProductListLoading';
@@ -21,7 +21,7 @@ export default function ProductList({ keyword, categoryIds, filters, setPage }: 
   const [totalElements, setTotalElements] = useState(0);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { onAlertModal } = useModalStore();
 
   useEffect(() => {
     let alive = true;
@@ -29,7 +29,6 @@ export default function ProductList({ keyword, categoryIds, filters, setPage }: 
     async function fetchProducts() {
       try {
         setIsLoading(true);
-        setError(null);
 
         const data = await productListAPI.searchProducts({
           keyword,
@@ -44,7 +43,7 @@ export default function ProductList({ keyword, categoryIds, filters, setPage }: 
         setTotalElements(data.totalElements ?? 0);
       } catch (e) {
         if (!alive) return;
-        setError('상품을 불러오지 못했습니다.');
+        onAlertModal('상품을 불러오지 못했습니다.');
       } finally {
         if (!alive) return;
         setIsLoading(false);
@@ -59,12 +58,7 @@ export default function ProductList({ keyword, categoryIds, filters, setPage }: 
   }, [keyword, filters]);
 
   if (isLoading) {
-    return (
-      <>
-        <ProductListLoading />
-        <AlertModal isOpen={!!error} message={error ?? ''} onClose={() => setError(null)} />
-      </>
-    );
+    return <ProductListLoading />;
   }
 
   return (
@@ -78,7 +72,7 @@ export default function ProductList({ keyword, categoryIds, filters, setPage }: 
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10">
             {products.map((product) => (
-              <ProductCard key={String(product.productId)} product={product} />
+              <ProductCard key={product.productId} product={product} />
             ))}
           </div>
 
@@ -87,8 +81,6 @@ export default function ProductList({ keyword, categoryIds, filters, setPage }: 
           </div>
         </div>
       )}
-
-      <AlertModal isOpen={!!error} message={error ?? ''} onClose={() => setError(null)} />
     </>
   );
 }

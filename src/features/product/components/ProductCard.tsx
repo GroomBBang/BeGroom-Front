@@ -1,11 +1,7 @@
 'use client';
 
-import { useAuthStore } from '@/features/auth/stores/useAuthStore';
-import AlertModal from '@/shared/components/common/AlertModal';
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import productAPI from '../api/product.api';
 import { useWishlistToggle } from '../hooks/useWishlistToggle';
 import { ProductCardType } from '../types/model';
@@ -17,10 +13,6 @@ interface Props {
 export default function ProductCard({ product }: Props) {
   const { addWishList } = productAPI();
 
-  const { isLoggedIn } = useAuthStore();
-  const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
-
   const {
     liked,
     count: displayLikes,
@@ -28,8 +20,6 @@ export default function ProductCard({ product }: Props) {
   } = useWishlistToggle({
     initialLiked: product.isWishlisted,
     initialCount: product.wishlistCount,
-    isLoggedIn,
-    onError: () => setIsOpen(true),
     onToggleRequest: () => addWishList(product.productId),
   });
 
@@ -86,7 +76,7 @@ export default function ProductCard({ product }: Props) {
             </span>
           </div>
 
-          {/* ❤️ 좋아요 영역 */}
+          {/* 좋아요 영역 */}
           <div className="flex items-center gap-1 text-xs">
             <Heart
               aria-hidden
@@ -96,14 +86,6 @@ export default function ProductCard({ product }: Props) {
           </div>
         </div>
       </Link>
-      <AlertModal
-        isOpen={isOpen}
-        message="해당 기능은 로그인 후 이용해주세요."
-        onClose={() => {
-          setIsOpen(false);
-          router.push('/auth?mode=login');
-        }}
-      />
     </>
   );
 }
