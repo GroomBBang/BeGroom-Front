@@ -22,7 +22,7 @@ export const useModalStore = create<ModalStore>((set) => ({
   onConfirm: () => {},
 
   onAlertModal: (message: string, onConfirm?: () => void | Promise<void>) =>
-    set({ type: 'alert', isOpen: true, message, onConfirm }),
+    set({ type: 'alert', isOpen: true, message, onConfirm: onConfirm || (() => {}) }),
   onConfirmModal: (message: string, confirmLabel: string, onConfirm: () => void | Promise<void>) =>
     set({ type: 'confirm', isOpen: true, message, confirmLabel, onConfirm }),
   clearModal: () =>

@@ -1,4 +1,5 @@
 import QuickMenu from '@/features/user/components/QuickMenu';
+import ModalProvider from '@/providers/ModalProvider';
 import MSWProvider from '@/providers/MSWProvider';
 import ToastProvider from '@/providers/ToastProvider';
 import SSEConnection from '@/shared/components/common/SSEConnection';
@@ -33,14 +34,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <MSWProvider>
           <SSEConnection />
-          <div className="relative">
-            {children}
-            <Suspense fallback={<div>Loading...</div>}>
-              <div className="fixed top-[25%] right-[30px] hidden xl:block">
-                <QuickMenu />
-              </div>
-            </Suspense>
-          </div>
+          <ModalProvider>
+            <div className="relative">
+              {children}
+              <Suspense fallback={<div>Loading...</div>}>
+                <div className="fixed top-[25%] right-[30px] hidden xl:block">
+                  <QuickMenu />
+                </div>
+              </Suspense>
+            </div>
+          </ModalProvider>
         </MSWProvider>
         <ToastProvider />
       </body>

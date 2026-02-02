@@ -6,7 +6,6 @@ import { useModalStore } from '@/shared/stores/useModalStore';
 
 export default function ModalProvider({ children }: { children: React.ReactNode }) {
   const modalStore = useModalStore();
-  console.log(modalStore.message);
   return (
     <>
       {children}
