@@ -62,17 +62,4 @@ describe('내 알림 리스트 조회', () => {
     expect(screen.getByTestId('notification-empty-place-holder')).toBeInTheDocument();
     expect(screen.queryByTestId('notification-loading')).not.toBeInTheDocument();
   });
-
-  test('2-3. 조회 실패 시 오류 UI 렌더링', () => {
-    mockUseNotification.mockReturnValue({
-      isLoading: false,
-      items: [],
-      error: '알림 내역 조회에 실패했습니다.',
-      clearError: jest.fn(),
-    });
-
-    render(<NotificationMainContainer />);
-
-    expect(screen.getByText('알림 내역 조회에 실패했습니다.')).toBeInTheDocument();
-  });
 });

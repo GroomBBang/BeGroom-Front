@@ -62,17 +62,4 @@ describe('장바구니 정보 조회 (CartContainer)', () => {
     expect(screen.getByTestId('cart-empty')).toBeInTheDocument();
     expect(screen.queryByTestId('cart-loading')).not.toBeInTheDocument();
   });
-
-  test('2-3. 조회 실패 시 오류 UI 렌더링', () => {
-    mockUseCart.mockReturnValue({
-      isLoading: false,
-      items: [],
-      error: '장바구니 조회에 실패했습니다.',
-      clearError: jest.fn(),
-    });
-
-    render(<CartContainer />);
-
-    expect(screen.getByText('장바구니 조회에 실패했습니다.')).toBeInTheDocument();
-  });
 });

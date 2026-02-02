@@ -12,6 +12,14 @@ jest.mock('../components/CartRecommend', () => ({
   default: () => <div data-testid="cart-recommend" />,
 }));
 
+const onConfirmModal = jest.fn();
+jest.mock('../../../shared/stores/useModalStore', () => ({
+  __esModule: true,
+  useModalStore: () => ({
+    onConfirmModal,
+  }),
+}));
+
 const mockCart = {
   items: [],
   totals: {
@@ -44,38 +52,40 @@ describe('CartMain', () => {
     });
   });
 
-  describe('선택 상품 삭제', () => {
-    test('1. 선택 삭제 버튼 클릭 시 삭제 확인 모달 출력', async () => {
-      const user = userEvent.setup();
-      const cart = mockCart;
+  describe('선택 상품 삭제 (CartMain)', () => {
+    const user = userEvent.setup();
+    let cart: any;
+
+    beforeEach(async () => {
+      cart = {
+        items: [{ productDetailId: 1, isSelected: true }],
+        totals: {
+          subtotal: 0,
+          total: 0,
+          selectedCount: 1,
+        },
+        setAllSelected: jest.fn(),
+        removeSelected: jest.fn(),
+        handleClickOrder: jest.fn(),
+      };
 
       render(<CartMain cart={cart} />);
 
       await user.click(screen.getByRole('button', { name: '선택 삭제' }));
-      expect(screen.getByTestId('confirm-modal')).toBeInTheDocument();
     });
 
-    test('2. 삭제 확인 모달 확인 버튼 클릭 시 함수가 호출된다', async () => {
-      const user = userEvent.setup();
-      const cart = mockCart;
+    test('선택 삭제 버튼 클릭 시 삭제 확인 모달을 연다', () => {
+      expect(onConfirmModal).toHaveBeenCalledWith(
+        '삭제하시겠습니까?',
+        '삭제',
+        expect.any(Function),
+      );
+    });
 
-      render(<CartMain cart={cart} />);
-
-      await user.click(screen.getByRole('button', { name: '선택 삭제' }));
-      await user.click(screen.getByRole('button', { name: '모달 확인' }));
+    test('삭제 확인 콜백 실행 시 removeSelected가 호출된다', async () => {
+      const [, , confirmCallback] = onConfirmModal.mock.calls[0];
+      await confirmCallback();
       expect(cart.removeSelected).toHaveBeenCalledTimes(1);
-    });
-
-    test('3. 삭제 확인 모달 취소 버튼 클릭 시 모달이 닫히고 함수가 호출되지 않는다', async () => {
-      const user = userEvent.setup();
-      const cart = mockCart;
-
-      render(<CartMain cart={cart} />);
-
-      await user.click(screen.getByRole('button', { name: '선택 삭제' }));
-      await user.click(screen.getByRole('button', { name: '모달 취소' }));
-      expect(screen.queryByTestId('confirm-modal')).not.toBeInTheDocument();
-      expect(cart.removeSelected).not.toHaveBeenCalled();
     });
   });
 

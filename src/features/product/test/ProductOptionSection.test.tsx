@@ -26,6 +26,14 @@ const baseProps: any = {
   getUnitPrice: (d: any) => d.discountedPrice ?? d.basePrice,
 };
 
+const onAlertModal = jest.fn();
+jest.mock('../../../shared/stores/useModalStore', () => ({
+  __esModule: true,
+  useModalStore: () => ({
+    onAlertModal: onAlertModal,
+  }),
+}));
+
 beforeEach(() => {
   jest.clearAllMocks();
 });
@@ -36,7 +44,7 @@ describe('상품 옵션 섹션 (핵심)', () => {
     expect(screen.getByLabelText('수량 감소')).toBeDisabled();
   });
 
-  test('2. 수량이 재고 초과 시 증가 버튼 클릭 시 모달 알림 및 상태 유지', async () => {
+  test('2. 수량이 재고 초과 시 증가 버튼 클릭 시 알림과 함께 모달여는 함수 호출', async () => {
     const user = userEvent.setup();
     const props = {
       ...baseProps,
@@ -47,10 +55,6 @@ describe('상품 옵션 섹션 (핵심)', () => {
 
     await user.click(screen.getByLabelText('수량 증가'));
     expect(props.inc).not.toHaveBeenCalled();
-    expect(screen.getByTestId('alert-modal')).toBeInTheDocument();
-    expect(screen.getByText('선택하신 상품의 재고가 부족합니다.')).toBeInTheDocument();
-
-    await user.click(screen.getByText('확인'));
-    expect(screen.queryByTestId('alert-modal')).not.toBeInTheDocument();
+    expect(onAlertModal).toHaveBeenCalledWith('선택하신 상품의 재고가 부족합니다.');
   });
 });

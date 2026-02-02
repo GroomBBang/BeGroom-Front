@@ -3,6 +3,14 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CartItemCard from '../components/CartItem';
 
+const onConfirmModal = jest.fn();
+jest.mock('../../../shared/stores/useModalStore', () => ({
+  __esModule: true,
+  useModalStore: () => ({
+    onConfirmModal: onConfirmModal,
+  }),
+}));
+
 const actions = {
   toggleSelect: jest.fn(),
   updateQty: jest.fn(),
@@ -33,52 +41,30 @@ describe('상품 선택 변경 (CartItemCard)', () => {
 });
 
 describe('상품 삭제 (CartItemCard)', () => {
-  test('1. 삭제 버튼 클릭 시 삭제 확인 모달 출력', async () => {
-    const user = userEvent.setup();
+  const user = userEvent.setup();
 
-    const item = {
-      cartItemId: 101,
-      isSelected: true,
-    } as any;
+  const item = {
+    cartItemId: 101,
+    isSelected: true,
+  } as any;
 
+  beforeEach(async () => {
     render(<CartItemCard item={item} actions={actions} />);
-
     await user.click(screen.getByRole('button', { name: '삭제' }));
-
-    expect(screen.getByTestId('confirm-modal')).toBeInTheDocument();
   });
 
-  test('2. 삭제 확인 모달 확인 버튼 클릭 시 removeItem이 cartItemId로 호출된다', async () => {
-    const user = userEvent.setup();
+  test('1. 삭제 버튼 클릭 시 삭제 확인 모달을 출력한다', () => {
+    expect(onConfirmModal).toHaveBeenCalledTimes(1);
+    expect(onConfirmModal).toHaveBeenCalledWith('삭제하시겠습니까?', '삭제', expect.any(Function));
+  });
 
-    const item = {
-      cartItemId: 101,
-      isSelected: true,
-    } as any;
+  test('2. 삭제 확인 모달의 확인 콜백 실행 시 removeItem이 cartItemId로 호출된다', async () => {
+    const [, , confirmCallback] = onConfirmModal.mock.calls[0];
 
-    render(<CartItemCard item={item} actions={actions} />);
-
-    await user.click(screen.getByRole('button', { name: '삭제' }));
-    await user.click(screen.getByRole('button', { name: '모달 확인' }));
+    await confirmCallback();
 
     expect(actions.removeItem).toHaveBeenCalledTimes(1);
     expect(actions.removeItem).toHaveBeenCalledWith(101);
-  });
-
-  test('3. 삭제 확인 모달 취소 버튼 클릭 시 모달이 닫히고 removeItem이 호출되지 않는다', async () => {
-    const user = userEvent.setup();
-
-    const item = {
-      cartItemId: 101,
-      isSelected: true,
-    } as any;
-
-    render(<CartItemCard item={item} actions={actions} />);
-
-    await user.click(screen.getByRole('button', { name: '삭제' }));
-    await user.click(screen.getByRole('button', { name: '모달 취소' }));
-    expect(screen.queryByTestId('confirm-modal')).not.toBeInTheDocument();
-    expect(actions.removeItem).not.toHaveBeenCalled();
   });
 });
 

@@ -1,5 +1,5 @@
 import { productListAPI } from '@/features/product/api/productList.api';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import ProductList from '../components/ProductList';
 
 jest.mock('../../product/api/productList.api', () => ({
@@ -21,6 +21,14 @@ jest.mock('../../product/components/ProductCard', () => ({
 jest.mock('../components/Pagination', () => ({
   __esModule: true,
   default: () => <div data-testid="pagination" />,
+}));
+
+const onAlertModal = jest.fn();
+jest.mock('../../../shared/stores/useModalStore', () => ({
+  __esModule: true,
+  useModalStore: () => ({
+    onAlertModal: onAlertModal,
+  }),
 }));
 
 const mockSearchProducts = productListAPI.searchProducts as unknown as jest.Mock;
@@ -88,9 +96,9 @@ describe('ProductList', () => {
 
     render(<ProductList {...baseProps} />);
 
-    expect(await screen.findByTestId('alert-modal')).toHaveTextContent(
-      '상품을 불러오지 못했습니다.',
-    );
+    await waitFor(() => {
+      expect(onAlertModal).toHaveBeenCalledWith('상품을 불러오지 못했습니다.');
+    });
     expect(screen.queryByTestId('product-list-loading')).not.toBeInTheDocument();
   });
 });
