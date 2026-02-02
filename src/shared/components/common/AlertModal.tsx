@@ -1,15 +1,12 @@
-// AlertModal.tsx
 'use client';
 
 interface Props {
-  isOpen: boolean;
   message: string;
+  onConfirm: () => void | Promise<void>;
   onClose: () => void;
 }
 
-export default function AlertModal({ isOpen, message, onClose }: Props) {
-  if (!isOpen) return null;
-
+export default function AlertModal({ message, onConfirm, onClose }: Props) {
   return (
     <div
       data-testid="alert-modal"
@@ -27,7 +24,10 @@ export default function AlertModal({ isOpen, message, onClose }: Props) {
         <div className="flex items-center justify-center">
           <button
             type="button"
-            onClick={onClose}
+            onClick={async () => {
+              onClose();
+              await onConfirm();
+            }}
             className="w-full py-4 cursor-pointer text-lg font-semibold text-primary-600 font-semibold cursor-pointer"
           >
             확인

@@ -1,17 +1,13 @@
-// ConfirmModal.tsx
 'use client';
 
 interface Props {
-  isOpen: boolean;
   message: string;
   confirmLabel: string;
   onConfirm: () => void | Promise<void>;
   onClose: () => void;
 }
 
-export default function ConfirmModal({ isOpen, message, confirmLabel, onConfirm, onClose }: Props) {
-  if (!isOpen) return null;
-
+export default function ConfirmModal({ message, confirmLabel, onConfirm, onClose }: Props) {
   return (
     <div
       data-testid="confirm-modal"
