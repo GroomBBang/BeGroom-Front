@@ -1,4 +1,5 @@
 import { useRecentProducts } from '@/features/user/hooks/useRecentProducts';
+import { useModalStore } from '@/shared/stores/useModalStore';
 import { useEffect, useState } from 'react';
 import productAPI from '../api/product.api';
 import { ProductType } from '../types/model';
@@ -6,7 +7,7 @@ import { ProductType } from '../types/model';
 export function useProductDetail(id: string) {
   const [product, setProduct] = useState<ProductType>();
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { onAlertModal } = useModalStore();
 
   const { addProduct } = useRecentProducts();
   const { fetchProduct } = productAPI();
@@ -16,12 +17,12 @@ export function useProductDetail(id: string) {
     fetchProduct(id)
       .then((product) => {
         if (!product) {
-          setError('상품을 찾을 수 없습니다.');
+          onAlertModal('상품을 찾을 수 없습니다.');
           return;
         }
         setProduct(product);
       })
-      .catch((error) => setError(error.message))
+      .catch((error) => onAlertModal(error.message))
       .finally(() => setIsLoading(false));
   }, [id]);
 
@@ -36,13 +37,8 @@ export function useProductDetail(id: string) {
     }
   }, [product]);
 
-  // 에러 초기화
-  const clearError = () => setError(null);
-
   return {
     product,
     isLoading,
-    error,
-    clearError,
   };
 }

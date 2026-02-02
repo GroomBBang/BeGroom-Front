@@ -43,8 +43,6 @@ export type CartActionsType = {
 export type CartStateType = {
   items: CartItemType[];
   isLoading: boolean;
-  error: string | null;
-  clearError: () => void;
   totals: CartTotalsType;
   allSelected: boolean;
 };

@@ -76,13 +76,11 @@ describe('상세 조회 (ProductDetailContainer)', () => {
       ...base,
       isLoading: false,
       product: undefined,
-      error: '상품을 찾을 수 없습니다.',
     });
 
     render(<ProductDetailContainer id="9999" />);
 
     expect(screen.getByTestId('product-empty')).toBeInTheDocument();
-    expect(screen.getByTestId('alert-modal')).toHaveTextContent('상품을 찾을 수 없습니다.');
     expect(screen.queryByTestId('product-detail-main')).not.toBeInTheDocument();
   });
 

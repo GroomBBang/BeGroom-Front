@@ -1,26 +1,24 @@
 // src/features/product/hooks/useWishlistToggle.ts
 'use client';
 
+import { useAuthStore } from '@/features/auth/stores/useAuthStore';
+import { useModalStore } from '@/shared/stores/useModalStore';
+import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 
 type Params = {
   initialLiked: boolean;
   initialCount: number;
-  isLoggedIn: boolean;
-  onError: (error: string) => void;
   onToggleRequest: () => Promise<unknown>;
 };
 
-export function useWishlistToggle({
-  initialLiked,
-  initialCount,
-  isLoggedIn,
-  onError,
-  onToggleRequest,
-}: Params) {
+export function useWishlistToggle({ initialLiked, initialCount, onToggleRequest }: Params) {
   const [liked, setLiked] = useState(initialLiked);
   const [count, setCount] = useState(initialCount);
   const [isPending, setIsPending] = useState(false);
+  const { onAlertModal } = useModalStore();
+  const { isLoggedIn } = useAuthStore();
+  const router = useRouter();
 
   const toggle = useCallback(
     async (e?: React.MouseEvent<HTMLElement>) => {
@@ -28,7 +26,7 @@ export function useWishlistToggle({
       e?.stopPropagation();
 
       if (!isLoggedIn) {
-        onError('해당 기능은 로그인 후 이용해주세요.');
+        onAlertModal('해당 기능은 로그인 후 이용해주세요.', () => router.push('/auth?mode=login'));
         return;
       }
       if (isPending) return;
@@ -48,12 +46,12 @@ export function useWishlistToggle({
       } catch {
         setLiked(prevLiked);
         setCount(prevCount);
-        onError('좋아요 중 오류가 발생하였습니다.');
+        onAlertModal('좋아요 중 오류가 발생하였습니다.');
       } finally {
         setIsPending(false);
       }
     },
-    [isLoggedIn, onError, onToggleRequest, isPending, liked, count],
+    [isLoggedIn, onToggleRequest, isPending, liked, count],
   );
 
   return { liked, count, toggle, isPending };

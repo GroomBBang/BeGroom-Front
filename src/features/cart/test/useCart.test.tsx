@@ -16,6 +16,14 @@ const fetchCart = jest.fn().mockResolvedValue({
   ],
 });
 
+const onAlertModal = jest.fn();
+jest.mock('../../../shared/stores/useModalStore', () => ({
+  __esModule: true,
+  useModalStore: () => ({
+    onAlertModal: onAlertModal,
+  }),
+}));
+
 const updateCartItemQty = jest.fn();
 const removeCartItem = jest.fn();
 const removeSelectedItems = jest.fn();
@@ -52,15 +60,27 @@ import { useCart } from '../hooks/useCart';
 beforeEach(() => {
   fetchCart.mockClear();
   updateCartItemQty.mockClear();
+  jest.clearAllMocks();
 });
 
 describe('useCart 테스트', () => {
-  test('1. 훅을 실행되면 장바구니 데이터를 불러오고 응답값을 저장한다.', async () => {
-    const { result } = renderHook(() => useCart());
+  describe('장바구니 조회', () => {
+    test('1. 훅을 실행되면 장바구니 데이터를 불러오고 응답값을 저장한다.', async () => {
+      const { result } = renderHook(() => useCart());
 
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
-    expect(fetchCart).toHaveBeenCalledTimes(1);
-    expect(result.current.items).toHaveLength(1);
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+      expect(fetchCart).toHaveBeenCalledTimes(1);
+      expect(result.current.items).toHaveLength(1);
+    });
+
+    test('2. 장바구니 조회 실패 시 알림 모달창을 띠운다.', async () => {
+      fetchCart.mockRejectedValueOnce(new Error('장바구니 조회에 실패했습니다.'));
+
+      const { result } = renderHook(() => useCart());
+
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+      expect(onAlertModal).toHaveBeenCalledWith('장바구니 조회에 실패했습니다.');
+    });
   });
 
   describe('상품 수량 변경', () => {
@@ -76,7 +96,7 @@ describe('useCart 테스트', () => {
       expect(result.current.items[0].quantity).toBe(2);
     });
 
-    test('2. 상품 수량 변경 요청이 재고 부족으로 실패하면 에러 문구를 반환한다.', async () => {
+    test('2. 상품 수량 변경 요청이 재고 부족으로 실패하면 알림 모달창을 띠운다.', async () => {
       const { result } = renderHook(() => useCart());
 
       await waitFor(() => expect(result.current.isLoading).toBe(false));
@@ -85,7 +105,7 @@ describe('useCart 테스트', () => {
       });
 
       expect(updateCartItemQty).not.toHaveBeenCalled();
-      expect(result.current.error).toBe('선택하신 상품의 재고가 부족합니다.');
+      expect(onAlertModal).toHaveBeenCalledWith('선택하신 상품의 재고가 부족합니다.');
     });
 
     test('3. 상품 수량 변경 요청이 1보다 적으면 데이터를 업데이트하지 않는다.', async () => {
@@ -100,7 +120,7 @@ describe('useCart 테스트', () => {
       expect(result.current.items[0].quantity).toBe(1);
     });
 
-    test('4. 상품 수량 변경 요청이 실패하면 에러 문구를 반환한다.', async () => {
+    test('4. 상품 수량 변경 요청이 실패하면 알림 모달창을 띠운다.', async () => {
       const { result } = renderHook(() => useCart());
       updateCartItemQty.mockRejectedValue(new Error('상품 수량 변경에 실패했습니다.'));
 
@@ -110,12 +130,12 @@ describe('useCart 테스트', () => {
       });
 
       expect(updateCartItemQty).toHaveBeenCalled();
-      expect(result.current.error).toBe('상품 수량 변경에 실패했습니다.');
+      expect(onAlertModal).toHaveBeenCalledWith('상품 수량 변경에 실패했습니다.');
     });
   });
 
   describe('개별 상품 삭제', () => {
-    test('1. 개별 상품 삭제 요청이 성공하면 장바구니 데이터를 업데이트한다.', async () => {
+    test('1. 개별 상품 삭제 요청이 성공하면 장바구니 데이터를 업데이트하고 모달창을 띠운다.', async () => {
       const { result } = renderHook(() => useCart());
 
       await waitFor(() => expect(result.current.isLoading).toBe(false));
@@ -127,7 +147,7 @@ describe('useCart 테스트', () => {
       expect(result.current.items).toHaveLength(0);
     });
 
-    test('2. 개별 상품 삭제 요청이 실패하면 에러 문구를 반환한다.', async () => {
+    test('2. 개별 상품 삭제 요청이 실패하면 알림 모달창을 띠운다.', async () => {
       const { result } = renderHook(() => useCart());
       removeCartItem.mockRejectedValue(new Error('상품 삭제에 실패했습니다.'));
 
@@ -137,8 +157,7 @@ describe('useCart 테스트', () => {
       });
 
       expect(removeCartItem).toHaveBeenCalled();
-      expect(result.current.items).toHaveLength(1);
-      expect(result.current.error).toBe('상품 삭제에 실패했습니다.');
+      expect(onAlertModal).toHaveBeenCalledWith('상품 삭제에 실패했습니다.');
     });
   });
 
@@ -155,7 +174,7 @@ describe('useCart 테스트', () => {
       expect(result.current.items).toHaveLength(0);
     });
 
-    test('2. 선택 상품 삭제 요청이 실패하면 에러 문구를 반환한다.', async () => {
+    test('2. 선택 상품 삭제 요청이 실패하면 알림 모달창을 띠운다.', async () => {
       const { result } = renderHook(() => useCart());
       removeSelectedItems.mockRejectedValue(new Error('상품 삭제에 실패했습니다.'));
 
@@ -165,8 +184,7 @@ describe('useCart 테스트', () => {
       });
 
       expect(removeSelectedItems).toHaveBeenCalled();
-      expect(result.current.items).toHaveLength(1);
-      expect(result.current.error).toBe('상품 삭제에 실패했습니다.');
+      expect(onAlertModal).toHaveBeenCalledWith('상품 삭제에 실패했습니다.');
     });
   });
 
@@ -187,7 +205,7 @@ describe('useCart 테스트', () => {
       expect(push).toHaveBeenCalledWith('/checkout');
     });
 
-    test('2. 주문하기 요청이 실패하면 에러 문구를 반환한다.', async () => {
+    test('2. 주문하기 요청이 실패하면 알림 모달창을 띠운다.', async () => {
       const { result } = renderHook(() => useCart());
       createOrder.mockRejectedValue(new Error('주문하기 요청이 실패했습니다.'));
 
@@ -197,7 +215,7 @@ describe('useCart 테스트', () => {
       });
 
       expect(createOrder).toHaveBeenCalled();
-      expect(result.current.error).toBe('주문하기 요청이 실패했습니다.');
+      expect(onAlertModal).toHaveBeenCalledWith('주문하기 요청이 실패했습니다.');
     });
   });
 });

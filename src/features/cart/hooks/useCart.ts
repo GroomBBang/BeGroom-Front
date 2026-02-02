@@ -5,6 +5,7 @@ import cartAPI from '@/features/cart/apis/cart.api';
 import checkoutAPI from '@/features/checkout/apis/checkout.api';
 import { useCheckoutStore } from '@/features/checkout/stores/useCheckoutStore';
 import { createOrderRequestDTO } from '@/features/checkout/types/response';
+import { useModalStore } from '@/shared/stores/useModalStore';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useCartStore } from '../stores/useCartStore';
@@ -13,8 +14,9 @@ import { CartContextType, CartItemType } from '../types/model';
 export function useCart(): CartContextType {
   const [items, setItems] = useState<CartItemType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const setCartCount = useCartStore((s) => s.setCartCount);
+
+  const { onAlertModal } = useModalStore();
 
   const router = useRouter();
   const { createOrder } = checkoutAPI();
@@ -22,19 +24,14 @@ export function useCart(): CartContextType {
 
   const api = useMemo(() => cartAPI(), []);
 
-  const clearError = useCallback(() => {
-    setError(null);
-  }, []);
-
   const refetch = useCallback(async () => {
     try {
       setIsLoading(true);
-      setError(null);
 
       const data = await api.fetchCart();
       setItems(data.groupItems.flatMap((group) => group.items));
     } catch (e) {
-      setError('장바구니 조회에 실패했습니다.');
+      onAlertModal('장바구니 조회에 실패했습니다.');
     } finally {
       setIsLoading(false);
     }
@@ -54,7 +51,7 @@ export function useCart(): CartContextType {
       setCartCount(items.length - 1);
     } catch (e) {
       setItems(backup);
-      setError('상품 삭제에 실패했습니다.');
+      onAlertModal('상품 삭제에 실패했습니다.');
     }
   };
 
@@ -64,7 +61,7 @@ export function useCart(): CartContextType {
     if (nextQty < 1) return;
     // 수량이 재고를 넘길 때
     if (stockQty < nextQty) {
-      setError('선택하신 상품의 재고가 부족합니다.');
+      onAlertModal('선택하신 상품의 재고가 부족합니다.');
       return;
     }
 
@@ -75,7 +72,7 @@ export function useCart(): CartContextType {
       await api.updateCartItemQty(id, nextQty);
     } catch (e) {
       setItems(backup);
-      setError('상품 수량 변경에 실패했습니다.');
+      onAlertModal('상품 수량 변경에 실패했습니다.');
     }
   };
 
@@ -96,6 +93,7 @@ export function useCart(): CartContextType {
           x.cartItemId === cartItemId ? { ...x, isSelected: target.isSelected } : x,
         ),
       );
+      onAlertModal('상품 선택에 실패했습니다.');
     }
   };
 
@@ -111,7 +109,7 @@ export function useCart(): CartContextType {
       }
     } catch (e) {
       setItems((prev) => prev.map((x) => ({ ...x, isSelected: !selected })));
-      setError('상품 삭제에 실패했습니다.');
+      onAlertModal('상품 선택에 실패했습니다.');
     }
   };
 
@@ -128,7 +126,7 @@ export function useCart(): CartContextType {
       setCartCount(items.length - selectedIds.length);
     } catch (e) {
       setItems(prev);
-      setError('상품 삭제에 실패했습니다.');
+      onAlertModal('상품 삭제에 실패했습니다.');
     }
   };
 
@@ -151,7 +149,7 @@ export function useCart(): CartContextType {
       router.push('/checkout');
     } catch (e) {
       const message = e instanceof Error ? e.message : '주문하기 요청이 실패했습니다.';
-      setError(message);
+      onAlertModal(message);
     }
   };
 
@@ -172,8 +170,6 @@ export function useCart(): CartContextType {
   return {
     items,
     isLoading,
-    error,
-    clearError,
     totals,
     allSelected,
     removeItem,

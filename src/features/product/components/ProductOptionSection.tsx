@@ -1,9 +1,8 @@
 // src/features/product/components/ProductOptionsSection.tsx
 'use client';
 
-import AlertModal from '@/shared/components/common/AlertModal';
 import { formatWon } from '@/shared/lib/format';
-import { useState } from 'react';
+import { useModalStore } from '@/shared/stores/useModalStore';
 import { SelectedDetail } from '../types/model';
 
 type Props = {
@@ -31,7 +30,7 @@ export default function ProductOptionsSection({
   remove,
   getUnitPrice,
 }: Props) {
-  const [error, setError] = useState<boolean>(false);
+  const { onAlertModal } = useModalStore();
 
   return (
     <div className="grid grid-cols-[120px_1fr] border-b border-border py-6">
@@ -100,7 +99,7 @@ export default function ProductOptionsSection({
                     type="button"
                     onClick={() => {
                       if (s.qty >= s.quantity) {
-                        setError(true);
+                        onAlertModal('선택하신 상품의 재고가 부족합니다.');
                         return;
                       }
                       inc(s.productDetailId);
@@ -127,13 +126,6 @@ export default function ProductOptionsSection({
           );
         })}
       </div>
-      <AlertModal
-        isOpen={!!error}
-        message="선택하신 상품의 재고가 부족합니다."
-        onClose={() => {
-          setError(false);
-        }}
-      />
     </div>
   );
 }

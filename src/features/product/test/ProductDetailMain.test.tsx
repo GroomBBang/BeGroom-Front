@@ -27,6 +27,14 @@ jest.mock('../hooks/useWishlistToggle', () => ({
 
 jest.mock('../components/ProductOptionSection', () => () => null);
 
+const onAlertModal = jest.fn();
+jest.mock('../../../shared/stores/useModalStore', () => ({
+  __esModule: true,
+  useModalStore: () => ({
+    onAlertModal: onAlertModal,
+  }),
+}));
+
 const baseProduct: any = {
   productId: 10,
   name: '사과',
@@ -68,20 +76,27 @@ describe('상세 조회 (ProductDetailMain)', () => {
     expect(toggle).toHaveBeenCalled();
   });
 
-  test('2. 로그인 필요 에러 모달을 닫을 때, /auth?mode=login 이동', async () => {
+  test('2. 로그인 필요 에러 모달 확인 콜백 실행 시 로그인 페이지로 이동한다', async () => {
     const user = userEvent.setup();
-    useWishlistToggleMock.mockImplementationOnce((args: any) => ({
+
+    useWishlistToggleMock.mockImplementationOnce(() => ({
       liked: false,
       count: 3,
-      toggle: () => args.onError('해당 기능은 로그인 후 이용해주세요.'),
+      toggle: () =>
+        onAlertModal('해당 기능은 로그인 후 이용해주세요.', () => pushMock('/auth?mode=login')),
     }));
 
     render(<ProductDetailMain product={baseProduct} />);
     await user.click(screen.getByLabelText('찜하기'));
 
-    expect(screen.getByTestId('alert-modal')).toBeInTheDocument();
+    expect(onAlertModal).toHaveBeenCalledWith(
+      '해당 기능은 로그인 후 이용해주세요.',
+      expect.any(Function),
+    );
 
-    await user.click(screen.getByText('확인'));
+    const [, confirmCallback] = onAlertModal.mock.calls[0];
+    await confirmCallback();
+
     expect(pushMock).toHaveBeenCalledWith('/auth?mode=login');
   });
 
