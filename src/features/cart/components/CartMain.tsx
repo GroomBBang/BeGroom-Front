@@ -3,8 +3,7 @@
 import { formatWon } from '@/shared/lib/format';
 import { Trash2 } from 'lucide-react';
 
-import ConfirmModal from '@/shared/components/common/ConfirmModal';
-import { useState } from 'react';
+import { useModalStore } from '@/shared/stores/useModalStore';
 import { CartContextType } from '../types/model';
 import CartItemCard from './CartItem';
 import CartRecommend from './CartRecommend';
@@ -22,8 +21,7 @@ export default function CartMain({ cart }: { cart: CartContextType }) {
     handleClickOrder,
   } = cart;
 
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-
+  const { onConfirmModal } = useModalStore();
   return (
     <div>
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_360px]">
@@ -47,7 +45,7 @@ export default function CartMain({ cart }: { cart: CartContextType }) {
 
                 <button
                   type="button"
-                  onClick={() => setIsConfirmOpen(true)}
+                  onClick={() => onConfirmModal('삭제하시겠습니까?', '삭제', removeSelected)}
                   className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
                 >
                   <Trash2 size={16} />
@@ -87,9 +85,6 @@ export default function CartMain({ cart }: { cart: CartContextType }) {
           </div>
 
           <div className="mt-4 rounded-md bg-primary-50 px-4 py-3 text-sm text-primary-700">
-            {/* {totals.subtotal >= 40000
-              ? '무료배송 대상입니다'
-              : `${formatWon(40000 - totals.subtotal)} 추가 주문 시 무료배송`} */}
             무료배송 대상입니다
           </div>
 
@@ -120,14 +115,6 @@ export default function CartMain({ cart }: { cart: CartContextType }) {
         </aside>
       </div>
       <CartRecommend />
-
-      <ConfirmModal
-        isOpen={isConfirmOpen}
-        confirmLabel="삭제"
-        message="삭제하시겠습니까?"
-        onConfirm={removeSelected}
-        onClose={() => setIsConfirmOpen(false)}
-      />
     </div>
   );
 }

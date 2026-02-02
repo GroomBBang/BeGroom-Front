@@ -1,9 +1,8 @@
 'use client';
 
-import ConfirmModal from '@/shared/components/common/ConfirmModal';
 import { formatWon } from '@/shared/lib/format';
+import { useModalStore } from '@/shared/stores/useModalStore';
 import { X } from 'lucide-react';
-import { useState } from 'react';
 import type { CartActionsType, CartItemType } from '../types/model';
 
 type ItemActions = Pick<CartActionsType, 'toggleSelect' | 'updateQty' | 'removeItem'>;
@@ -15,7 +14,7 @@ type Props = {
 
 export default function CartItemCard({ item, actions }: Props) {
   const { toggleSelect, updateQty, removeItem } = actions;
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const { onConfirmModal } = useModalStore();
 
   return (
     <div className="rounded-md border border-border bg-background p-5">
@@ -73,9 +72,9 @@ export default function CartItemCard({ item, actions }: Props) {
           <div className="flex flex-col items-end gap-2">
             <button
               type="button"
-              onClick={() => {
-                setIsConfirmOpen(true);
-              }}
+              onClick={() =>
+                onConfirmModal('삭제하시겠습니까?', '삭제', () => removeItem(item.cartItemId))
+              }
               className="grid h-8 w-8 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
               aria-label="삭제"
             >
@@ -87,14 +86,6 @@ export default function CartItemCard({ item, actions }: Props) {
             </div>
           </div>
         </div>
-
-        <ConfirmModal
-          isOpen={isConfirmOpen}
-          confirmLabel="삭제"
-          message="삭제하시겠습니까?"
-          onConfirm={() => removeItem(item.cartItemId)}
-          onClose={() => setIsConfirmOpen(false)}
-        />
       </div>
     </div>
   );
