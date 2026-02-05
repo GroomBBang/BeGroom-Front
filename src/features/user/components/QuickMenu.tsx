@@ -26,7 +26,7 @@ export default function QuickMenu() {
   };
 
   return (
-    <aside className="flex w-[80px] flex-col gap-2">
+    <aside className="flex w-[80px] flex-col gap-2 ">
       <div className="w-full h-[50px] overflow-hidden border border-gray-200 cursor-pointer">
         <div className="flex h-full w-full flex-col items-center justify-start bg-purple-50 pt-2 text-center">
           <span className="text-[10px] font-bold text-[#5f0080]">샛별·하루</span>

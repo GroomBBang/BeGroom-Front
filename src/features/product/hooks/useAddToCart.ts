@@ -28,7 +28,6 @@ export function useAddToCart() {
       toast.success('상품이 장바구니에 추가되었습니다');
       fetchCartCount();
     } catch (e) {
-      console.error(e);
       toast.error('장바구니 추가 실패');
     }
   };
