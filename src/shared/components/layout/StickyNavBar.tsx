@@ -5,9 +5,9 @@ import { Menu } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import Categorybar from './Categorybar';
+import Categorybar from '../../../features/search/components/Categorybar';
 
-export default function SearchNavigation() {
+export default function StickyNavBar() {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -36,7 +36,7 @@ export default function SearchNavigation() {
 
   return (
     <div className="sticky top-0 z-50 w-full bg-white shadow-[0_4px_8px_rgba(0,0,0,0.07)]">
-      <div className="mx-auto grid h-16 max-w-6xl grid-cols-[auto_1fr_91px] items-center px-4">
+      <div className="mx-auto grid h-14 max-w-6xl grid-cols-[auto_1fr_91px] items-center px-4">
         <div ref={dropdownRef} className="relative">
           <button
             className="group flex items-center gap-3 py-2 text-gray-900 transition-colors hover:text-primary-500 cursor-pointer"

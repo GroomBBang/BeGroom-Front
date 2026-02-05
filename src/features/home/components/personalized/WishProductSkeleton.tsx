@@ -1,6 +1,6 @@
 'use client';
 
-export default function ProductCarouselSkeleton() {
+export default function WishProductSkeleton() {
   return (
     <div className="relative w-full">
       <div className="overflow-hidden">
