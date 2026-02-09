@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 
 export function useProductSearch(params: SearchProductsParams) {
   const [data, setData] = useState<ProductCardType[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
