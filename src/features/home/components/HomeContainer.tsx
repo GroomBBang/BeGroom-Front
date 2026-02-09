@@ -30,7 +30,7 @@ export default function HomeContainer() {
       {/* 이벤트(광고) 배너 */}
       <EventBanner />
 
-      {/* 최근 본 상품 */}
+      {/* 좋아요 한 상품 */}
       <WishProductsSection />
 
       {/* 카테고리 리스트 */}
