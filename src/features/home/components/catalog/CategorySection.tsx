@@ -8,6 +8,7 @@ import { useProductSearch } from '../../hooks/useFetchProducts';
 import { CategoryType } from '../../types/model';
 import CategoryFeaturedSection from './CategoryFeaturedSection';
 import CategoryProductList from './CategoryProductList';
+import CategorySectionSkeleton from './CategorySectionSkeleton';
 
 export default function CategorySection({ category }: { category: CategoryType }) {
   const searchParams = useMemo(
@@ -23,7 +24,8 @@ export default function CategorySection({ category }: { category: CategoryType }
   const featuredProducts = products.slice(0, 6);
   const restProducts = products.slice(6);
 
-  if (isLoading || !products) return null;
+  if (isLoading) return <CategorySectionSkeleton />;
+  if (!products) return null;
 
   return (
     <div
@@ -43,7 +45,7 @@ export default function CategorySection({ category }: { category: CategoryType }
         </div>
         <div className="flex gap-2 flex-wrap align-start justify-start">
           {category.subcategories.map((subCategory) => (
-            <Link key={subCategory.id} href={`/categories/${subCategory.id}`}>
+            <Link key={subCategory.id} prefetch={false} href={`/categories/${subCategory.id}`}>
               <div className="w-fit flex items-center gap-1 text-xs border border-gray-200 px-2 py-1 rounded-full">
                 <p className="shrink-0">#</p>
                 <p className="truncate">{subCategory.label}</p>

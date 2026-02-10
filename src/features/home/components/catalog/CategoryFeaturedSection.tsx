@@ -28,18 +28,28 @@ export default function CategoryFeaturedSection({ products }: Props) {
         className="flex h-full transition-transform duration-500 ease-out"
         style={{ transform: `translateX(-${index * 100}%)` }}
       >
-        {items.map((p) => {
+        {items.map((p, i) => {
           const productId = (p as any).productId ?? (p as any).id;
           const imageUrl = (p as any).mainImageUrl ?? (p as any).imageUrl ?? '';
           const name = p.name;
+          const isPriority = i === 0;
 
           return (
             <Link
               key={String(productId)}
               href={`/products/${productId}`}
+              prefetch={isPriority}
               className="relative h-full w-full shrink-0"
             >
-              <Image src={imageUrl} alt={name} fill className="object-cover" sizes="360px" />
+              <Image
+                src={imageUrl}
+                alt={name}
+                fill
+                className="object-cover"
+                sizes="360px"
+                priority={isPriority}
+                fetchPriority={isPriority ? 'high' : 'auto'}
+              />
 
               {/* 가운데 문구 */}
               <div className="absolute inset-x-0 bottom-10 flex justify-center px-6">

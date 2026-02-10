@@ -2,11 +2,13 @@ import ProductCard from '@/features/product/components/ProductCard';
 import { ProductCardType } from '@/features/product/types/model';
 import { productSearchPresets } from '../../constants/fetchProductsPrestets';
 import { useProductSearch } from '../../hooks/useFetchProducts';
+import NewProductsSkeleton from './NewProductsSkeleton';
 
 export default function NewProductsSection() {
   const { data: products, isLoading } = useProductSearch(productSearchPresets.homeNew);
 
-  if (isLoading || !products) return;
+  if (isLoading) return <NewProductsSkeleton />;
+  if (!products) return null;
 
   return (
     <div className="flex flex-col gap-6 my-4">

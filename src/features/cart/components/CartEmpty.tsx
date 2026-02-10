@@ -11,6 +11,7 @@ export default function CartEmpty() {
       <div className="text-sm text-muted-foreground">장바구니가 비어있습니다</div>
       <Link
         href="/"
+        prefetch={false}
         className="mt-6 inline-flex h-11 items-center justify-center rounded-md bg-primary-700 px-6 text-sm font-bold text-white hover:bg-primary-800"
       >
         쇼핑 계속하기

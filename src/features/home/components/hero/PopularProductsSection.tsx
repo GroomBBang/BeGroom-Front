@@ -4,11 +4,13 @@ import { ProductCardType } from '@/features/product/types/model';
 import { productSearchPresets } from '../../constants/fetchProductsPrestets';
 import { useProductSearch } from '../../hooks/useFetchProducts';
 import PopularProductCard from './PopularProductCard';
+import PopularProductsSkeleton from './PopularProductsSkeleton';
 
 export default function PopularProductsSection() {
   const { data, isLoading } = useProductSearch(productSearchPresets.homePopular);
 
-  if (isLoading || !data) return;
+  if (isLoading) return <PopularProductsSkeleton />;
+  if (!data) return;
 
   return (
     <aside className="flex flex-col gap-6">

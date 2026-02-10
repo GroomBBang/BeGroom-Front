@@ -1,7 +1,6 @@
 'use client';
 
 import { formatWon } from '@/shared/lib/format';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { ProductType, TabKey } from '../types/model';
 
@@ -47,7 +46,6 @@ export default function ProductDetailTab({ product }: { product: ProductType }) 
       <div className="py-8">
         {tab === 'desc' ? (
           <div className="flex flex-col gap-4">
-            <ImageCarousel images={product.detailImageUrls} />
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
               {product.shortDescription}
             </p>
@@ -57,15 +55,50 @@ export default function ProductDetailTab({ product }: { product: ProductType }) 
             <h2 className="mb-5 text-xl font-bold text-foreground">상품 정보</h2>
 
             <div className="overflow-hidden rounded-md border border-border bg-background">
-              <InfoRow label="브랜드" value={product.brand} />
-              <InfoRow
-                label="판매가"
-                value={formatWon(product.discountedPrice ?? product.salesPrice)}
-              />
-              <InfoRow label="정상가" value={formatWon(product.salesPrice)} />
-              <InfoRow label="배송" value="샛별배송 (새벽 7시 전 도착)" />
-              <InfoRow label="배송비" value="무료배송" />
-              <InfoRow label="판매자" value="컬리" />
+              <div className="grid grid-cols-[160px_1fr] border-b border-border last:border-b-0">
+                <div className="bg-muted px-6 py-4 text-sm font-medium text-muted-foreground">
+                  브랜드
+                </div>
+                <div className="px-6 py-4 text-sm text-foreground">{product.brand}</div>
+              </div>
+              <div className="grid grid-cols-[160px_1fr] border-b border-border last:border-b-0">
+                <div className="bg-muted px-6 py-4 text-sm font-medium text-muted-foreground">
+                  판매가
+                </div>
+                <div className="px-6 py-4 text-sm text-foreground">
+                  {formatWon(product.discountedPrice ?? product.salesPrice)}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-[160px_1fr] border-b border-border last:border-b-0">
+                <div className="bg-muted px-6 py-4 text-sm font-medium text-muted-foreground">
+                  정상가
+                </div>
+                <div className="px-6 py-4 text-sm text-foreground">
+                  {formatWon(product.salesPrice)}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-[160px_1fr] border-b border-border last:border-b-0">
+                <div className="bg-muted px-6 py-4 text-sm font-medium text-muted-foreground">
+                  배송
+                </div>
+                <div className="px-6 py-4 text-sm text-foreground">샛별배송 (새벽 7시 전 도착)</div>
+              </div>
+
+              <div className="grid grid-cols-[160px_1fr] border-b border-border last:border-b-0">
+                <div className="bg-muted px-6 py-4 text-sm font-medium text-muted-foreground">
+                  배송비
+                </div>
+                <div className="px-6 py-4 text-sm text-foreground">무료배송</div>
+              </div>
+
+              <div className="grid grid-cols-[160px_1fr] border-b border-border last:border-b-0">
+                <div className="bg-muted px-6 py-4 text-sm font-medium text-muted-foreground">
+                  판매자
+                </div>
+                <div className="px-6 py-4 text-sm text-foreground">컬리</div>
+              </div>
             </div>
 
             <div className="mt-8 rounded-md bg-primary-50 p-6">
@@ -80,83 +113,5 @@ export default function ProductDetailTab({ product }: { product: ProductType }) 
         )}
       </div>
     </section>
-  );
-}
-
-/* ======================
-   Image Carousel (max 5)
-====================== */
-
-function ImageCarousel({ images }: { images: string[] }) {
-  const safe = images.slice(0, 5);
-  const [idx, setIdx] = useState(0);
-
-  if (safe.length === 0) {
-    return (
-      <div className="rounded-xl border border-border bg-background p-16 text-center text-sm text-muted-foreground">
-        상세 이미지가 없어요.
-      </div>
-    );
-  }
-
-  const prev = () => setIdx((v) => (v - 1 + safe.length) % safe.length);
-  const next = () => setIdx((v) => (v + 1) % safe.length);
-
-  return (
-    <div className="overflow-hidden rounded-xl border border-border bg-background">
-      <div className="relative h-[520px] bg-muted">
-        <img
-          src={safe[idx]}
-          alt={`상세 이미지 ${idx + 1}`}
-          className="h-full w-full object-cover"
-        />
-
-        <button
-          type="button"
-          onClick={prev}
-          aria-label="이전 이미지"
-          className="absolute left-4 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-background/80 text-foreground shadow backdrop-blur hover:bg-background cursor-pointer"
-        >
-          <ChevronLeft size={18} />
-        </button>
-
-        <button
-          type="button"
-          onClick={next}
-          aria-label="다음 이미지"
-          className="absolute right-4 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-background/80 text-foreground shadow backdrop-blur hover:bg-background cursor-pointer"
-        >
-          <ChevronRight size={18} />
-        </button>
-
-        <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
-          {safe.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setIdx(i)}
-              className={[
-                'h-2 w-2 rounded-full transition',
-                i === idx ? 'bg-background' : 'bg-background/40 hover:bg-background/70',
-              ].join(' ')}
-              aria-label={`이미지 ${i + 1}로 이동`}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ======================
-   Info Table Row (탭 영역에서 사용)
-====================== */
-
-function InfoRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="grid grid-cols-[160px_1fr] border-b border-border last:border-b-0">
-      <div className="bg-muted px-6 py-4 text-sm font-medium text-muted-foreground">{label}</div>
-      <div className="px-6 py-4 text-sm text-foreground">{value}</div>
-    </div>
   );
 }

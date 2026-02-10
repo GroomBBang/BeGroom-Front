@@ -18,6 +18,7 @@ export default function Categorybar() {
           return (
             <Link
               key={category.id}
+              prefetch={false}
               href={{
                 pathname: `/categories/${category.id}`,
                 query: { sort: 'wishlistCount', direction: 'DESC', page: 0, size: 30 },
@@ -53,6 +54,7 @@ export default function Categorybar() {
                   pathname: `/categories/${sub.id}`,
                   query: { sort: 'wishlistCount', direction: 'DESC', page: 0, size: 30 },
                 }}
+                prefetch={false}
                 className="block w-full cursor-pointer rounded px-3 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:text-[#5f0080] hover:underline"
               >
                 {sub.label}
