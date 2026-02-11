@@ -32,7 +32,11 @@ export default function WishProductCard({ product }: Props) {
 
   return (
     <>
-      <Link href={`/products/${product.productId}`} className="group cursor-pointer">
+      <Link
+        href={`/products/${product.productId}`}
+        data-testid={'wish-product-card'}
+        className="group cursor-pointer"
+      >
         {/* 이미지 */}
         <div className="relative mb-2 overflow-hidden rounded bg-gray-100 aspect-[5/6]">
           <Image
