@@ -1,15 +1,15 @@
-// components/home/CategoryItemSection.tsx
 'use client';
 
 import Link from 'next/link';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { productSearchPresets } from '../../constants/fetchProductsPrestets';
 import { useProductSearch } from '../../hooks/useFetchProducts';
 import { CategoryType } from '../../types/model';
 import CategoryFeaturedSection from './CategoryFeaturedSection';
 import CategoryProductList from './CategoryProductList';
+import CategorySectionSkeleton from './CategorySectionSkeleton';
 
-export default function CategorySection({ category }: { category: CategoryType }) {
+function CategorySection({ category }: { category: CategoryType }) {
   const searchParams = useMemo(
     () => ({
       ...productSearchPresets.homeCategoryCommon,
@@ -20,10 +20,11 @@ export default function CategorySection({ category }: { category: CategoryType }
 
   const { data: products, isLoading } = useProductSearch(searchParams);
 
+  if (isLoading) return <CategorySectionSkeleton />;
+  if (!products) return null;
+
   const featuredProducts = products.slice(0, 6);
   const restProducts = products.slice(6);
-
-  if (isLoading || !products) return null;
 
   return (
     <div
@@ -35,7 +36,10 @@ export default function CategorySection({ category }: { category: CategoryType }
         <div>
           <h3 className="text-xl font-bold text-primary-300">{category.label}</h3>
           <Link
-            href={`/categories/${category.id}`}
+            href={{
+              pathname: `/categories/${category.id}`,
+              query: { sort: 'wishlistCount', direction: 'DESC', page: 0, size: 30 },
+            }}
             className="text-xs text-gray-500 cursor-pointer"
           >
             바로가기
@@ -43,7 +47,14 @@ export default function CategorySection({ category }: { category: CategoryType }
         </div>
         <div className="flex gap-2 flex-wrap align-start justify-start">
           {category.subcategories.map((subCategory) => (
-            <Link key={subCategory.id} href={`/categories/${subCategory.id}`}>
+            <Link
+              key={subCategory.id}
+              prefetch={false}
+              href={{
+                pathname: `/categories/${subCategory.id}`,
+                query: { sort: 'wishlistCount', direction: 'DESC', page: 0, size: 30 },
+              }}
+            >
               <div className="w-fit flex items-center gap-1 text-xs border border-gray-200 px-2 py-1 rounded-full">
                 <p className="shrink-0">#</p>
                 <p className="truncate">{subCategory.label}</p>
@@ -63,3 +74,5 @@ export default function CategorySection({ category }: { category: CategoryType }
     </div>
   );
 }
+
+export default React.memo(CategorySection);

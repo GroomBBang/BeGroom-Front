@@ -1,6 +1,4 @@
-'use client';
-
-import ProductCardSkeleton from '@/features/product/components/ProductCardSceleton';
+import ProductCardSkeleton from '@/features/product/components/ProductCardSkeleton';
 
 export default function WishProductSkeleton() {
   return (

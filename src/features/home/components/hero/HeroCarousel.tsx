@@ -2,6 +2,7 @@
 'use client';
 
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 const slides = [
@@ -103,11 +104,17 @@ export default function HeroCarousel() {
     >
       <div className="flex h-full transition-transform duration-500 ease-out" style={trackStyle}>
         {slides.map((s) => (
-          <div
-            key={s.id}
-            className="h-full w-full shrink-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${s.image})` }}
-          />
+          <div key={s.id} className="h-full w-full shrink-0 relative">
+            <Image
+              src={s.image}
+              alt="banner-image"
+              fill
+              sizes="(max-width: 736px) 100vw, 736px"
+              className="object-cover"
+              priority={s.id === '1'}
+              fetchPriority={s.id === '1' ? 'high' : 'auto'}
+            />
+          </div>
         ))}
       </div>
 

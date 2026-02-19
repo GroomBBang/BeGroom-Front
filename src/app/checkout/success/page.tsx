@@ -27,6 +27,7 @@ export default function CheckoutSuccessPage() {
 
           <Link
             href="/"
+            prefetch={false}
             className="inline-flex h-11 items-center justify-center rounded-sm bg-primary-700 px-5 text-sm font-bold text-white hover:bg-primary-800"
           >
             쇼핑 계속하기

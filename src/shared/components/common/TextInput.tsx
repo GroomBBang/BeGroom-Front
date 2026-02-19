@@ -29,6 +29,7 @@ export default function TextInput({
       )}
       <div className="relative">
         <input
+          aria-label={label}
           type={inputType}
           placeholder={placeholder}
           value={value}

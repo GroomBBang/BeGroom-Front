@@ -3,6 +3,7 @@
 import { formatWon } from '@/shared/lib/format';
 import { useModalStore } from '@/shared/stores/useModalStore';
 import { X } from 'lucide-react';
+import Image from 'next/image';
 import type { CartActionsType, CartItemType } from '../types/model';
 
 type ItemActions = Pick<CartActionsType, 'toggleSelect' | 'updateQty' | 'removeItem'>;
@@ -27,13 +28,9 @@ export default function CartItemCard({ item, actions }: Props) {
         />
 
         {/* 이미지 */}
-        <div className="h-20 w-20 overflow-hidden rounded-md bg-muted">
+        <div className="relative h-20 w-20 overflow-hidden rounded-md bg-muted">
           {item.mainImageUrl ? (
-            <img
-              src={item.mainImageUrl}
-              alt={item.productName}
-              className="h-full w-full object-cover"
-            />
+            <Image src={item.mainImageUrl} alt="cart-item-images" fill className="object-cover" />
           ) : null}
         </div>
 

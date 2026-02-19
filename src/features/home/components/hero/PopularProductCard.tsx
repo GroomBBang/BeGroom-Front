@@ -1,6 +1,7 @@
 'use client';
 
 import { ProductCardType } from '@/features/product/types/model';
+import Image from 'next/image';
 import Link from 'next/link';
 
 interface Props {
@@ -16,15 +17,17 @@ export default function PopularProductCard({ product, rank }: Props) {
     <Link
       href={`/products/${product.productId}`}
       className="group flex gap-3 rounded-2xl p-1"
+      prefetch={isTopRank}
       aria-label={`${rank}위 ${product.name} 상세로 이동`}
     >
       {/* 썸네일 */}
-      <div className="h-24 w-24 shrink-0 overflow-hidden rounded-md bg-gray-100">
-        <img
+      <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-md bg-gray-100">
+        <Image
           src={product.mainImageUrl}
           alt={product.name}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          loading="lazy"
+          fill
+          sizes="96px"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
       </div>
 
@@ -53,7 +56,6 @@ export default function PopularProductCard({ product, rank }: Props) {
           {product.discountRate !== 0 && (
             <span className="text-xs font-bold text-orange-500">{product.discountRate}%</span>
           )}
-
           {/* 현재가 */}
           <span className="text-sm font-extrabold text-gray-900">{price.toLocaleString()}원</span>
         </div>

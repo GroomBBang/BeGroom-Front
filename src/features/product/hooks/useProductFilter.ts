@@ -1,7 +1,7 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { objectToQuery, queryToObject } from '../lib/format';
 import { FiltersType } from '../types/model';
 
@@ -16,33 +16,30 @@ export type FiltersStateType = ReturnType<typeof useProductFilters>;
 export function useProductFilters(keyword?: string) {
   const router = useRouter();
   const pathname = usePathname();
-  const isInitializedRef = useRef(false);
+  const searchParams = useSearchParams();
 
   const [filters, setFilters] = useState<FiltersType>({
     brandIds: [],
     deliveryTypes: [],
     packagingTypes: [],
     excludeSoldOut: false,
+    sort: 'wishlistCount',
+    direction: 'DESC',
     page: 0,
     size: 30,
-    sort: 'productId',
-    direction: 'DESC',
   });
 
-  // 현재 URL기반 초기화
+  // 현재 URL 기반으로 필터 초기화
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     params.delete('keyword');
+
     const initialFilters = queryToObject(params);
-
     setFilters(initialFilters);
-    isInitializedRef.current = true;
-  }, []);
+  }, [searchParams]);
 
-  // 필터 변경 시 URL 이동
+  // 필터 변경 시 URL 동기화 (동일하면 replace 하지 않음)
   useEffect(() => {
-    if (!isInitializedRef.current) return;
-
     const filterQuery = objectToQuery(filters);
 
     const baseParams = new URLSearchParams();
@@ -51,10 +48,13 @@ export function useProductFilters(keyword?: string) {
     const baseQuery = baseParams.toString();
     const finalQuery = [baseQuery, filterQuery].filter(Boolean).join('&');
 
-    router.replace(finalQuery ? `${pathname}?${finalQuery}` : pathname);
+    const currentQuery = window.location.search.slice(1);
+    if (currentQuery === finalQuery) return;
+
+    router.push(finalQuery ? `${pathname}?${finalQuery}` : pathname);
   }, [filters, pathname, router, keyword]);
 
-  // 브랜드
+  // 브랜드 필터 토글
   const toggleBrand = (brandId: number) => {
     setFilters((prev) => ({
       ...prev,
@@ -65,7 +65,7 @@ export function useProductFilters(keyword?: string) {
     }));
   };
 
-  // 배송
+  // 배송 필터 토글
   const toggleDelivery = (type: string) => {
     setFilters((prev) => ({
       ...prev,
@@ -76,7 +76,7 @@ export function useProductFilters(keyword?: string) {
     }));
   };
 
-  // 포장
+  // 포장 필터 토글
   const togglePackaging = (type: string) => {
     setFilters((prev) => ({
       ...prev,
@@ -87,7 +87,7 @@ export function useProductFilters(keyword?: string) {
     }));
   };
 
-  // 품절 포함
+  // 품절 상품 포함 여부 설정
   const setIncludeSoldOut = (exclude: boolean) => {
     setFilters((prev) => ({
       ...prev,
@@ -104,7 +104,7 @@ export function useProductFilters(keyword?: string) {
     }));
   };
 
-  // 정렬
+  // 정렬 옵션 변경
   const setSortOption = (sort: string, direction: string) => {
     setFilters((prev) => ({
       ...prev,
@@ -113,24 +113,22 @@ export function useProductFilters(keyword?: string) {
     }));
   };
 
-  // 초기화
+  // 필터 초기화 (기본값으로 리셋)
   const resetFilters = () => {
     setFilters({
       brandIds: [],
       deliveryTypes: [],
       packagingTypes: [],
       excludeSoldOut: false,
-      page: 0,
-      size: 30,
       sort: 'wishlistCount',
       direction: 'DESC',
+      page: 0,
+      size: 30,
     });
   };
 
   return {
     filters,
-
-    // actions
     toggleBrand,
     toggleDelivery,
     togglePackaging,

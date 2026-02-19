@@ -30,12 +30,6 @@ export function objectToQuery(filters: FiltersType) {
     params.set('excludeSoldOut', String(filters.excludeSoldOut));
   }
 
-  // 페이지
-  params.set('page', String(filters.page));
-
-  // 페이지 크기
-  params.set('size', String(filters.size));
-
   // 정렬
   if (filters.sort) {
     params.set('sort', filters.sort);
@@ -45,6 +39,12 @@ export function objectToQuery(filters: FiltersType) {
   if (filters.direction) {
     params.set('direction', filters.direction);
   }
+
+  // 페이지
+  params.set('page', String(filters.page));
+
+  // 페이지 크기
+  params.set('size', String(filters.size));
 
   return params.toString();
 }

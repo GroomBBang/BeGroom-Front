@@ -92,7 +92,7 @@ export default function Header() {
               {open && (
                 <div
                   role="menu"
-                  className="absolute right-0 z-50 mt-2 w-40 overflow-hidden rounded-lg border border-border bg-background shadow-md"
+                  className="absolute right-0 z-100 mt-2 w-40 overflow-hidden rounded-lg border border-border bg-background shadow-md"
                 >
                   <Link
                     href="/my"

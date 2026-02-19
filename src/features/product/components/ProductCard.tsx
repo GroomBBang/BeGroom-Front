@@ -1,6 +1,7 @@
 'use client';
 
 import { Heart } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import productAPI from '../api/product.api';
 import { useWishlistToggle } from '../hooks/useWishlistToggle';
@@ -25,13 +26,19 @@ export default function ProductCard({ product }: Props) {
 
   return (
     <>
-      <Link href={`/products/${product.productId}`} className="group cursor-pointer">
+      <Link
+        href={`/products/${product.productId}`}
+        prefetch={false}
+        className="group cursor-pointer"
+      >
         {/* 이미지 */}
         <div className="relative mb-2 overflow-hidden rounded bg-gray-100 aspect-[5/6]">
-          <img
+          <Image
             src={product.mainImageUrl}
             alt={product.name}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            fill
+            sizes="276px"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
 
           {/* 하트 버튼 (hover 노출) */}

@@ -1,17 +1,19 @@
 import { ProductCardType } from '@/features/product/types/model';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function CategoryProductCard({ product }: { product: ProductCardType }) {
   const price = product.discountedPrice ?? product.salesPrice;
   return (
-    <Link href={`/products/${product.productId}`} className="h-[250px]">
+    <Link href={`/products/${product.productId}`} prefetch={false} className="h-[250px]">
       {/* 썸네일 */}
-      <div className="h-[180px] w-[180px] shrink-0 overflow-hidden rounded-md bg-gray-100">
-        <img
+      <div className="relative h-[180px] w-[180px] shrink-0 overflow-hidden rounded-md bg-gray-100">
+        <Image
           src={product.mainImageUrl}
           alt={product.name}
+          fill
+          sizes="180px"
           className="object-cover transition-transform duration-300 group-hover:scale-105"
-          loading="lazy"
         />
       </div>
 

@@ -2,6 +2,7 @@
 
 import { formatWon } from '@/shared/lib/format';
 import { Heart, ShoppingCart } from 'lucide-react';
+import Image from 'next/image';
 import { useMemo } from 'react';
 import productAPI from '../api/product.api';
 import { useAddToCart } from '../hooks/useAddToCart';
@@ -46,11 +47,7 @@ export default function ProductDetailMain({ product }: { product: ProductType })
         {/* LEFT */}
         <section className="relative h-[550px] overflow-hidden rounded-xl border border-border bg-muted">
           {product.mainImageUrl ? (
-            <img
-              src={product.mainImageUrl}
-              alt={product.name}
-              className="h-full w-full object-cover"
-            />
+            <Image src={product.mainImageUrl} alt={product.name} className="object-cover" fill />
           ) : (
             <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
               NO IMAGE
