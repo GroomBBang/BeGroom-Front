@@ -17,7 +17,13 @@ export default function CategoryNav() {
               aria-label={item.label}
             >
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-100">
-                <Image src={item.iconSrc} alt="" width={40} height={40} />
+                <Image
+                  src={item.iconSrc}
+                  alt="category-icon"
+                  width={40}
+                  height={40}
+                  style={{ width: '40px', height: '40px' }}
+                />
               </div>
               <span className="text-sm font-medium text-gray-800">{item.label}</span>
             </Link>

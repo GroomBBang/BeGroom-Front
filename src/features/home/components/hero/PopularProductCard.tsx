@@ -26,6 +26,7 @@ export default function PopularProductCard({ product, rank }: Props) {
           src={product.mainImageUrl}
           alt={product.name}
           fill
+          sizes="96px"
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
       </div>

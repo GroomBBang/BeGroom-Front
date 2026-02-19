@@ -12,6 +12,7 @@ export default function CategoryProductCard({ product }: { product: ProductCardT
           src={product.mainImageUrl}
           alt={product.name}
           fill
+          sizes="180px"
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
       </div>

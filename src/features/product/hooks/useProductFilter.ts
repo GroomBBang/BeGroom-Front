@@ -49,7 +49,6 @@ export function useProductFilters(keyword?: string) {
     const finalQuery = [baseQuery, filterQuery].filter(Boolean).join('&');
 
     const currentQuery = window.location.search.slice(1);
-    console.log(currentQuery, finalQuery);
     if (currentQuery === finalQuery) return;
 
     router.push(finalQuery ? `${pathname}?${finalQuery}` : pathname);

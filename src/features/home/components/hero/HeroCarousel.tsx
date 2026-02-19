@@ -109,6 +109,7 @@ export default function HeroCarousel() {
               src={s.image}
               alt="banner-image"
               fill
+              sizes="(max-width: 736px) 100vw, 736px"
               className="object-cover"
               priority={s.id === '1'}
               fetchPriority={s.id === '1' ? 'high' : 'auto'}
