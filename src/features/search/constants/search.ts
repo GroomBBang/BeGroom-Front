@@ -481,60 +481,11 @@ export const SUB_CATEGORIES = [
   '어린이음료/선물세트',
 ];
 
-export const PRODUCTS = [
-  {
-    id: 1,
-    brand: '테일러',
-    title: '[테일러] 트리플 클렌즈 주스 24시간 946mL',
-    desc: '세콤달콤',
-    price: 12000,
-    likes: 0,
-    discount: 0,
-    delivery: '샛별배송',
-    reviews: 0,
-    img: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&q=80&w=400', // 오렌지 주스 대체 이미지
-  },
-  {
-    id: 2,
-    brand: '롯데칠성',
-    title: '[롯데칠성] 칠성사이다 제로 라임 (355mL X 6개)',
-    desc: '톡 쏘는 청량함',
-    price: 5980,
-    likes: 0,
-    discount: 0,
-    delivery: '샛별배송',
-    reviews: 0,
-    img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&q=80&w=400', // 캔 음료 대체 이미지
-  },
-  {
-    id: 3,
-    brand: '오후의 홍차',
-    title: '[오후의 홍차] 차이티 라떼 400mL',
-    desc: '일본에서 온 스파이시 한 겨울 음료',
-    price: 3200, // 원가
-    likes: 99,
-    salePrice: 2600, // 할인가
-    discount: 18,
-    delivery: '샛별배송',
-    reviews: 43,
-    img: 'https://images.unsplash.com/photo-1596910547037-846b19803115?auto=format&fit=crop&q=80&w=400', // 밀크티 대체 이미지
-  },
-];
-
 export const NAV_LINKS = [
-  { label: '채소', href: '/categories/1' },
-  { label: '과일', href: '/categories/2' },
-  { label: '육류', href: '/categories/3' },
-  { label: '해산물', href: '/categories/4' },
-  { label: '건강식품', href: '/categories/5' },
-  { label: '기타', href: '/categories/6' },
+  { label: '베스트', href: '/categories/popular' },
+  { label: '패션', href: '/categories/16' },
+  { label: '주방용품', href: '/categories/17' },
+  { label: '리빙', href: '/categories/18' },
+  { label: '가전제품', href: '/categories/19' },
+  { label: '인테리어', href: '/categories/20' },
 ];
-
-// export const NAV_LINKS = [
-//   { label: '베스트', href: '/categories/1' },
-//   { label: '세일', href: '/categories/2' },
-//   { label: '패션', href: '/categories/3' },
-//   { label: '리빙', href: '/categories/4' },
-//   { label: '신상', href: '/categories/5' },
-//   { label: '특가/혜택', href: '/categories/6' },
-// ];

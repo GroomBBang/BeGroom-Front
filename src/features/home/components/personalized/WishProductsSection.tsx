@@ -1,3 +1,5 @@
+'use client';
+
 import { useAuthStore } from '@/features/auth/stores/useAuthStore';
 import myAPI from '@/features/user/apis/my.api';
 import { MyWishResponseDTO } from '@/features/user/types/response';
@@ -13,13 +15,14 @@ export default function WishProductsSection() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!isLoggedIn) return;
     setLoading(true);
 
     fetchMyWish()
       .then((res) => setData(res.result))
       .catch(() => setData(null))
       .finally(() => setLoading(false));
-  }, []);
+  }, [isLoggedIn]);
 
   if (!isLoggedIn) return null;
 

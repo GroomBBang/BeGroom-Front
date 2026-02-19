@@ -1,3 +1,5 @@
+'use Client';
+
 import { MyWishResponseDTO } from '@/features/user/types/response';
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import Link from 'next/link';

@@ -1,3 +1,5 @@
+'use client';
+
 import { CATEGORIES } from '@/features/search/constants/search';
 import { useEffect, useRef, useState } from 'react';
 import CategorySection from './CategorySection';

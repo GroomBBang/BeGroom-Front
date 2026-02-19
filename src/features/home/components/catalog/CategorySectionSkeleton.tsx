@@ -1,6 +1,3 @@
-// components/home/CategorySectionSkeleton.tsx
-'use client';
-
 export default function CategorySectionSkeleton() {
   return (
     <div
