@@ -60,7 +60,7 @@ export default function StickyNavBar() {
                 <Link
                   href={{
                     pathname: link.href,
-                    query: { sort: 'wishlistCount', direction: 'DESC', page: 0, size: 30 },
+                    query: { sort: 'wishlistCount, desc', page: 0, size: 30 },
                   }}
                   className={`text-base font-semibold text-gray-900 transition-colors hover:text-primary-500`}
                 >

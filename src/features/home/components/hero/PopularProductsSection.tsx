@@ -20,7 +20,7 @@ export default function PopularProductsSection() {
         <Link
           href={{
             pathname: `/categories/popular`,
-            query: { sort: 'wishlistCount', direction: 'DESC', page: 0, size: 30 },
+            query: { sort: 'wishlistCount,desc', page: 0, size: 30 },
           }}
           className="text-sm text-gray-500 hover:text-gray-800"
         >
@@ -38,7 +38,7 @@ export default function PopularProductsSection() {
         <Link
           href={{
             pathname: `/categories/popular`,
-            query: { sort: 'wishlistCount', direction: 'DESC', page: 0, size: 30 },
+            query: { sort: 'wishlistCount,desc', page: 0, size: 30 },
           }}
           className="w-full rounded-full border px-4 py-3 text-sm text-center font-semibold hover:bg-gray-100 cursor-pointer"
         >

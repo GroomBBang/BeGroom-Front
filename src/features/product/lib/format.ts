@@ -30,14 +30,9 @@ export function objectToQuery(filters: FiltersType) {
     params.set('excludeSoldOut', String(filters.excludeSoldOut));
   }
 
-  // 정렬
+  // 정렬, 방향
   if (filters.sort) {
     params.set('sort', filters.sort);
-  }
-
-  // 정렬 방향
-  if (filters.direction) {
-    params.set('direction', filters.direction);
   }
 
   // 페이지
@@ -66,6 +61,5 @@ export function queryToObject(params: URLSearchParams): FiltersType {
     page: Number(params.get('page')) || 0,
     size: Number(params.get('size')) || 30,
     sort: params.get('sort') || '',
-    direction: params.get('direction') || '',
   };
 }

@@ -8,7 +8,7 @@ import { SelectedDetail } from '../types/model';
 type Props = {
   hasOptions: boolean;
   details: Array<{
-    productDetailId: number;
+    id: number;
     name: string;
     isAvailable: boolean;
   }>;
@@ -17,7 +17,7 @@ type Props = {
   dec: (id: number) => void;
   inc: (id: number) => void;
   remove: (id: number) => void;
-  getUnitPrice: (d: { discountedPrice?: number; basePrice: number }) => number;
+  getUnitPrice: (d: { sellingPrice?: number; originalPrice: number }) => number;
 };
 
 export default function ProductOptionsSection({
@@ -52,7 +52,7 @@ export default function ProductOptionsSection({
               상품을 선택해주세요
             </option>
             {details.map((d) => (
-              <option key={d.productDetailId} value={d.productDetailId} disabled={!d.isAvailable}>
+              <option key={d.id} value={d.id} disabled={!d.isAvailable}>
                 {d.name}
               </option>
             ))}
@@ -62,17 +62,14 @@ export default function ProductOptionsSection({
         {selected.map((s) => {
           const unit = getUnitPrice(s);
           return (
-            <div
-              key={s.productDetailId}
-              className="rounded-sm border border-border bg-background p-4"
-            >
+            <div key={s.id} className="rounded-sm border border-border bg-background p-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="text-sm font-medium text-foreground">{s.name}</div>
 
                 {hasOptions && (
                   <button
                     type="button"
-                    onClick={() => remove(s.productDetailId)}
+                    onClick={() => remove(s.id)}
                     className="text-muted-foreground hover:text-foreground"
                     aria-label="옵션 제거"
                   >
@@ -86,7 +83,7 @@ export default function ProductOptionsSection({
                   <button
                     type="button"
                     disabled={s.qty === 1}
-                    onClick={() => dec(s.productDetailId)}
+                    onClick={() => dec(s.id)}
                     className="grid h-10 w-12 place-items-center text-foreground hover:bg-muted cursor-pointer disabled:cursor-not-allowed disabled:text-muted-foreground disabled:hover:bg-transparent"
                     aria-label="수량 감소"
                   >
@@ -98,11 +95,11 @@ export default function ProductOptionsSection({
                   <button
                     type="button"
                     onClick={() => {
-                      if (s.qty >= s.quantity) {
+                      if (s.qty >= s.stock) {
                         onAlertModal('선택하신 상품의 재고가 부족합니다.');
                         return;
                       }
-                      inc(s.productDetailId);
+                      inc(s.id);
                     }}
                     className="grid h-10 w-12 place-items-center text-foreground hover:bg-muted cursor-pointer"
                     aria-label="수량 증가"
@@ -113,15 +110,15 @@ export default function ProductOptionsSection({
 
                 <div className="text-right">
                   <div className="text-sm font-bold text-foreground">{formatWon(unit * s.qty)}</div>
-                  {typeof s.discountedPrice === 'number' && s.discountedPrice < s.basePrice && (
+                  {typeof s.sellingPrice === 'number' && s.sellingPrice < s.originalPrice && (
                     <div className="text-xs text-muted-foreground line-through">
-                      {formatWon(s.basePrice * s.qty)}원
+                      {formatWon(s.originalPrice * s.qty)}원
                     </div>
                   )}
                 </div>
               </div>
 
-              <div className="mt-2 text-xs text-muted-foreground">재고: {s.quantity}개</div>
+              <div className="mt-2 text-xs text-muted-foreground">재고: {s.stock}개</div>
             </div>
           );
         })}

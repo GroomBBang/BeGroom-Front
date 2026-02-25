@@ -14,7 +14,7 @@ describe('SubCategorybar', () => {
 
     expect(link).toHaveAttribute(
       'href',
-      expect.stringContaining('/categories/2?sort=wishlistCount&direction=DESC&page=0&size=30'),
+      expect.stringContaining('/categories/2?sort=wishlistCount%2Cdesc&page=0&size=30'),
     );
   });
 });

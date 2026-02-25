@@ -16,7 +16,7 @@ export default function SubCategorybar({
             key={cat.id}
             href={{
               pathname: `/categories/${cat.id}`,
-              query: { sort: 'wishlistCount', direction: 'DESC', page: 0, size: 30 },
+              query: { sort: 'wishlistCount,desc', page: 0, size: 30 },
             }}
             className={`text-sm hover:text-primary-500 hover:font-bold ${categoryId === cat.id ? 'text-primary-500 font-bold' : ''}`}
           >

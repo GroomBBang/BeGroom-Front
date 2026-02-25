@@ -18,8 +18,7 @@ jest.mock('../lib/format', () => ({
     excludeSoldOut: false,
     page: 0,
     size: 30,
-    sort: 'wishlistCount',
-    direction: 'DESC',
+    sort: 'wishlistCount,desc',
   })),
 }));
 

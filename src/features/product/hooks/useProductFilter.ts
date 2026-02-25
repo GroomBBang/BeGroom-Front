@@ -23,8 +23,7 @@ export function useProductFilters(keyword?: string) {
     deliveryTypes: [],
     packagingTypes: [],
     excludeSoldOut: false,
-    sort: 'wishlistCount',
-    direction: 'DESC',
+    sort: 'wishlistCount,desc',
     page: 0,
     size: 30,
   });
@@ -105,11 +104,10 @@ export function useProductFilters(keyword?: string) {
   };
 
   // 정렬 옵션 변경
-  const setSortOption = (sort: string, direction: string) => {
+  const setSortOption = (sort: string) => {
     setFilters((prev) => ({
       ...prev,
       sort,
-      direction,
     }));
   };
 
@@ -120,8 +118,7 @@ export function useProductFilters(keyword?: string) {
       deliveryTypes: [],
       packagingTypes: [],
       excludeSoldOut: false,
-      sort: 'wishlistCount',
-      direction: 'DESC',
+      sort: 'wishlistCount,desc',
       page: 0,
       size: 30,
     });

@@ -38,7 +38,7 @@ function CategorySection({ category }: { category: CategoryType }) {
           <Link
             href={{
               pathname: `/categories/${category.id}`,
-              query: { sort: 'wishlistCount', direction: 'DESC', page: 0, size: 30 },
+              query: { sort: 'wishlistCount,desc', page: 0, size: 30 },
             }}
             className="text-xs text-gray-500 cursor-pointer"
           >
@@ -52,7 +52,7 @@ function CategorySection({ category }: { category: CategoryType }) {
               prefetch={false}
               href={{
                 pathname: `/categories/${subCategory.id}`,
-                query: { sort: 'wishlistCount', direction: 'DESC', page: 0, size: 30 },
+                query: { sort: 'wishlistCount,desc', page: 0, size: 30 },
               }}
             >
               <div className="w-fit flex items-center gap-1 text-xs border border-gray-200 px-2 py-1 rounded-full">

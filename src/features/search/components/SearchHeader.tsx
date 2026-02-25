@@ -6,10 +6,10 @@ export default function SearchHeader({ filtersState }: { filtersState: FiltersSt
   const { filters, setSortOption, setPage } = filtersState;
 
   const tabs = [
-    { label: '인기순', sort: 'wishlistCount', direction: 'DESC' },
-    { label: '신상품순', sort: 'createdAt', direction: 'DESC' },
-    { label: '낮은 가격순', sort: 'salesPrice', direction: 'ASC' },
-    { label: '높은 가격순', sort: 'salesPrice', direction: 'DESC' },
+    { label: '인기순', sort: 'wishlistCount,desc' },
+    { label: '신상품순', sort: 'createdAt,desc' },
+    { label: '낮은 가격순', sort: 'salesPrice,asc' },
+    { label: '높은 가격순', sort: 'salesPrice,desc' },
   ];
 
   return (
@@ -19,14 +19,14 @@ export default function SearchHeader({ filtersState }: { filtersState: FiltersSt
 
         <div className="flex items-center gap-4 text-xs text-gray-400">
           {tabs.map((tab, idx) => {
-            const isActive = filters.sort === tab.sort && filters.direction === tab.direction;
+            const isActive = filters.sort === tab.sort;
 
             return (
               <div key={tab.label} className="flex items-center gap-4">
                 <button
                   type="button"
                   onClick={() => {
-                    setSortOption(tab.sort, tab.direction);
+                    setSortOption(tab.sort);
                     setPage(0);
                   }}
                   className={

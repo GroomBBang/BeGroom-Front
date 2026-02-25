@@ -4,11 +4,11 @@ export type TabKey = 'desc' | 'info';
 
 export type ProductStatus = 'WAIT' | 'SALE' | 'SOLD_OUT' | 'STOP';
 export type ProductDetailOption = {
-  productDetailId: number;
+  id: number;
   name: string;
-  basePrice: number;
-  discountedPrice: number;
-  quantity: number;
+  originalPrice: number;
+  sellingPrice: number;
+  stock: number;
   isAvailable: boolean;
 };
 
@@ -67,16 +67,15 @@ export type FiltersType = {
   page: number;
   size: number;
   sort: string;
-  direction: string;
 };
 
 // 상품 옵션 타입(상세)
 export type SelectedDetail = {
-  productDetailId: number;
+  id: number;
   name: string;
-  basePrice: number;
-  discountedPrice?: number;
-  quantity: number;
+  originalPrice: number;
+  sellingPrice?: number;
+  stock: number;
   isAvailable: boolean;
   qty: number;
 };

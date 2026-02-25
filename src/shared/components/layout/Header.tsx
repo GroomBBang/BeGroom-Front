@@ -35,7 +35,7 @@ export default function Header() {
   const handleSearch = (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!keyword.trim()) return;
-    router.push(`/search?keyword=${encodeURIComponent(keyword)}&sort=productId&direction=DESC`);
+    router.push(`/search?keyword=${encodeURIComponent(keyword)}&sort=id,desc`);
   };
 
   useEffect(() => {

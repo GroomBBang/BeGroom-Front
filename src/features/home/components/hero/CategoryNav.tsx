@@ -11,7 +11,7 @@ export default function CategoryNav() {
             <Link
               href={{
                 pathname: `/categories/${item.id}`,
-                query: { sort: 'wishlistCount', direction: 'DESC', page: 0, size: 30 },
+                query: { sort: 'wishlistCount,desc', page: 0, size: 30 },
               }}
               className="flex flex-col items-center gap-2 rounded-2xl p-2 transition hover:scale-[1.04] active:scale-[0.98]"
               aria-label={item.label}

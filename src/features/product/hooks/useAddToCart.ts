@@ -5,7 +5,7 @@ import { useCartStore } from '@/features/cart/stores/useCartStore';
 import toast from 'react-hot-toast';
 
 type SelectedItem = {
-  productDetailId: number;
+  id: number;
   qty: number;
 };
 
@@ -18,7 +18,7 @@ export function useAddToCart() {
 
     const payload = {
       items: selected.map((s) => ({
-        productDetailId: s.productDetailId,
+        productDetailId: s.id,
         quantity: s.qty,
       })),
     };

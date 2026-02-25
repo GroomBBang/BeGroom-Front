@@ -8,8 +8,7 @@ describe('SearchHeader', () => {
 
     const filtersState = {
       filters: {
-        sort: 'productId',
-        direction: 'DESC',
+        sort: 'id,desc',
       },
       setSortOption: jest.fn(),
       setPage: jest.fn(),
@@ -20,7 +19,7 @@ describe('SearchHeader', () => {
     await user.click(screen.getByRole('button', { name: '낮은 가격순' }));
 
     expect(filtersState.setSortOption).toHaveBeenCalledTimes(1);
-    expect(filtersState.setSortOption).toHaveBeenCalledWith('salesPrice', 'ASC');
+    expect(filtersState.setSortOption).toHaveBeenCalledWith('salesPrice,asc');
 
     expect(filtersState.setPage).toHaveBeenCalledTimes(1);
     expect(filtersState.setPage).toHaveBeenCalledWith(0);
@@ -29,8 +28,7 @@ describe('SearchHeader', () => {
   test('2. 현재 선택된 필터는 구분이 가능하도록 스타일이 적용된다.', () => {
     const filtersState = {
       filters: {
-        sort: 'wishlistCount',
-        direction: 'DESC',
+        sort: 'wishlistCount,desc',
       },
       setSortOption: jest.fn(),
       setPage: jest.fn(),

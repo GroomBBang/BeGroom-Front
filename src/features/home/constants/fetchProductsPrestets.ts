@@ -1,23 +1,20 @@
 export const productSearchPresets = {
   homeNew: {
-    sort: 'createdAt',
-    direction: 'DESC',
+    sort: 'createdAt,desc',
     page: 1,
     size: 6,
     excludeSoldOut: false,
   },
 
   homePopular: {
-    sort: 'wishlistCount',
-    direction: 'DESC',
+    sort: 'wishlistCount,desc',
     page: 1,
     size: 12,
     excludeSoldOut: false,
   },
 
   homeCategoryCommon: {
-    sort: 'wishlistCount',
-    direction: 'DESC',
+    sort: 'wishlistCount,desc',
     page: 1,
     size: 30,
     excludeSoldOut: false,

@@ -44,8 +44,7 @@ describe('ProductList', () => {
       excludeSoldOut: false,
       page: 0,
       size: 30,
-      sort: 'productId',
-      direction: 'DESC',
+      sort: 'id,desc',
     },
     setPage: jest.fn(),
   } as any;

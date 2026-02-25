@@ -17,16 +17,14 @@ export function useProductOptions(detailsInput: Props[] | undefined) {
   });
 
   const onSelectOption = (productDetailId: number) => {
-    const found = details.find((d) => d.productDetailId === productDetailId);
+    const found = details.find((d) => d.id === productDetailId);
     if (!found) return;
 
     setSelected((prev) => {
-      const exists = prev.find((x) => x.productDetailId === productDetailId);
+      const exists = prev.find((x) => x.id === productDetailId);
       if (exists) {
         return prev.map((x) =>
-          x.productDetailId === productDetailId
-            ? { ...x, qty: Math.min(x.quantity, x.qty + 1) }
-            : x,
+          x.id === productDetailId ? { ...x, qty: Math.min(x.stock, x.qty + 1) } : x,
         );
       }
       return [...prev, { ...found, qty: 1 }];
@@ -35,25 +33,23 @@ export function useProductOptions(detailsInput: Props[] | undefined) {
 
   const dec = (id: number) => {
     setSelected((prev) =>
-      prev.map((x) => (x.productDetailId === id ? { ...x, qty: Math.max(1, x.qty - 1) } : x)),
+      prev.map((x) => (x.id === id ? { ...x, qty: Math.max(1, x.qty - 1) } : x)),
     );
   };
 
   const inc = (id: number) => {
     setSelected((prev) =>
-      prev.map((x) =>
-        x.productDetailId === id ? { ...x, qty: Math.min(x.quantity, x.qty + 1) } : x,
-      ),
+      prev.map((x) => (x.id === id ? { ...x, qty: Math.min(x.stock, x.qty + 1) } : x)),
     );
   };
 
   const remove = (id: number) => {
     if (!hasOptions) return;
-    setSelected((prev) => prev.filter((x) => x.productDetailId !== id));
+    setSelected((prev) => prev.filter((x) => x.id !== id));
   };
 
-  const getUnitPrice = (d: { discountedPrice?: number; basePrice: number }) =>
-    typeof d.discountedPrice === 'number' ? d.discountedPrice : d.basePrice;
+  const getUnitPrice = (d: { sellingPrice?: number; originalPrice: number }) =>
+    typeof d.sellingPrice === 'number' ? d.sellingPrice : d.originalPrice;
 
   const totalPrice = useMemo(() => {
     return selected.reduce((acc, cur) => acc + getUnitPrice(cur) * cur.qty, 0);
