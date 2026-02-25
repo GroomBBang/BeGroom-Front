@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body className="min-h-screen bg-background text-foreground antialiased">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div></div>}>
           <HideOnPopup>
             <Header />
           </HideOnPopup>
@@ -37,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ModalProvider>
             <div className="relative">
               {children}
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<div></div>}>
                 <div className="fixed top-[25%] right-[30px] hidden xl:block">
                   <QuickMenu />
                 </div>
